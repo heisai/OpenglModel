@@ -56,7 +56,7 @@ add_executable(OpenglEngine ${PROJECT_SOURCES}
     ParaConfigWidget.h ParaConfigWidget.cpp ParaConfigWidget.ui
 )
 
-#target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets )
+
 
 target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets )
 
