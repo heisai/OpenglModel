@@ -29,8 +29,6 @@ void CustomOpenglWidget::BindManageEngine(const std::shared_ptr<ManageEngine>& e
 
 void CustomOpenglWidget::initializeGL()
 {
-  
-    //gladLoadGL();
 
     initializeOpenGLFunctions();
     const GLubyte* version = glGetString(GL_VERSION);

@@ -17,7 +17,6 @@ public:
 		return m_DirName;
 	}
 
-    void UseProgram();
     void bind();
     void release();
     void setBool(const std::string& name, bool value) ;

@@ -15,15 +15,29 @@ void MainWindow::InitUI()
     m_PtrManageEngine = std::make_shared<ManageEngine>();
     ui->openGLWidget->BindManageEngine(m_PtrManageEngine);
     this->setWindowTitle("OpenGLDemon");
+
+    QAction* ring_action = new QAction("ring", ui->model_menu);
+    ring_action->setObjectName("ring");
+    QAction* cube_action = new QAction("cube", ui->model_menu);
+    cube_action->setObjectName("cube_action");
+    QAction* cylinder_action = new QAction("cylinder", ui->model_menu);
+    cylinder_action->setObjectName("cylinder_action");
+	ui->model_menu->addAction(ring_action);
+    ui->model_menu->addAction(cube_action);
+	ui->model_menu->addAction(cylinder_action);
+
     
     
 }
 
 void MainWindow::InitConnect()
 {
-    connect(ui->widget,&ParaConfigWidget::CheckBoxSig,this,&MainWindow::CreatEngine);
-    //connect(ui->widget, &ParaConfigWidget::ChangeLightColorSig, this, &MainWindow::ChangeLightColorSlot);
     connect(ui->openGLWidget, &CustomOpenglWidget::CheckBoxType, m_PtrManageEngine.get(), &ManageEngine::checkBoxTypeSlot);
+
+	for (auto action : ui->model_menu->findChildren<QAction*>())
+	{
+		connect(action, &QAction::triggered, this, &MainWindow::createModel,Qt::UniqueConnection);
+	}
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +45,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::createModel(bool checked)
+{
+	QString objname = sender()->objectName();
+	if (objname == "ring")
+	{
+        CreatEngine(true, EM_CYLINDERENGINE);
+	}
+	else if (objname == "cube_action")
+	{
+        CreatEngine(true, EM_CUBEENGINE);
+	}
+	else if (objname == "cylinder_action")
+	{
+        CreatEngine(true, EM_TOURSENGINE);
+	}
+}
 
 void MainWindow::CreatEngine(bool checked, EngineType type)
 {

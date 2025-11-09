@@ -2,82 +2,33 @@
 ScreenRenderModel::ScreenRenderModel(std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(shader)
 {
-	// 使用拾取着色器
-	m_PickShader = std::make_shared<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
-	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
-	screen_shader_ = std::make_shared<Shader>("fbo_vertex.vs", "fbo_fragment.fs", "GeneralModel");
-
+	screen_shader_ = std::make_unique<Shader>("screen_vertex.vs", "screen_fragment.fs", "GeneralModel");
+	color_pick_shader_ = std::make_unique<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 }
 
 
 void ScreenRenderModel::Draw()
 {
-
-
-#if 1
-	//
-	LogInfo("glGetError():{}" ,int(glGetError()));
-	glViewport(0, 0, m_Width, m_Height);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glClearColor(0.9f, 0.4f, 0.6f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	LogInfo("Width :{} Height: {}", m_Width, m_Height);
-	
-	//if (selected_)
-	//{
-	//	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	//	glStencilMask(0xFF);
-	//}
-	m_shader->UseProgram();
-	m_shader->setMat4("view", mvp_data_->view_);
-	m_shader->setMat4("projection", mvp_data_->projection_);
-	m_shader->setMat4("model", mvp_data_->model_);
-
-
-	//设置光源属性
-	m_shader->setVec3("viewPos", mvp_data_->view_[3]);
-	m_shader->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	//设置材质属性
-	m_shader->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-	m_shader->setFloat("material.shininess", 32.0f);
-	
-	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-
-
-
 	// 将离屏帧缓冲添加到纹理中
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, 200, 200); // 设置视口大小为 200x200
 	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//glClear(GL_COLOR_BUFFER_BIT);
-	screen_shader_->UseProgram();
-	//LogInfo("glGetError()1:{}", int(glGetError()));
+	screen_shader_->bind();
 	glBindVertexArray(quadvao_);
-	//LogInfo("glGetError()2:{}", int(glGetError()));
 	glBindTexture(GL_TEXTURE_2D, m_PickTexture);	// use the color attachment texture as the texture of the quad plane
-	//LogInfo("glGetError()3:{}", int(glGetError()));
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	LogInfo("glGetError()4:{}", int(glGetError()));
 
 
-#endif
-	
 
-#if 1
+
+
+
 	// 步骤二：创建拾取纹理
 		//// 清除缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
 	glViewport(0, 0, m_Width, m_Height);
-	LogInfo("PickModel: width: {} height: {}", m_Width, m_Height);
 	// 清除缓冲
 	glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -86,40 +37,42 @@ void ScreenRenderModel::Draw()
 
 
 
-	m_shader->UseProgram();
-	m_shader->setMat4("view", mvp_data_->view_);
-	m_shader->setMat4("projection", mvp_data_->projection_);
-	m_shader->setMat4("model", mvp_data_->model_);
+	m_shader->bind();
+	//m_shader->setMat4("view", mvp_data_->view_);
+	//m_shader->setMat4("projection", mvp_data_->projection_);
+	//m_shader->setMat4("model", mvp_data_->model_);
 
 
-	//设置光源属性
-	m_shader->setVec3("viewPos", mvp_data_->view_[3]);
-	m_shader->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	//设置材质属性
-	m_shader->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-	m_shader->setFloat("material.shininess", 32.0f);
+	////设置光源属性
+	//m_shader->setVec3("viewPos", mvp_data_->view_[3]);
+	//m_shader->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
+	//m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	//m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+	//m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	////设置材质属性
+	//m_shader->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
+	//m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
+	//m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	//m_shader->setFloat("material.shininess", 32.0f);
 
 
 	//设置顶点属性指针
 
 
-	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(default_render_vao_);
+	glDrawElements(GL_TRIANGLES, default_render_indices_.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glFinish();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 
 }
 
 void ScreenRenderModel::InitBufferData()
 {
-#if 1
+	screen_shader_->CreatProgram();
+	screen_shader_->SetInt("screenTexture", 0);
+	color_pick_shader_->CreatProgram();
+
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
 		-1.0f,  1.0f,  0.0f, 1.0f,
@@ -130,23 +83,23 @@ void ScreenRenderModel::InitBufferData()
 		 1.0f, -1.0f,  1.0f, 0.0f,
 		 1.0f,  1.0f,  1.0f, 1.0f
 	};
-    glGenVertexArrays(1, &quadvao_);
-    glGenBuffers(1, &quadvbo_);
-    glBindVertexArray(quadvao_);
-    glBindBuffer(GL_ARRAY_BUFFER, quadvbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+	glGenVertexArrays(1, &quadvao_);
+	glGenBuffers(1, &quadvbo_);
+	glBindVertexArray(quadvao_);
+	glBindBuffer(GL_ARRAY_BUFFER, quadvbo_);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 
-#endif
 
 
 
 
-#if 1
+
+
 	//glBindVertexArray(0);
 	//步骤1：创建缓冲对象
 	glGenFramebuffers(1, &m_PickFBO);
@@ -189,9 +142,96 @@ void ScreenRenderModel::InitBufferData()
 	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	std::cout << "FBO initialization completed" << std::endl;
+}
 
-
-#endif
+void ScreenRenderModel::setModelData(const ModelDataInfo& datas)
+{
 
 }
 
+void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices)
+{
+	 default_render_vao_ = vao;
+	 default_render_indices_ = indices;
+}
+
+
+bool ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
+	int objetc_id)
+{
+	LogInfo("========================== START PICKING =======================");
+#if 1
+	// 保存当前状态
+	GLint currentFBO;
+	glGetIntegerv(GL_FRAMEBUFFER, &currentFBO);
+	GLint currentReadBuffer;
+	glGetIntegerv(GL_READ_BUFFER, &currentReadBuffer);
+
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
+	glViewport(0, 0, m_Width, m_Height);
+
+	LogInfo("PickModel: width: {} height: {}", m_Width, m_Height);
+
+	// 清除缓冲
+	//glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	// 使用拾取着色器
+
+	color_pick_shader_->bind();
+	color_pick_shader_->setMat4("projection", projection);
+	color_pick_shader_->setMat4("view", view);
+	color_pick_shader_->setMat4("model", model);
+
+	// 设置拾取颜色
+	glm::vec3 pickColor = idToColor(objetc_id);
+	LogInfo("Object ID {} \t Pick RGB:{},{},{}", objetc_id, (float)pickColor.r, (float)pickColor.g, (float)pickColor.b);
+	color_pick_shader_->setVec3("pickColor", pickColor);
+
+	glBindVertexArray(default_render_vao_);
+	glDrawElements(GL_TRIANGLES, default_render_indices_.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	glFinish();
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_PickFBO);
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+	// 读取像素
+	unsigned char pixel[3] = { 0, 0, 0 };
+	glReadPixels(readX, readY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+
+	// 转换回ID
+	int pickedID = colorToId(glm::vec3(pixel[0], pixel[1], pixel[2]));
+
+	GLint srgb;
+	glGetIntegerv(GL_FRAMEBUFFER_SRGB, &srgb);
+	LogInfo("Picked ID {} \t Pixel RGB:{},{},{}", pickedID, (int)pixel[0], (int)pixel[1], (int)pixel[2]);
+	// === 关键修正7：正确恢复状态 ===
+	glReadBuffer(currentReadBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, m_Width, m_Height);
+
+	return pickedID == objetc_id;
+#endif
+}
+
+glm::vec3 ScreenRenderModel::idToColor(int id)
+{
+	float r = ((id >> 0) & 0xFF) / 255.0f;
+	float g = ((id >> 8) & 0xFF) / 255.0f;
+	float b = ((id >> 16) & 0xFF) / 255.0f;
+	return glm::vec3(r, g, b);
+}
+
+int ScreenRenderModel::colorToId(const glm::vec3& color)
+{
+	int r = int(color.r * 255.0f + 0.5f);
+	int g = int(color.g * 255.0f + 0.5f);
+	int b = int(color.b * 255.0f + 0.5f);
+	return (r / 255 | (g << 8) / 255 | (b << 16) / 255);
+}

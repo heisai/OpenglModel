@@ -16,12 +16,7 @@ public:
     explicit ParaConfigWidget(QWidget *parent = nullptr);
     ~ParaConfigWidget();
     void InitUI();
-    void InitConnect();
-private slots:
-    void CheckBoxSlot(bool checked);
-signals:
-    void CheckBoxSig(bool checked,EngineType type);
- 
+    void InitConnect(); 
 private:
     Ui::ParaConfigWidget *ui;
 };

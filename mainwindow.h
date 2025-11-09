@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void createModel(bool checked);
     void CreatEngine(bool checked,EngineType type);
     void ChangeLightColorSlot(QColor color);
 private:

@@ -15,11 +15,6 @@ Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, s
    
 }
 
-void Shader::UseProgram()
-{
-    glUseProgram(ShaderPromger);
-}
-
 void Shader::bind()
 {
     glUseProgram(ShaderPromger);
@@ -27,7 +22,7 @@ void Shader::bind()
 
 void Shader::release()
 {
-
+    glUseProgram(0);
 }
 
 void Shader::setBool(const std::string &name, bool value) 

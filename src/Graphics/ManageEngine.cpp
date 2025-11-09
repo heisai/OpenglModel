@@ -53,7 +53,7 @@ void ManageEngine::createToursEngine()
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
     auto vertices_data = std::make_unique<CreatModelData>();
     GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(light_shader);
-    basic_light_engine->SetModelData(vertices_data->GetModelDatas(EM_TOURSENGINE));
+    basic_light_engine->setModelData(vertices_data->GetModelDatas(EM_TOURSENGINE));
     basic_light_engine->SetViewSize(width_, height_);
     addEngine(generateUuid(), basic_light_engine, light_shader);
 }
@@ -63,7 +63,7 @@ void ManageEngine::createCylinderEngine()
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
     auto vertices_data = std::make_unique<CreatModelData>();
     GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(light_shader);
-    basic_light_engine->SetModelData(vertices_data->GetModelDatas(EM_CYLINDERENGINE));
+    basic_light_engine->setModelData(vertices_data->GetModelDatas(EM_CYLINDERENGINE));
     basic_light_engine->SetViewSize(width_, height_);
     addEngine(generateUuid(), basic_light_engine, light_shader);
 }
@@ -138,11 +138,6 @@ void ManageEngine::initializeGl()
         {
             pair.second->stencil_shader_->CreatProgram();
         }
-		if (pair.second && pair.second->screen_shader_)
-		{
-			pair.second->screen_shader_->CreatProgram();
-            pair.second->screen_shader_->SetInt("screenTexture", 0);
-		}
         if (pair.second)
             pair.second->InitBufferData();
     }
@@ -181,8 +176,14 @@ void ManageEngine::paintGl()
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     for (const auto& pair : map_graphic_)
     {
-        if (!pair.second) continue;
-        if (pair.second->m_shader) pair.second->m_shader->UseProgram();
+        if (!pair.second)
+        {
+            continue;
+        }
+        if (pair.second->m_shader)
+        {
+            pair.second->m_shader->bind();
+        }
         pair.second->Draw();
     }
 }
@@ -203,7 +204,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     {
         QString model_id = pair.first;
         MvpDataPtr mvp = pair.second->mvp_data_;
-        bool selected = pair.second->PickModel(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
+        bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
             LogInfo("¡¾Selected Model UUID:{}¡¿ ColorID: {}", model_id.toStdString(), object_id);

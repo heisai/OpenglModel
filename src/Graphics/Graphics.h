@@ -35,8 +35,9 @@ public:
     GraphicsEngine(std::shared_ptr<Shader> shader = nullptr, std::shared_ptr<Shader>m_Stencilshader = nullptr);
     virtual void Draw() = 0;
     virtual void InitBufferData() = 0;
-    virtual void SetModelData(const ModelDataInfo& datas);
-    virtual bool PickModel(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int xpos, int ypos,int objetc_id)
+    virtual void setModelData(const ModelDataInfo& datas) = 0;
+    virtual void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices) {};
+    virtual bool colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int xpos, int ypos,int objetc_id)
     {
         return false;
     }
@@ -46,28 +47,17 @@ public:
 
     /*virtual ~ GraphicsEngine();*/
 public:
-     unsigned int m_VBO, m_VAO, m_EBO;
-     unsigned int m_Texture, m_Texture1, m_Texture2;
-     unsigned int m_PickFBO;
-     unsigned int m_PickTexture;
-     unsigned int m_PickTexture1;
-     unsigned int m_PickRBO;
-
-     unsigned int quadvao_;
-     unsigned int quadvbo_;
-
-
      std::shared_ptr<Shader>m_shader;
      std::shared_ptr<Shader>m_PickShader;
      std::shared_ptr<Shader>stencil_shader_;
-     std::shared_ptr<Shader>screen_shader_;
-	 std::vector<float> m_Vertices;
-	 std::vector<unsigned int>m_Indices;
+     
+
+
      int m_Width, m_Height;
 
 
      MvpDataPtr mvp_data_;
-	 bool selected_ = false;
+
 
 
 };
