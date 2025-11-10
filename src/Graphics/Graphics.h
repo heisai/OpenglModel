@@ -59,7 +59,7 @@ public:
      MvpDataPtr mvp_data_;
 
 
-
+     bool selected_ = false;
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;
 

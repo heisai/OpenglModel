@@ -215,7 +215,6 @@ bool ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 pro
 	glReadBuffer(currentReadBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, m_Width, m_Height);
-
 	return pickedID == objetc_id;
 #endif
 }

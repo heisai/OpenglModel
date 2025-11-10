@@ -22,5 +22,5 @@ private:
 	unsigned int m_VBO, m_VAO, m_EBO;
 	std::vector<float> m_Vertices;
 	std::vector<unsigned int>m_Indices;
-    bool selected_ = false;
+
 };
