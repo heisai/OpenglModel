@@ -9,7 +9,7 @@
 
 
 #include"Shader.h"
-#include"../ModelDatas/ModelDataInterFace.h"
+#include"../ModelDatas/CreatModelData.h"
 #include<QOpenGLFunctions_4_5_Core>
 
 /*
@@ -33,10 +33,10 @@ using MvpDataPtr = std::shared_ptr<MvpData>;
 class GraphicsEngine:public QOpenGLFunctions_4_5_Core
 {
 public:
-    GraphicsEngine(std::shared_ptr<Shader> shader = nullptr, std::shared_ptr<Shader>m_Stencilshader = nullptr);
+    GraphicsEngine(EngineType type,std::shared_ptr<Shader> shader = nullptr, std::shared_ptr<Shader>m_Stencilshader = nullptr);
     virtual void Draw() = 0;
     virtual void InitBufferData() = 0;
-    virtual void setModelData(const ModelDataInfo& datas) = 0;
+    
     virtual void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices) {};
     virtual bool colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int xpos, int ypos,int objetc_id)
     {
@@ -46,7 +46,17 @@ public:
     void UseShader();
     void setChecked(bool flag);
 
+
+    void setViewData(const glm::mat4& view_);
+    void setModelData(const glm::mat4& model_);
+    void setProjectionData(const glm::mat4& projection_);
+    void setTranlstorPosition(const QVector2D& tranlstor_position_);
+    MvpDataPtr getMvpData();
+  
+
     /*virtual ~ GraphicsEngine();*/
+private:
+    void setModelInfo(const ModelDataInfo& model_datas);
 public:
      std::shared_ptr<Shader>m_shader;
      std::shared_ptr<Shader>m_PickShader;
@@ -54,13 +64,13 @@ public:
      
 
 
-     int m_Width, m_Height;
-
-
-     MvpDataPtr mvp_data_;
-
 
      bool selected_ = false;
+protected:
+	 std::vector<float> vertices_datas; //顶点数据
+	 std::vector<unsigned int>indices_datas;    
+	 int m_Width, m_Height;
+	 MvpDataPtr mvp_data_;
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;
 

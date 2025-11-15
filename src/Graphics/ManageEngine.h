@@ -21,9 +21,9 @@ public:
     // 创建模型
     void createModel(EngineType type);
     void createGridEngine();
-    void createCubeEngine();
-    void createToursEngine();
-    void createCylinderEngine();
+    GraphicsEnginePtr createCubeEngine();
+    GraphicsEnginePtr createToursEngine();
+    GraphicsEnginePtr createCylinderEngine();
     void createLoadModelEngine();
     void createMixEngine();
 
@@ -40,7 +40,7 @@ public:
     void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
 
 protected:
-    void addEngine(const QString& uuid, const GraphicsEnginePtr& graphics, const ShaderPtr& shader);
+    void addEngine( const GraphicsEnginePtr& graphics);
     QString generateUuid();
 
 public:

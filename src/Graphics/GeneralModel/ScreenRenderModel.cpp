@@ -1,6 +1,6 @@
 #include"ScreenRenderModel.h"
-ScreenRenderModel::ScreenRenderModel(std::shared_ptr<Shader> shader /*= nullptr*/):
-    GraphicsEngine(shader)
+ScreenRenderModel::ScreenRenderModel(EngineType type,std::shared_ptr<Shader> shader /*= nullptr*/):
+    GraphicsEngine(type,shader)
 {
 	screen_shader_ = std::make_unique<Shader>("screen_vertex.vs", "screen_fragment.fs", "GeneralModel");
 	color_pick_shader_ = std::make_unique<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
@@ -123,12 +123,6 @@ void ScreenRenderModel::InitBufferData()
 
 	std::cout << "FBO initialization completed" << std::endl;
 }
-
-void ScreenRenderModel::setModelData(const ModelDataInfo& datas)
-{
-
-}
-
 void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices)
 {
 	 default_render_vao_ = vao;

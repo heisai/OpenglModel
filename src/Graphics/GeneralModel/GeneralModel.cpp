@@ -1,13 +1,13 @@
 #include"GeneralModel.h"
-GeneralModel::GeneralModel(std::shared_ptr<Shader> shader /*= nullptr*/):
-    GraphicsEngine(shader),
+GeneralModel::GeneralModel(EngineType type, std::shared_ptr<Shader> shader /*= nullptr*/):
+    GraphicsEngine(type,shader),
 	m_RayTrack(false)
 {
 
 	// 使用拾取着色器
 	//m_PickShader = std::make_shared<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
-	screen_render_model_ = std::make_unique<ScreenRenderModel>(shader);
+	screen_render_model_ = std::make_unique<ScreenRenderModel>(type,shader);
 
 }
 
@@ -44,7 +44,7 @@ void GeneralModel::Draw()
 	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	m_shader->setFloat("material.shininess", 32.0f);
 	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indices_datas.size(), GL_UNSIGNED_INT, 0);
 	if (selected_)
 	{
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -56,7 +56,7 @@ void GeneralModel::Draw()
 		stencil_shader_->setMat4("projection", mvp_data_->projection_);
 		stencil_shader_->setMat4("model", mvp_data_->model_);
 		glBindVertexArray(m_VAO);
-		glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indices_datas.size(), GL_UNSIGNED_INT, 0);
 
 		
 	}
@@ -103,12 +103,12 @@ void GeneralModel::InitBufferData()
 	//把顶点数组复制到缓冲中供OpenGL使用
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_datas.size() * sizeof(float), vertices_datas.data(), GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, &m_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(unsigned int), m_Indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_datas.size() * sizeof(unsigned int), indices_datas.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -117,16 +117,10 @@ void GeneralModel::InitBufferData()
 	glEnableVertexAttribArray(1);
 
 	stencil_shader_->CreatProgram();
-	screen_render_model_->setScreenRenderVertexData(m_VAO, m_Indices);
+	screen_render_model_->setScreenRenderVertexData(m_VAO, indices_datas);
 	screen_render_model_->SetViewSize(m_Width, m_Height);
 	screen_render_model_->InitBufferData();
 	
-}
-
-void GeneralModel::setModelData(const ModelDataInfo& datas)
-{
-	m_Vertices = datas.m_Vertices;
-	m_Indices = datas.m_Indices;
 }
 
 void GeneralModel::SetLightColor(glm::vec3 lightcolor)

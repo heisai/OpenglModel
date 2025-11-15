@@ -4,10 +4,9 @@
 class GeneralModel : public GraphicsEngine
 {
 public:
-	explicit GeneralModel(std::shared_ptr<Shader> shader = nullptr);
+	explicit GeneralModel(EngineType type, std::shared_ptr<Shader> shader = nullptr);
 	void Draw() override;
 	void InitBufferData() override;
-	void setModelData(const ModelDataInfo& datas) override;
     void SetLightColor(glm::vec3 lightcolor);
     void SetObjectColor(glm::vec3 objectcolor);
     void DrawStencil(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
@@ -20,7 +19,8 @@ private:
 
     std::unique_ptr<ScreenRenderModel>screen_render_model_;
 	unsigned int m_VBO, m_VAO, m_EBO;
-	std::vector<float> m_Vertices;
-	std::vector<unsigned int>m_Indices;
+	std::shared_ptr<Shader>base_shader_;
+
+
 
 };

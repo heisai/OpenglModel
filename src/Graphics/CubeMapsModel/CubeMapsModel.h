@@ -5,10 +5,9 @@
 class CubeMapsModel : public GraphicsEngine
 {
 public:
-	explicit CubeMapsModel(std::shared_ptr<Shader> shader = nullptr);
+	explicit CubeMapsModel(EngineType type,std::shared_ptr<Shader> shader = nullptr);
 	void Draw() override;
 	void InitBufferData() override;   
-	void setModelData(const ModelDataInfo& datas) override;
 private:
 	unsigned int loadCubemap(std::vector<std::string> faces);
 	std::vector<std::string> faces = 

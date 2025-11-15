@@ -2,8 +2,8 @@
 ModelDataInfo CylinderVerticesData::GetModelDatas()
 {
     ModelDataInfo info;
-    info.m_Vertices = GenerateCylinderVertices(0.8f, 2.5f, 36);
-    info.m_Indices = GenerateCylinderIndices(36);
+    info.vertices_datas = GenerateCylinderVertices(0.8f, 2.5f, 36);
+    info.indices_datas = GenerateCylinderIndices(36);
     return info;
 }
 

@@ -14,26 +14,30 @@ void ManageEngine::setViewSize(int width, int height)
 
 void ManageEngine::createModel(EngineType type)
 {
+
+    GraphicsEnginePtr engine_ptr = nullptr;
     switch (type)
     {
     case EM_GRIDENGINE:
-        createGridEngine();
-        break;
+        //createGridEngine();
+        //break;
     case EM_CUBEENGINE:
-        createCubeEngine();
+        engine_ptr = createCubeEngine();
         break;
     case EM_TOURSENGINE:
-        createToursEngine();
+        engine_ptr = createToursEngine();
         break;
     case EM_MODELENGINE:
-        createLoadModelEngine();
-        break;
+        //createLoadModelEngine();
+        //break;
     case EM_CYLINDERENGINE:
-        createCylinderEngine();
+        engine_ptr = createCylinderEngine();
         break;
     default:
         break;
     }
+
+    addEngine(engine_ptr);
 }
 
 void ManageEngine::createGridEngine()
@@ -43,7 +47,7 @@ void ManageEngine::createGridEngine()
     addEngine(generateUuid(), graphics, shader);*/
 }
 
-void ManageEngine::createCubeEngine()
+GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
 	//ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
 	//GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(light_shader);
@@ -52,29 +56,25 @@ void ManageEngine::createCubeEngine()
 
 
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(light_shader);
+	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_CUBEENGINE,light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
-	addEngine(generateUuid(), basic_light_engine, light_shader);
+    return basic_light_engine;
 }
 
-void ManageEngine::createToursEngine()
+GraphicsEnginePtr ManageEngine::createToursEngine()
 {
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-    auto vertices_data = std::make_unique<CreatModelData>();
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(light_shader);
-    basic_light_engine->setModelData(vertices_data->GetModelDatas(EM_TOURSENGINE));
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_TOURSENGINE,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
-    addEngine(generateUuid(), basic_light_engine, light_shader);
+    return basic_light_engine;
 }
 
-void ManageEngine::createCylinderEngine()
+GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-    auto vertices_data = std::make_unique<CreatModelData>();
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(light_shader);
-    basic_light_engine->setModelData(vertices_data->GetModelDatas(EM_CYLINDERENGINE));
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_CYLINDERENGINE,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
-    addEngine(generateUuid(), basic_light_engine, light_shader);
+    return basic_light_engine;
 }
 
 void ManageEngine::createLoadModelEngine()
@@ -90,25 +90,24 @@ void ManageEngine::createMixEngine()
     //GraphicsEnginePtr mix_engine = std::make_shared<MixEngine>(model_shader);
     //addEngine(generateUuid(), mix_engine, model_shader);
 }
-
-void ManageEngine::addEngine(const QString& uuid, const GraphicsEnginePtr& graphics, const ShaderPtr& shader)
+void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 {
-    if (map_graphic_.find(uuid) == map_graphic_.end())
-    {
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        //graphics->mvp_data_->view_ = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
-        graphics->mvp_data_->view_ = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
-        graphics->mvp_data_->model_ = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-        graphics->mvp_data_->projection_ = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
-        map_graphic_.emplace(uuid, graphics);
-    }
+    QString uuid = generateUuid();
+	if (map_graphic_.find(uuid) == map_graphic_.end())
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::mat4(1.0f);
+		graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f)));
+		graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
+		graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		map_graphic_.emplace(uuid, graphics);
+	}
 
-    for (const auto& pair_value : map_graphic_)
-    {
-        LogInfo("EngineType:{}", pair_value.first.toStdString());
-    }
+	for (const auto& pair_value : map_graphic_)
+	{
+		LogInfo("EngineType:{}", pair_value.first.toStdString());
+	}
 }
 
 QString ManageEngine::generateUuid()
@@ -165,10 +164,10 @@ void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::ve
             projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
             view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
             model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
-            map_graphic_[key]->mvp_data_->view_ = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-            map_graphic_[key]->mvp_data_->model_ = model * model_old;
-            map_graphic_[key]->mvp_data_->projection_ = projection;
-            map_graphic_[key]->mvp_data_->tranlstor_position_ = QVector2D(translate.x, -translate.y);
+            map_graphic_[key]->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
+            map_graphic_[key]->setModelData(model * model_old);
+            map_graphic_[key]->setProjectionData(projection);
+            map_graphic_[key]->setTranlstorPosition(QVector2D(translate.x, -translate.y));
         }
         
     }
@@ -208,7 +207,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     for (const auto& pair : map_graphic_)
     {
         QString model_id = pair.first;
-        MvpDataPtr mvp = pair.second->mvp_data_;
+        MvpDataPtr mvp = pair.second->getMvpData();
         bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {

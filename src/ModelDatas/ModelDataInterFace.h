@@ -49,9 +49,8 @@ enum EngineType
 
 struct ModelDataInfo
 {
-
-    std::vector<float> m_Vertices;
-    std::vector<unsigned int>m_Indices;
+	std::vector<float> vertices_datas; //¶¥µãÊý¾Ý
+	std::vector<unsigned int>indices_datas;
 };
 
 class ModelDataInterFace{

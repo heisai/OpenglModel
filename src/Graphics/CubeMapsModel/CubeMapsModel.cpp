@@ -1,8 +1,8 @@
 #include"CubeMapsModel.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include"../stb_image.h"
-CubeMapsModel::CubeMapsModel(std::shared_ptr<Shader> shader /*= nullptr*/):
-    GraphicsEngine(shader)
+CubeMapsModel::CubeMapsModel(EngineType type, std::shared_ptr<Shader> shader /*= nullptr*/):
+    GraphicsEngine(type,shader)
 {
 	// 使用拾取着色器
 
@@ -54,10 +54,7 @@ void CubeMapsModel::InitBufferData()
 	m_shader->SetInt("skybox", 0);
 }
 
-void CubeMapsModel::setModelData(const ModelDataInfo& datas)
-{
 
-}
 
 unsigned int CubeMapsModel::loadCubemap(std::vector<std::string> faces)
 {

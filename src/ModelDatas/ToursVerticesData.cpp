@@ -3,8 +3,8 @@
 ModelDataInfo ToursVerticesData::GetModelDatas()
 {
     ModelDataInfo info;
-    info.m_Vertices = GenerateTorusVertices(1.0f, 0.4f, 32, 16);
-    info.m_Indices = GenerateTorusIndices(32, 16);
+    info.vertices_datas = GenerateTorusVertices(1.0f, 0.4f, 32, 16);
+    info.indices_datas = GenerateTorusIndices(32, 16);
     return info;
 }
 

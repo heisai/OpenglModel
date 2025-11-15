@@ -3,10 +3,9 @@
 class ScreenRenderModel : public GraphicsEngine
 {
 public:
-	explicit ScreenRenderModel(std::shared_ptr<Shader> shader = nullptr);
+	explicit ScreenRenderModel(EngineType type,std::shared_ptr<Shader> shader = nullptr);
 	void Draw() override;
 	void InitBufferData() override;
-	void setModelData(const ModelDataInfo& datas) override;
 	void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices) override;
 
 
