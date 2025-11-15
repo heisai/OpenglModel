@@ -38,27 +38,7 @@ void ScreenRenderModel::Draw()
 
 
 	m_shader->bind();
-	//m_shader->setMat4("view", mvp_data_->view_);
-	//m_shader->setMat4("projection", mvp_data_->projection_);
-	//m_shader->setMat4("model", mvp_data_->model_);
-
-
-	////设置光源属性
-	//m_shader->setVec3("viewPos", mvp_data_->view_[3]);
-	//m_shader->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
-	//m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	//m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	//m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	////设置材质属性
-	//m_shader->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
-	//m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
-	//m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-	//m_shader->setFloat("material.shininess", 32.0f);
-
-
 	//设置顶点属性指针
-
-
 	glBindVertexArray(default_render_vao_);
 	glDrawElements(GL_TRIANGLES, default_render_indices_.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

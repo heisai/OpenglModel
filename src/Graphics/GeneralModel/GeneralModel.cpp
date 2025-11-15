@@ -15,17 +15,17 @@ GeneralModel::GeneralModel(std::shared_ptr<Shader> shader /*= nullptr*/):
 void GeneralModel::Draw()
 {
 
-	glViewport(0, 0, m_Width, m_Height);
+	/*glViewport(0, 0, m_Width, m_Height);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDepthFunc(GL_LESS);*/
+	/*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 	
-	//if (selected_)
-	//{
-	//	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	//	glStencilMask(0xFF);
-	//}
+	if (selected_)
+	{
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+	}
 	m_shader->bind();
 	m_shader->setMat4("view", mvp_data_->view_);
 	m_shader->setMat4("projection", mvp_data_->projection_);
@@ -43,36 +43,57 @@ void GeneralModel::Draw()
 	m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
 	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	m_shader->setFloat("material.shininess", 32.0f);
-	/*if (selected_)
+	glBindVertexArray(m_VAO);
+	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+	if (selected_)
 	{
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
 		stencil_shader_->bind();
 		float scale = 1.025f;
 		stencil_shader_->setMat4("view", mvp_data_->view_);
 		stencil_shader_->setMat4("projection", mvp_data_->projection_);
 		stencil_shader_->setMat4("model", mvp_data_->model_);
-	}*/
-	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+		glBindVertexArray(m_VAO);
+		glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+
+		
+	}
+
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glEnable(GL_DEPTH_TEST);
 	
 
-	screen_render_model_->Draw();
+	//screen_render_model_->Draw();
 
 }
 
 void GeneralModel::InitBufferData()
 {
 	
+	if (m_shader)
+	{
+		m_shader->CreatProgram();
+	}
+	if (m_PickShader)
+	{
+		m_PickShader->CreatProgram();
+	}
+	if (stencil_shader_)
+	{
+		stencil_shader_->CreatProgram();
+	}
 
 
-
-	//glEnable(GL_DEPTH_TEST);
-	////glDepthFunc(GL_LESS);
-	/*glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);*/
-	////glEnable(GL_MULTISAMPLE);
-	////glHint(GL_LINE_SMOOTH, GL_NICEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glEnable(GL_MULTISAMPLE);
+	glHint(GL_LINE_SMOOTH, GL_NICEST);
 
 	// 顶点数组对象
 	glGenVertexArrays(1, &m_VAO);
@@ -95,11 +116,7 @@ void GeneralModel::InitBufferData()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	stencil_shader_->CreatProgram();
-
 	screen_render_model_->setScreenRenderVertexData(m_VAO, m_Indices);
 	screen_render_model_->SetViewSize(m_Width, m_Height);
 	screen_render_model_->InitBufferData();

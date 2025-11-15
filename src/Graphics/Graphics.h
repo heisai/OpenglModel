@@ -6,11 +6,12 @@
 #include<memory>
 #include<tuple>
 #include<QVector2D>
-// // #define STB_IMAGE_IMPLEMENTATION
+
 
 #include"Shader.h"
 #include"../ModelDatas/ModelDataInterFace.h"
 #include<QOpenGLFunctions_4_5_Core>
+
 /*
     1: 图形引擎基类
     2: Draw: 采用多态机制 运行时绑定

@@ -45,7 +45,16 @@ void ManageEngine::createGridEngine()
 
 void ManageEngine::createCubeEngine()
 {
+	//ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
+	//GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(light_shader);
+	//basic_light_engine->SetViewSize(width_, height_);
+	//addEngine(generateUuid(), basic_light_engine, light_shader);
 
+
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	addEngine(generateUuid(), basic_light_engine, light_shader);
 }
 
 void ManageEngine::createToursEngine()
@@ -89,6 +98,7 @@ void ManageEngine::addEngine(const QString& uuid, const GraphicsEnginePtr& graph
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
+        //graphics->mvp_data_->view_ = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
         graphics->mvp_data_->view_ = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
         graphics->mvp_data_->model_ = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f));
         graphics->mvp_data_->projection_ = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
@@ -130,16 +140,11 @@ void ManageEngine::initializeGl()
 {
     for (const auto& pair : map_graphic_)
     {
-        if (pair.second && pair.second->m_shader)
-            pair.second->m_shader->CreatProgram();
-        if (pair.second && pair.second->m_PickShader)
-            pair.second->m_PickShader->CreatProgram();
-        if (pair.second && pair.second->stencil_shader_)
-        {
-            pair.second->stencil_shader_->CreatProgram();
-        }
         if (pair.second)
+        {
             pair.second->InitBufferData();
+        }
+
     }
 }
 
