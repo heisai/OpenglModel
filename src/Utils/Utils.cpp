@@ -24,20 +24,6 @@ void Utils::CreatShaderProgram(const std::string &vs, const std::string &fs)
     std::string fs_text = ReadFile(fs);
 }
 
-std::string Utils::GlslAbsolute(const std::string& filename, const std::string& dirname)
-{
-    std::string current_dir = fs::current_path().string();
-    const size_t last_slash_idx = current_dir.rfind('\\');
-    if (std::string::npos != last_slash_idx)
-    {
-        current_dir = current_dir.substr(0, last_slash_idx);
-    }
-    current_dir.append("\\src\\Graphics\\").append(dirname).append("\\").append(filename);
-    std::cout << "File_Path:" << current_dir << std::endl;
-    return current_dir;
-}
-
-
 
 Utils::MaterialAttrib::MaterialAttrib(const std::string& attrib):
     m_MaterialName(attrib)

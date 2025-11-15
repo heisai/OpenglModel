@@ -4,6 +4,8 @@
 #include <QFont>
 #include <QSurfaceFormat>
 #include <QTextCodec>
+
+
 int main(int argc, char *argv[])
 {
 
@@ -22,9 +24,7 @@ int main(int argc, char *argv[])
 	QSurfaceFormat::setDefaultFormat(format);  // 应用到所有 QOpenGLWidget
     QApplication a(argc, argv);
     InitLogging();
-
 	QFont font("Microsoft YaHei", 10); // 设置字体为 微软雅黑，字号为 10
-	
     MainWindow w;
     w.show();
     QFont f;

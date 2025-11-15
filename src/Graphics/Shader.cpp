@@ -5,8 +5,8 @@ Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, s
 {
    
     initializeOpenGLFunctions();
-     vs_sourcecode = Utils::ReadFile(Utils::GlslAbsolute(vs_filename, dirname));
-     fs_sourcecode = Utils::ReadFile(Utils::GlslAbsolute(fs_filename, dirname));
+     vs_sourcecode = Utils::ReadFile(Utils::joinPaths(dirname, vs_filename));
+     fs_sourcecode = Utils::ReadFile(Utils::joinPaths( dirname, fs_filename));
     vShaderCode = vs_sourcecode.c_str();
     gShaderCode = fs_sourcecode.c_str();
     std::cout<<vs_sourcecode<<std::endl;

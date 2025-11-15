@@ -12,12 +12,12 @@ private:
 	unsigned int loadCubemap(std::vector<std::string> faces);
 	std::vector<std::string> faces = 
 	{
-		Utils::GlslAbsolute("right.jpg","CubeMapsModel\\skybox"),
-		Utils::GlslAbsolute("left.jpg","CubeMapsModel\\skybox"),
-		Utils::GlslAbsolute("top.jpg","CubeMapsModel\\skybox"),
-		Utils::GlslAbsolute("bottom.jpg","CubeMapsModel\\skybox"),
-		Utils::GlslAbsolute("front.jpg","CubeMapsModel\\skybox"),
-		Utils::GlslAbsolute("back.jpg","CubeMapsModel\\skybox"),
+		Utils::joinPaths("CubeMapsModel","skybox","right.jpg"),
+		Utils::joinPaths("CubeMapsModel","skybox","left.jpg"),
+		Utils::joinPaths("CubeMapsModel","skybox","top.jpg"),
+		Utils::joinPaths("CubeMapsModel","skybox","bottom.jpg"),
+		Utils::joinPaths("CubeMapsModel","skybox","front.jpg"),
+		Utils::joinPaths("CubeMapsModel","skybox","back.jpg"),
 	};
 	std::vector<float> cubeVertices = {
   -1.0f,  1.0f, -1.0f,
