@@ -2,6 +2,7 @@
 #define CREATMODELDATAIMPL_H
 #include"CylinderVerticesData.h"
 #include"ToursVerticesData.h"
+#include"CubeVerticesData.h"
 class CreatModelDataImpl
 {
 public:

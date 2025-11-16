@@ -16,6 +16,7 @@
     1: 图形引擎基类
     2: Draw: 采用多态机制 运行时绑定
 */
+//世界空间坐标
 struct MvpData
 {
     glm::mat4 model_ = glm::mat4(1.0f);
@@ -28,6 +29,16 @@ struct MvpData
     QVector2D tranlstor_position_temp_;
 };
 using MvpDataPtr = std::shared_ptr<MvpData>;
+//网格基础单元
+struct Mesh
+{
+    unsigned int vao_;
+    unsigned int vbo_;
+    unsigned int ebo_;
+	std::vector<float> vertices_datas; //顶点数据
+	std::vector<unsigned int>indices_datas;
+};
+using MeshPtr = std::shared_ptr<Mesh>;
 
 
 class GraphicsEngine:public QOpenGLFunctions_4_5_Core
@@ -52,7 +63,7 @@ public:
     void setProjectionData(const glm::mat4& projection_);
     void setTranlstorPosition(const QVector2D& tranlstor_position_);
     MvpDataPtr getMvpData();
-  
+    MeshPtr getMesh();
 
     /*virtual ~ GraphicsEngine();*/
 private:
@@ -67,10 +78,10 @@ public:
 
      bool selected_ = false;
 protected:
-	 std::vector<float> vertices_datas; //顶点数据
-	 std::vector<unsigned int>indices_datas;    
+  
 	 int m_Width, m_Height;
 	 MvpDataPtr mvp_data_;
+     MeshPtr mesh_data_;
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;
 

@@ -18,7 +18,6 @@ private:
     glm::vec3 m_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
     std::unique_ptr<ScreenRenderModel>screen_render_model_;
-	unsigned int m_VBO, m_VAO, m_EBO;
 	std::shared_ptr<Shader>base_shader_;
 
 

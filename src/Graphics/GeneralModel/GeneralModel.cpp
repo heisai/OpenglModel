@@ -7,7 +7,7 @@ GeneralModel::GeneralModel(EngineType type, std::shared_ptr<Shader> shader /*= n
 	// 使用拾取着色器
 	//m_PickShader = std::make_shared<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
-	screen_render_model_ = std::make_unique<ScreenRenderModel>(type,shader);
+	//screen_render_model_ = std::make_unique<ScreenRenderModel>(type,shader);
 
 }
 
@@ -21,11 +21,13 @@ void GeneralModel::Draw()
 	/*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 	
-	if (selected_)
+	/*if (selected_)
 	{
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
-	}
+	}*/
+
+
 	m_shader->bind();
 	m_shader->setMat4("view", mvp_data_->view_);
 	m_shader->setMat4("projection", mvp_data_->projection_);
@@ -43,9 +45,9 @@ void GeneralModel::Draw()
 	m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
 	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	m_shader->setFloat("material.shininess", 32.0f);
-	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, indices_datas.size(), GL_UNSIGNED_INT, 0);
-	if (selected_)
+	glBindVertexArray(mesh_data_->vao_);
+	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
+	/*if (selected_)
 	{
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
@@ -58,12 +60,12 @@ void GeneralModel::Draw()
 		glBindVertexArray(m_VAO);
 		glDrawElements(GL_TRIANGLES, indices_datas.size(), GL_UNSIGNED_INT, 0);
 
-		
-	}
 
-	glStencilMask(0xFF);
+	}*/
+
+	/*glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);*/
 	
 
 	//screen_render_model_->Draw();
@@ -90,25 +92,25 @@ void GeneralModel::InitBufferData()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glEnable(GL_MULTISAMPLE);
 	glHint(GL_LINE_SMOOTH, GL_NICEST);
 
 	// 顶点数组对象
-	glGenVertexArrays(1, &m_VAO);
+	glGenVertexArrays(1, &mesh_data_->vao_);
 	//绑定VAO
-	glBindVertexArray(m_VAO);
+	glBindVertexArray(mesh_data_->vao_);
 
 	//把顶点数组复制到缓冲中供OpenGL使用
-	glGenBuffers(1, &m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices_datas.size() * sizeof(float), vertices_datas.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &mesh_data_->vbo_);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
 
 
-	glGenBuffers(1, &m_EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_datas.size() * sizeof(unsigned int), indices_datas.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &mesh_data_->ebo_);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->indices_datas.size() * sizeof(unsigned int), mesh_data_->indices_datas.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -116,10 +118,10 @@ void GeneralModel::InitBufferData()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	stencil_shader_->CreatProgram();
-	screen_render_model_->setScreenRenderVertexData(m_VAO, indices_datas);
-	screen_render_model_->SetViewSize(m_Width, m_Height);
-	screen_render_model_->InitBufferData();
+	//stencil_shader_->CreatProgram();
+	//screen_render_model_->setScreenRenderVertexData(m_VAO, indices_datas);
+	//screen_render_model_->SetViewSize(m_Width, m_Height);
+	//screen_render_model_->InitBufferData();
 	
 }
 
@@ -160,7 +162,7 @@ bool GeneralModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projecti
 
 	
 
-	selected_ = screen_render_model_->colorPick(model, view, projection, readX, readY, objetc_id);
+	//selected_ = screen_render_model_->colorPick(model, view, projection, readX, readY, objetc_id);
 	return selected_;
 	LogInfo( "========================== START PICKING =======================");
 }

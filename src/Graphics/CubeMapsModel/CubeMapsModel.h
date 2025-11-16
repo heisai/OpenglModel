@@ -20,7 +20,7 @@ private:
 		Utils::joinPaths("CubeMapsModel","skybox","back.jpg"),
 	};
 	std::vector<float> cubeVertices = {
-  -1.0f,  1.0f, -1.0f,
+		 -1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f,
 		 1.0f, -1.0f, -1.0f,
 		 1.0f, -1.0f, -1.0f,

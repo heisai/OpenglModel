@@ -7,14 +7,14 @@ GraphicsEngine::GraphicsEngine(EngineType type,std::shared_ptr<Shader> shader /*
 {
 	initializeOpenGLFunctions();
 	mvp_data_ = std::make_shared<MvpData>();
-
+	mesh_data_ = std::make_shared<Mesh>();
 	setModelInfo(CreatModelData().GetModelDatas(type));
 }
 
 void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
 {
-	vertices_datas = model_datas.vertices_datas;
-	indices_datas = model_datas.indices_datas;
+	mesh_data_->vertices_datas = model_datas.vertices_datas;
+	mesh_data_->indices_datas = model_datas.indices_datas;
 }
 
 void GraphicsEngine::setModelData(const glm::mat4& model_)
@@ -34,6 +34,13 @@ void GraphicsEngine::setTranlstorPosition(const QVector2D& tranlstor_position_)
 MvpDataPtr GraphicsEngine::getMvpData()
 {
 		return mvp_data_;
+}
+
+
+
+MeshPtr GraphicsEngine::getMesh()
+{
+	return mesh_data_;
 }
 
 void GraphicsEngine::SetViewSize(int width,int height)

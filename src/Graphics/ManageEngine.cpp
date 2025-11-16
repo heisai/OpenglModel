@@ -1,7 +1,16 @@
 #include "ManageEngine.h"
 
-ManageEngine::ManageEngine()
+ManageEngine::ManageEngine():
+    screen_render_model_(nullptr)
 {
+
+	// 注册引擎创建函数
+    map_graphicengine_createfunc_.insert({ EM_CUBEENGINE, std::bind(&ManageEngine::createCubeEngine, this) });
+    map_graphicengine_createfunc_.insert({ EM_TOURSENGINE, std::bind(&ManageEngine::createToursEngine, this) });
+    map_graphicengine_createfunc_.insert({ EM_CYLINDERENGINE, std::bind(&ManageEngine::createCylinderEngine, this) });
+    map_graphicengine_createfunc_.insert({ EM_SKYBOXENGINE, std::bind(&ManageEngine::createSkyBoxEngine, this) });
+
+
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -10,34 +19,26 @@ void ManageEngine::setViewSize(int width, int height)
     height_ = height;
     std::for_each(map_graphic_.begin(), map_graphic_.end(), [width, height](auto pair) {pair.second->SetViewSize(width, height); });
 
+	if (screen_render_model_)
+	{
+        screen_render_model_->SetViewSize(width, height);
+	}
 }
 
 void ManageEngine::createModel(EngineType type)
 {
 
-    GraphicsEnginePtr engine_ptr = nullptr;
-    switch (type)
-    {
-    case EM_GRIDENGINE:
-        //createGridEngine();
-        //break;
-    case EM_CUBEENGINE:
-        engine_ptr = createCubeEngine();
-        break;
-    case EM_TOURSENGINE:
-        engine_ptr = createToursEngine();
-        break;
-    case EM_MODELENGINE:
-        //createLoadModelEngine();
-        //break;
-    case EM_CYLINDERENGINE:
-        engine_ptr = createCylinderEngine();
-        break;
-    default:
-        break;
-    }
-
-    addEngine(engine_ptr);
+   auto iter = map_graphicengine_createfunc_.find(type);
+   if (iter != map_graphicengine_createfunc_.end())
+   {
+       GraphicsEnginePtr ptr = iter->second();
+       addEngine(ptr);
+   }
+   if (screen_render_model_ == nullptr)
+   {
+	   screen_render_model_ = std::make_unique<ScreenRenderModel>(EM_MIXENGINE);
+	   screen_render_model_->SetViewSize(width_, height_);
+   }
 }
 
 void ManageEngine::createGridEngine()
@@ -54,11 +55,11 @@ GraphicsEnginePtr ManageEngine::createCubeEngine()
 	//basic_light_engine->SetViewSize(width_, height_);
 	//addEngine(generateUuid(), basic_light_engine, light_shader);
 
-
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_CUBEENGINE,light_shader);
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_CUBEENGINE, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
-    return basic_light_engine;
+	return basic_light_engine;
+
 }
 
 GraphicsEnginePtr ManageEngine::createToursEngine()
@@ -75,6 +76,14 @@ GraphicsEnginePtr ManageEngine::createCylinderEngine()
     GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_CYLINDERENGINE,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
     return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
+{
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_CUBEENGINE, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
 }
 
 void ManageEngine::createLoadModelEngine()
@@ -137,14 +146,19 @@ void ManageEngine::checkBoxTypeSlot(const QString& type, bool check)
 
 void ManageEngine::initializeGl()
 {
-    for (const auto& pair : map_graphic_)
-    {
-        if (pair.second)
-        {
-            pair.second->InitBufferData();
-        }
 
+    for (const auto& pair : map_graphic_)
+	{
+        GraphicsEnginePtr engine_ptr = pair.second;
+        if (engine_ptr)
+        {
+            engine_ptr->InitBufferData();
+        }
     }
+	if (screen_render_model_ )
+	{
+        screen_render_model_->InitBufferData();
+	}
 }
 
 
@@ -204,13 +218,19 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
 
 
     int object_id = 1;
-    for (const auto& pair : map_graphic_)
+    for (auto& onepair_graphic_ : map_graphic_)
     {
-        QString model_id = pair.first;
-        MvpDataPtr mvp = pair.second->getMvpData();
-        bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
+        QString model_id = onepair_graphic_.first;
+        MvpDataPtr mvp = onepair_graphic_.second->getMvpData();
+        //bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
+
+
+        MeshPtr mesh = onepair_graphic_.second->getMesh();
+        screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas);
+        bool selected  = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
+            onepair_graphic_.second ->setChecked(selected);
             LogInfo("【Selected Model UUID:{}】 ColorID: {}", model_id.toStdString(), object_id);
             mvp_data = mvp;
             break;

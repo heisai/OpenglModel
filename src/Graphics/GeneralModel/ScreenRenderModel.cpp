@@ -123,6 +123,7 @@ void ScreenRenderModel::InitBufferData()
 
 	std::cout << "FBO initialization completed" << std::endl;
 }
+
 void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices)
 {
 	 default_render_vao_ = vao;

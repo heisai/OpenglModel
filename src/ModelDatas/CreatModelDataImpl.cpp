@@ -13,6 +13,8 @@ ModelDataInfo CreatModelDataImpl::GetModelDatas(EngineType type)
     case EM_CYLINDERENGINE:
         model_data = move(std::make_unique<ToursVerticesData>());
         break;
+    case EM_CUBEENGINE:
+        model_data = move(std::make_unique<CubeVerticesData>());
     default:
         break;
     }

@@ -26,7 +26,12 @@ void MainWindow::InitUI()
     ui->model_menu->addAction(cube_action);
 	ui->model_menu->addAction(cylinder_action);
 
-    
+    QAction* sky_action = new QAction("sky", ui->render_menu);
+    sky_action->setObjectName("sky");
+    //QAction* _action = new QAction("ring", ui->render_menu);
+
+
+    ui->render_menu->addAction(sky_action);
     
 }
 
@@ -34,7 +39,7 @@ void MainWindow::InitConnect()
 {
     connect(ui->openGLWidget, &CustomOpenglWidget::CheckBoxType, m_PtrManageEngine.get(), &ManageEngine::checkBoxTypeSlot);
 
-	for (auto action : ui->model_menu->findChildren<QAction*>())
+	for (auto action : this->findChildren<QAction*>())
 	{
 		connect(action, &QAction::triggered, this, &MainWindow::createModel,Qt::UniqueConnection);
 	}
@@ -61,6 +66,10 @@ void MainWindow::createModel(bool checked)
 	{
         CreatEngine(true, EM_TOURSENGINE);
 	}
+    else if (objname == "sky")
+    {
+        CreatEngine(true, EM_SKYBOXENGINE);
+    }
 }
 
 void MainWindow::CreatEngine(bool checked, EngineType type)

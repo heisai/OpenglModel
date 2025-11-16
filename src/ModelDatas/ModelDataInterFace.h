@@ -45,6 +45,7 @@ enum EngineType
     EM_CYLINDERENGINE, //圆柱体引擎
     EM_MODELENGINE,//模型引擎
     EM_MIXENGINE,   //混合引擎
+	EM_SKYBOXENGINE,   //天空盒引擎
 };
 
 struct ModelDataInfo
