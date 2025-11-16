@@ -18,13 +18,12 @@ public:
     void setViewSize(int width, int height);
     // 创建模型
     void createModel(EngineType type);
+    void removeModel(EngineType type);
 	// 渲染 / 拾取 / 初始化
 	void paintGl();
 	MvpDataPtr pickModel(int xpos, int ypos);
 	void initializeGl();
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
-	// 复选框响应： type 为 uuid 字符串
-	void checkBoxTypeSlot(const QString& type, bool check);
 private:
     void createGridEngine();
     GraphicsEnginePtr createCubeEngine();
@@ -40,7 +39,8 @@ protected:
     QString generateUuid();
 
 public:
-    std::map<QString, GraphicsEnginePtr> map_graphic_;
+    //std::map<QString, GraphicsEnginePtr> map_graphic_;
+    std::list<GraphicsEnginePtr>list_graphic_;
     std::map<EngineType, std::function<GraphicsEnginePtr(void)>> map_graphicengine_createfunc_;
     int width_ = 0;
     int height_ = 0;

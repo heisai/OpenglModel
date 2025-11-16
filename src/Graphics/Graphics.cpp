@@ -3,18 +3,21 @@
 GraphicsEngine::GraphicsEngine(EngineType type,std::shared_ptr<Shader> shader /*= nullptr*/,
 	std::shared_ptr<Shader>m_Tshader /*= nullptr*/):
 	m_shader(shader),
-	m_PickShader(m_Tshader)
+	m_PickShader(m_Tshader),
+	model_type_(type)
 {
 	initializeOpenGLFunctions();
 	mvp_data_ = std::make_shared<MvpData>();
 	mesh_data_ = std::make_shared<Mesh>();
 	setModelInfo(CreatModelData().GetModelDatas(type));
+	
 }
 
 void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
 {
 	mesh_data_->vertices_datas = model_datas.vertices_datas;
 	mesh_data_->indices_datas = model_datas.indices_datas;
+	mesh_data_->model_type_ = model_type_;
 }
 
 void GraphicsEngine::setModelData(const glm::mat4& model_)
@@ -41,6 +44,16 @@ MvpDataPtr GraphicsEngine::getMvpData()
 MeshPtr GraphicsEngine::getMesh()
 {
 	return mesh_data_;
+}
+
+EngineType GraphicsEngine::getModeltype()const
+{
+	return model_type_;
+}
+
+bool GraphicsEngine::getCheck() const
+{
+	return selected_;
 }
 
 void GraphicsEngine::SetViewSize(int width,int height)

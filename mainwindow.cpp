@@ -28,17 +28,20 @@ void MainWindow::InitUI()
 
     QAction* sky_action = new QAction("sky", ui->render_menu);
     sky_action->setObjectName("sky");
-    //QAction* _action = new QAction("ring", ui->render_menu);
-
-
     ui->render_menu->addAction(sky_action);
+
+    QAction* clear_model_action = new QAction("model", ui->clear_menu);
+    clear_model_action->setObjectName("clear_model");
+    QAction* clear_sky_action = new QAction("sky", ui->clear_menu);
+    clear_sky_action->setObjectName("clear_sky");
+    ui->clear_menu->addAction(clear_model_action);
+    ui->clear_menu->addAction(clear_sky_action);
+    
     
 }
 
 void MainWindow::InitConnect()
 {
-    connect(ui->openGLWidget, &CustomOpenglWidget::CheckBoxType, m_PtrManageEngine.get(), &ManageEngine::checkBoxTypeSlot);
-
 	for (auto action : this->findChildren<QAction*>())
 	{
 		connect(action, &QAction::triggered, this, &MainWindow::createModel,Qt::UniqueConnection);
@@ -70,6 +73,14 @@ void MainWindow::createModel(bool checked)
     {
         CreatEngine(true, EM_SKYBOXENGINE);
     }
+    else if (objname == "clear_model")
+    {
+        CreatEngine(false, EM_GRIDENGINE);
+    }
+    else if (objname == "clear_sky")
+    {
+        CreatEngine(false, EM_SKYBOXENGINE);
+    }
 }
 
 void MainWindow::CreatEngine(bool checked, EngineType type)
@@ -85,7 +96,7 @@ void MainWindow::CreatEngine(bool checked, EngineType type)
     }
     else
     {
-         // m_PtrManageEngine->RemoveEngine(type);
+         m_PtrManageEngine->removeModel(type);
     }
 }
 

@@ -17,7 +17,7 @@ void ManageEngine::setViewSize(int width, int height)
 {
     width_ = width;
     height_ = height;
-    std::for_each(map_graphic_.begin(), map_graphic_.end(), [width, height](auto pair) {pair.second->SetViewSize(width, height); });
+    std::for_each(list_graphic_.begin(), list_graphic_.end(), [width, height](auto graphic) {graphic ->SetViewSize(width, height); });
 
 	if (screen_render_model_)
 	{
@@ -39,6 +39,20 @@ void ManageEngine::createModel(EngineType type)
 	   screen_render_model_ = std::make_unique<ScreenRenderModel>(EM_MIXENGINE);
 	   screen_render_model_->SetViewSize(width_, height_);
    }
+}
+
+void ManageEngine::removeModel(EngineType type)
+{
+    if (type == EM_SKYBOXENGINE)
+    {
+        list_graphic_.remove_if([type](auto grahic) {   return grahic->getModeltype() == type; });
+    }
+    else
+    {
+        list_graphic_.remove_if([](auto grahic) {   return grahic->getCheck() == true; });
+    }
+ 
+    
 }
 
 void ManageEngine::createGridEngine()
@@ -81,7 +95,7 @@ GraphicsEnginePtr ManageEngine::createCylinderEngine()
 GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
 {
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_CUBEENGINE, light_shader);
+	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_SKYBOXENGINE, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
 }
@@ -101,21 +115,25 @@ void ManageEngine::createMixEngine()
 }
 void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 {
-    QString uuid = generateUuid();
-	if (map_graphic_.find(uuid) == map_graphic_.end())
-	{
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::mat4(1.0f);
 		graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f)));
 		graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
 		graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		map_graphic_.emplace(uuid, graphics);
-	}
+        if (graphics->getMesh()->model_type_ == EM_SKYBOXENGINE)
+        {
+            list_graphic_.push_front(graphics);
+        }
+        else
+        {
+            list_graphic_.push_back(graphics);
+        }
+    
 
-	for (const auto& pair_value : map_graphic_)
+	for (const auto& graphic : list_graphic_)
 	{
-		LogInfo("EngineType:{}", pair_value.first.toStdString());
+		LogInfo("EngineType:{} ", int(graphic->getMesh()->model_type_));
 	}
 }
 
@@ -132,28 +150,13 @@ void ManageEngine::removeEngine(EngineType /*type*/)
     // 保留实现占位，按需实现
 }
 
-void ManageEngine::checkBoxTypeSlot(const QString& type, bool check)
-{
-    if (map_graphic_.count(type))
-    {
-        /*PhongModelEngine* engine = dynamic_cast<PhongModelEngine*>(map_graphic_[type].get());
-        if (engine)
-        {
-            engine->m_RayTrack = check;
-        }*/
-    }
-}
 
 void ManageEngine::initializeGl()
 {
 
-    for (const auto& pair : map_graphic_)
+    for (const auto& graphic_ : list_graphic_)
 	{
-        GraphicsEnginePtr engine_ptr = pair.second;
-        if (engine_ptr)
-        {
-            engine_ptr->InitBufferData();
-        }
+            graphic_->InitBufferData();
     }
 	if (screen_render_model_ )
 	{
@@ -166,11 +169,10 @@ void ManageEngine::initializeGl()
 void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
 {
     int index = 0;
-    for (auto& onepair : map_graphic_)
+    for (auto& graphic_ : list_graphic_)
     {
-        if (onepair.second->selected_)
+        if (graphic_->getCheck())
         {
-            QString key = onepair.first;
             glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = glm::mat4(1.0f);
             glm::mat4 projection = glm::mat4(1.0f);
@@ -178,10 +180,10 @@ void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::ve
             projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
             view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
             model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
-            map_graphic_[key]->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
-            map_graphic_[key]->setModelData(model * model_old);
-            map_graphic_[key]->setProjectionData(projection);
-            map_graphic_[key]->setTranlstorPosition(QVector2D(translate.x, -translate.y));
+            graphic_->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
+            graphic_->setModelData(model * model_old);
+            graphic_->setProjectionData(projection);
+            graphic_->setTranlstorPosition(QVector2D(translate.x, -translate.y));
         }
         
     }
@@ -189,49 +191,44 @@ void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::ve
 
 void ManageEngine::paintGl()
 {
-    if (map_graphic_.empty()) return;
+    if (list_graphic_.empty()) return;
 
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    for (const auto& pair : map_graphic_)
+    for (const auto& graphic_ : list_graphic_)
     {
-        if (!pair.second)
+        if (graphic_->m_shader)
         {
-            continue;
+            graphic_->m_shader->bind();
         }
-        if (pair.second->m_shader)
-        {
-            pair.second->m_shader->bind();
-        }
-        pair.second->Draw();
+        graphic_->Draw();
     }
 }
 
 MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
 {
     MvpDataPtr mvp_data = nullptr;
-    if (map_graphic_.empty())
+    if (list_graphic_.empty())
     {
         mvp_data;
     }
     //清空物体选中状态
-    std::for_each(map_graphic_.begin(), map_graphic_.end(), [](auto pair) {pair.second->setChecked(false); });
+    std::for_each(list_graphic_.begin(), list_graphic_.end(), [](auto graphic_) {graphic_->setChecked(false); });
 
 
     int object_id = 1;
-    for (auto& onepair_graphic_ : map_graphic_)
+    for (auto& graphic_ : list_graphic_)
     {
-        QString model_id = onepair_graphic_.first;
-        MvpDataPtr mvp = onepair_graphic_.second->getMvpData();
+        MvpDataPtr mvp = graphic_->getMvpData();
         //bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
 
 
-        MeshPtr mesh = onepair_graphic_.second->getMesh();
+        MeshPtr mesh = graphic_->getMesh();
         screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas);
         bool selected  = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
-            onepair_graphic_.second ->setChecked(selected);
-            LogInfo("【Selected Model UUID:{}】 ColorID: {}", model_id.toStdString(), object_id);
+            graphic_->setChecked(selected);
+            LogInfo("【Selected 】 ColorID: {}", object_id);
             mvp_data = mvp;
             break;
         }

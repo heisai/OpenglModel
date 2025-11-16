@@ -33,8 +33,16 @@ void CustomOpenglWidget::initializeGL()
     initializeOpenGLFunctions();
     const GLubyte* version = glGetString(GL_VERSION);
     qDebug() << "OpenGL Version:" << reinterpret_cast<const char*>(version);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+
+
     if (m_PtrManageEngine)
     {
         m_PtrManageEngine->setViewSize(this->width(), this->height());
@@ -65,7 +73,8 @@ void CustomOpenglWidget::resizeGL(int w, int h)
 
 void CustomOpenglWidget::paintGL()
 {
-  
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     if (m_PtrManageEngine)
     {
@@ -95,7 +104,6 @@ void CustomOpenglWidget::mousePressEvent(QMouseEvent *e)
         {
             m_TranlstorPosition = m_TranlstorPositionOld = mvp_data->tranlstor_position_;
         }
-      
     }
 }
 

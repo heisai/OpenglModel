@@ -36,7 +36,7 @@ struct fmt::formatter<glm::vec3> {
 #define LogInfo(...)  SPDLOG_INFO(__VA_ARGS__)
 #define LogWarn(...)  SPDLOG_WARN(__VA_ARGS__)
 #define LogError(...) SPDLOG_ERROR(__VA_ARGS__)
-
+//模型类型
 enum EngineType
 {
     EM_GRIDENGINE = 0,	//网格引擎
@@ -47,7 +47,11 @@ enum EngineType
     EM_MIXENGINE,   //混合引擎
 	EM_SKYBOXENGINE,   //天空盒引擎
 };
+//操作动作
+enum OperatorAction
+{
 
+};
 struct ModelDataInfo
 {
 	std::vector<float> vertices_datas; //顶点数据

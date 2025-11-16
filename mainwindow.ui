@@ -75,7 +75,7 @@
      <string>编辑</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="clear_menu">
     <property name="title">
      <string>清除</string>
     </property>
@@ -84,7 +84,7 @@
    <addaction name="edit_menu"/>
    <addaction name="model_menu"/>
    <addaction name="render_menu"/>
-   <addaction name="menu"/>
+   <addaction name="clear_menu"/>
   </widget>
  </widget>
  <customwidgets>

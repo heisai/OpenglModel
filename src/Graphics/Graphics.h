@@ -37,6 +37,7 @@ struct Mesh
     unsigned int ebo_;
 	std::vector<float> vertices_datas; //顶点数据
 	std::vector<unsigned int>indices_datas;
+    EngineType model_type_;   //模型类型
 };
 using MeshPtr = std::shared_ptr<Mesh>;
 
@@ -64,7 +65,8 @@ public:
     void setTranlstorPosition(const QVector2D& tranlstor_position_);
     MvpDataPtr getMvpData();
     MeshPtr getMesh();
-
+    EngineType getModeltype()const;
+    bool getCheck()const;
     /*virtual ~ GraphicsEngine();*/
 private:
     void setModelInfo(const ModelDataInfo& model_datas);
@@ -76,12 +78,15 @@ public:
 
 
 
-     bool selected_ = false;
+    
 protected:
   
 	 int m_Width, m_Height;
-	 MvpDataPtr mvp_data_;
-     MeshPtr mesh_data_;
+	 MvpDataPtr mvp_data_;      //世界空间坐标
+     MeshPtr mesh_data_;           //模型数据
+     bool selected_ = false;        //选中状态
+     EngineType model_type_;   //模型类型
+
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;
 

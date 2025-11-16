@@ -7,27 +7,17 @@ GeneralModel::GeneralModel(EngineType type, std::shared_ptr<Shader> shader /*= n
 	// 使用拾取着色器
 	//m_PickShader = std::make_shared<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
-	//screen_render_model_ = std::make_unique<ScreenRenderModel>(type,shader);
-
 }
 
 
 void GeneralModel::Draw()
 {
 
-	/*glViewport(0, 0, m_Width, m_Height);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);*/
-	/*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-	
-	/*if (selected_)
+	if (selected_)
 	{
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
-	}*/
-
-
+	}
 	m_shader->bind();
 	m_shader->setMat4("view", mvp_data_->view_);
 	m_shader->setMat4("projection", mvp_data_->projection_);
@@ -47,28 +37,27 @@ void GeneralModel::Draw()
 	m_shader->setFloat("material.shininess", 32.0f);
 	glBindVertexArray(mesh_data_->vao_);
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
-	/*if (selected_)
+	if (selected_)
 	{
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 		stencil_shader_->bind();
 		float scale = 1.025f;
+		glm::mat4 model_ = glm::scale(mvp_data_->model_, glm::vec3(scale, scale, scale));
 		stencil_shader_->setMat4("view", mvp_data_->view_);
 		stencil_shader_->setMat4("projection", mvp_data_->projection_);
-		stencil_shader_->setMat4("model", mvp_data_->model_);
-		glBindVertexArray(m_VAO);
-		glDrawElements(GL_TRIANGLES, indices_datas.size(), GL_UNSIGNED_INT, 0);
+		stencil_shader_->setMat4("model", model_);
+		glBindVertexArray(mesh_data_->vao_);
+		glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 
 
-	}*/
+	}
 
-	/*glStencilMask(0xFF);
+	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glEnable(GL_DEPTH_TEST);*/
-	
+	glEnable(GL_DEPTH_TEST);
 
-	//screen_render_model_->Draw();
 
 }
 
@@ -118,11 +107,7 @@ void GeneralModel::InitBufferData()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	//stencil_shader_->CreatProgram();
-	//screen_render_model_->setScreenRenderVertexData(m_VAO, indices_datas);
-	//screen_render_model_->SetViewSize(m_Width, m_Height);
-	//screen_render_model_->InitBufferData();
-	
+	//stencil_shader_->CreatProgram();	
 }
 
 void GeneralModel::SetLightColor(glm::vec3 lightcolor)
@@ -154,17 +139,6 @@ void GeneralModel::DrawStencil(glm::mat4 model, glm::mat4 view, glm::mat4 projec
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
 	glEnable(GL_DEPTH_TEST);
 #endif 
-}
-
-bool GeneralModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
-	int objetc_id)
-{
-
-	
-
-	//selected_ = screen_render_model_->colorPick(model, view, projection, readX, readY, objetc_id);
-	return selected_;
-	LogInfo( "========================== START PICKING =======================");
 }
 
 

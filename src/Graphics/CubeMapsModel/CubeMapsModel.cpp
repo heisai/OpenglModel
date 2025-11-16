@@ -35,8 +35,8 @@ void CubeMapsModel::InitBufferData()
 	m_shader->CreatProgram();
 
 	
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS);
 	// 顶点数组对象
 	glGenVertexArrays(1, &m_VAO);
 	//绑定VAO
