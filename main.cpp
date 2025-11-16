@@ -1,5 +1,5 @@
 ﻿
-#include "mainwindow.h"
+#include "src/OpenglWidget/mainwindow.h"
 #include <QApplication>
 #include <QFont>
 #include <QSurfaceFormat>
@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[])
 {
+
 
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
