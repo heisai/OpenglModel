@@ -1,5 +1,5 @@
 ﻿
-#include "src/OpenglWidget/mainwindow.h"
+#include "./src/OpenglWidget/mainwindow.h"
 #include <QApplication>
 #include <QFont>
 #include <QSurfaceFormat>

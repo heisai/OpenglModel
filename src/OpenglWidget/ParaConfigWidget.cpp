@@ -1,6 +1,5 @@
 #include "ParaConfigWidget.h"
-#include "ui_ParaConfigWidget.h"
-
+#include"ui_ParaConfigWidget.h"
 ParaConfigWidget::ParaConfigWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ParaConfigWidget)

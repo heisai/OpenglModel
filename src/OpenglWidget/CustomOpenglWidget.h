@@ -4,8 +4,8 @@
 
 
 #include<QOpenGLWidget>
-#include"src/Utils/OpengHearder.h"
-#include"src/Graphics/ManageEngine.h"
+#include"../Utils/OpengHearder.h"
+#include"../Graphics/ManageEngine.h"
 #include<QBasicTimer>
 #include<QMouseEvent>
 #include<QVector3D>
@@ -21,7 +21,7 @@ struct AABB {
 #include<QDockWidget>
 #include <QOpenGLFunctions_4_5_Core>
 #include<QOpenGLContext>
-#include"src/OpenglWidget/HoverToolWidget.h"
+#include"HoverToolWidget.h"
 class CustomOpenglWidget : public QOpenGLWidget, QOpenGLFunctions_4_5_Core
 {
     Q_OBJECT

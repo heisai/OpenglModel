@@ -1,6 +1,6 @@
 #ifndef PARACONFIGWIDGET_H
 #define PARACONFIGWIDGET_H
-#include"./src/Utils/OpengHearder.h"
+#include "../Utils/OpengHearder.h"
 #include <QWidget>
 #include<QMouseEvent>
 #include<QColorDialog>

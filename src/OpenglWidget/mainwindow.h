@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include"src/Graphics/ManageEngine.h"
+#include"../Graphics/ManageEngine.h"
 #include<QDockWidget>
 QT_BEGIN_NAMESPACE
 namespace Ui {

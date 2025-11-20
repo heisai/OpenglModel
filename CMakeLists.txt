@@ -33,31 +33,20 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 # # Ìí¼Ó .cpp
- file(GLOB_RECURSE SOURCE_FILES  ./src/*.cpp)
+ file(GLOB_RECURSE SOURCE_FILES  src/*.cpp)
+ file(GLOB_RECURSE HEADER_FILES  src/*.h)
+ file(GLOB_RECURSE UI_FILES   src/*.ui)
+ qt_wrap_ui(UI_HEADERS  ${UI_FILES} )
 
-# # Ìí¼Ó .h
- file(GLOB_RECURSE HEADER_FILES  ./src/*.h)
-
-
-set(PROJECT_SOURCES
-        
-          
+set(PROJECT_SOURCES  
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        CustomOpenglWidget.h CustomOpenglWidget.cpp
-         ${HEADER_FILES} ${SOURCE_FILES}
-
+        ${HEADER_FILES} ${SOURCE_FILES} ${UI_FILES}
 )
 
 set(LIBS    assimp-vc142-mt)
-add_executable(OpenglEngine ${PROJECT_SOURCES}
-    ParaConfigWidget.h ParaConfigWidget.cpp ParaConfigWidget.ui
-)
-
-
-
+add_executable(OpenglEngine ${PROJECT_SOURCES})
 target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets )
+target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+message(STATUS "UI files: ${PROJECT_SOURCES}")
 
-
+ 

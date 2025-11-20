@@ -89,15 +89,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CustomOpenglWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header location="global">../../../CustomOpenglWidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>ParaConfigWidget</class>
    <extends>QWidget</extends>
-   <header location="global">../../../ParaConfigWidget.h</header>
+   <header location="global">../src/OpenglWidget/ParaConfigWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CustomOpenglWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>../src/OpenglWidget/CustomOpenglWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
