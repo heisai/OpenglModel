@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QFont>
 #include <QSurfaceFormat>
-#include <QTextCodec>
+#include "src/Utils/Translator.h"
 
 
 int main(int argc, char *argv[])
@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
 
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     //qputenv("QT_SCALE_FACTOR", "1.25");
 	// 配置 OpenGL 全局格式
 	QSurfaceFormat format;
@@ -26,6 +25,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     InitLogging();
 	QFont font("Microsoft YaHei", 10); // 设置字体为 微软雅黑，字号为 10
+	Translator trans;
+	trans.addTranslator("yang");
+	trans.addTranslator("sen");
     MainWindow w;
     w.show();
     QFont f;

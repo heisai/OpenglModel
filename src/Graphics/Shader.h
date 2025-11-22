@@ -6,7 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include<QOpenGLFunctions_4_5_Core>
+#include <QtOpenGL/QOpenGLFunctions_4_5_Core>
+
 class Shader: public QOpenGLFunctions_4_5_Core {
 public:
     explicit Shader(const std::string& vs_filename,const std::string &fs_filename,

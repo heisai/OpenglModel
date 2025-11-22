@@ -3,7 +3,7 @@
 
 
 
-#include<QOpenGLWidget>
+#include <QtOpenGLWidgets/QOpenGLWidget>
 #include"../Utils/OpengHearder.h"
 #include"../Graphics/ManageEngine.h"
 #include<QBasicTimer>
@@ -19,7 +19,7 @@ struct AABB {
 #include<QHBoxLayout>
 #include<QPushButton>
 #include<QDockWidget>
-#include <QOpenGLFunctions_4_5_Core>
+#include <QtOpenGL/QOpenGLFunctions_4_5_Core>
 #include<QOpenGLContext>
 #include"HoverToolWidget.h"
 class CustomOpenglWidget : public QOpenGLWidget, QOpenGLFunctions_4_5_Core

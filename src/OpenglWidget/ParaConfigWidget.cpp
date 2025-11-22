@@ -16,8 +16,8 @@ ParaConfigWidget::~ParaConfigWidget()
 
 void ParaConfigWidget::InitUI()
 {
-	QPalette palette;
-	palette.setColor(QPalette::Background, QColor(Qt::red));
+    // QPalette palette;
+    // palette.setColor(QPalette::Background, QColor(Qt::red));
 }
 
 void ParaConfigWidget::InitConnect()

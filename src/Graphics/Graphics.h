@@ -10,7 +10,7 @@
 
 #include"Shader.h"
 #include"../ModelDatas/CreatModelData.h"
-#include<QOpenGLFunctions_4_5_Core>
+#include <QtOpenGL/QOpenGLFunctions_4_5_Core>
 
 /*
     1: 图形引擎基类

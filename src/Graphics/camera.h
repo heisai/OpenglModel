@@ -4,7 +4,7 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <QKeyEvent>
-#include <QOpenGLShader>//为了glfloat 这些变量，所以引进这个头文件
+#include <QtOpengl/QOpenGLShader>//为了glfloat 这些变量，所以引进这个头文件
 #include <QDebug>
 #include <QtMath>
 
