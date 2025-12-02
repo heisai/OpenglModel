@@ -64,6 +64,7 @@ qt_add_translations(OpenglEngine
     TS_FILES 
         translations/zh_CN.ts
         translations/en_US.ts
+     QM_OUTPUT_DIRECTORY translations
 )
 # 关键：添加依赖，确保构建主目标前更新翻译
 add_dependencies(OpenglEngine update_translations)

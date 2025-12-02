@@ -2,18 +2,18 @@
 
 CreatModelDataImpl::CreatModelDataImpl() {}
 
-ModelDataInfo CreatModelDataImpl::GetModelDatas(EngineType type)
+ModelDataInfo CreatModelDataImpl::GetModelDatas(OperatorAction type)
 {
 
     std::unique_ptr<ModelDataInterFace> model_data = nullptr;
     switch (type) {
-    case EM_TOURSENGINE:
+    case OperatorAction::CreatCyliner:
         model_data = move(std::make_unique<CylinderVerticesData>());
         break;
-    case EM_CYLINDERENGINE:
+    case OperatorAction::CreatTourse:
         model_data = move(std::make_unique<ToursVerticesData>());
         break;
-    case EM_CUBEENGINE:
+    case OperatorAction::CreatCube:
         model_data = move(std::make_unique<CubeVerticesData>());
     default:
         break;

@@ -3,14 +3,14 @@
 class ScreenRenderModel : public GraphicsEngine
 {
 public:
-	explicit ScreenRenderModel(EngineType type, std::shared_ptr<Shader> shader = nullptr);
+	explicit ScreenRenderModel(OperatorAction type, std::shared_ptr<Shader> shader = nullptr);
 	void Draw() override;
 	void InitBufferData() override;
-	void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices) override;
-
-
-	bool colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
-		int objetc_id);
+	void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices, std::shared_ptr<Shader>shader = nullptr);
+	bool colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,int objetc_id);
+	void  drawTexture();
+	//…Ë÷√‰÷»æ¿‡–Õ
+	void setRenderType(int type);
 private:
 	glm::vec3 idToColor(int id);
 	int colorToId(const glm::vec3& color);
@@ -19,6 +19,7 @@ private:
 	std::unique_ptr<Shader>color_pick_shader_;
 	unsigned int default_render_vao_;
 	std::vector<unsigned int>default_render_indices_;
+	
 
 	unsigned int m_PickFBO;
 	unsigned int m_PickTexture;
@@ -26,4 +27,5 @@ private:
 
 	unsigned int quadvao_;
 	unsigned int quadvbo_;
+	int render_type_ = 1;
 };

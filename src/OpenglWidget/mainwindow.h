@@ -19,10 +19,14 @@ public:
     void InitUI();
     void InitConnect();
     ~MainWindow();
-
+private:
+    //添加引擎菜单
+    void addEngineMenu();
+    //添加渲染菜单
+    void addRenderMenu();
 private slots:
     void createModel(bool checked);
-    void CreatEngine(bool checked,EngineType type);
+    void CreatEngine(bool checked,OperatorAction type);
     void ChangeLightColorSlot(QColor color);
 private:
     Ui::MainWindow *ui;

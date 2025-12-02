@@ -5,11 +5,17 @@ ManageEngine::ManageEngine():
 {
 
 	// 注册引擎创建函数
-    map_graphicengine_createfunc_.insert({ EM_CUBEENGINE, std::bind(&ManageEngine::createCubeEngine, this) });
-    map_graphicengine_createfunc_.insert({ EM_TOURSENGINE, std::bind(&ManageEngine::createToursEngine, this) });
-    map_graphicengine_createfunc_.insert({ EM_CYLINDERENGINE, std::bind(&ManageEngine::createCylinderEngine, this) });
-    map_graphicengine_createfunc_.insert({ EM_SKYBOXENGINE, std::bind(&ManageEngine::createSkyBoxEngine, this) });
+    map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });
+    map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
+    map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });
+    map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
 
+
+    map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   //反向
+    map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });   //灰度
+    map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //锐化
+    map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //模糊
+    map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //检测
 
 }
 
@@ -25,9 +31,9 @@ void ManageEngine::setViewSize(int width, int height)
 	}
 }
 
-void ManageEngine::createModel(EngineType type)
+void ManageEngine::createModel(OperatorAction type)
 {
-
+    //判断包装器中是否包含该函数
    auto iter = map_graphicengine_createfunc_.find(type);
    if (iter != map_graphicengine_createfunc_.end())
    {
@@ -36,14 +42,14 @@ void ManageEngine::createModel(EngineType type)
    }
    if (screen_render_model_ == nullptr)
    {
-	   screen_render_model_ = std::make_unique<ScreenRenderModel>(EM_MIXENGINE);
+	   screen_render_model_ = std::make_unique<ScreenRenderModel>(OperatorAction::CreatTourse);
 	   screen_render_model_->SetViewSize(width_, height_);
    }
 }
 
-void ManageEngine::removeModel(EngineType type)
+void ManageEngine::removeModel(OperatorAction type)
 {
-    if (type == EM_SKYBOXENGINE)
+    if (type == OperatorAction::ClearSkyBox)
     {
         list_graphic_.remove_if([type](auto grahic) {   return grahic->getModeltype() == type; });
     }
@@ -70,7 +76,7 @@ GraphicsEnginePtr ManageEngine::createCubeEngine()
 	//addEngine(generateUuid(), basic_light_engine, light_shader);
 
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_CUBEENGINE, light_shader);
+	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCube, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
 
@@ -79,7 +85,7 @@ GraphicsEnginePtr ManageEngine::createCubeEngine()
 GraphicsEnginePtr ManageEngine::createToursEngine()
 {
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_TOURSENGINE,light_shader);
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
     return basic_light_engine;
 }
@@ -87,7 +93,7 @@ GraphicsEnginePtr ManageEngine::createToursEngine()
 GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
     ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(EM_CYLINDERENGINE,light_shader);
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
     return basic_light_engine;
 }
@@ -95,8 +101,58 @@ GraphicsEnginePtr ManageEngine::createCylinderEngine()
 GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
 {
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(EM_SKYBOXENGINE, light_shader);
+	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(OperatorAction::ClearSkyBox, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createInversionRender()
+{
+    GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(2);
+	}
+    return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createGrayscaleRender()
+{
+	GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(1);
+	}
+	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createSharpenRender()
+{
+	GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(2);
+	}
+	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createBlurRender()
+{
+	GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(3);
+	}
+	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createDetectionRender()
+{
+	GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(4);
+	}
 	return basic_light_engine;
 }
 
@@ -115,25 +171,29 @@ void ManageEngine::createMixEngine()
 }
 void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 {
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::mat4(1.0f);
-		graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f)));
-		graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
-		graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-        if (graphics->getMesh()->model_type_ == EM_SKYBOXENGINE)
-        {
-            list_graphic_.push_front(graphics);
-        }
-        else
-        {
-            list_graphic_.push_back(graphics);
-        }
-    
+	if (graphics == nullptr)
+	{
+		return;
+	}
+	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
+	graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f)));
+	graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
+	graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+	if (graphics->getMesh()->model_type_ == OperatorAction::ClearSkyBox)
+	{
+		list_graphic_.push_front(graphics);
+	}
+	else
+	{
+		list_graphic_.push_back(graphics);
+	}
+
 
 	for (const auto& graphic : list_graphic_)
 	{
-		LogInfo("EngineType:{} ", int(graphic->getMesh()->model_type_));
+		LogInfo("OperatorAction:{} ", int(graphic->getMesh()->model_type_));
 	}
 }
 
@@ -144,13 +204,6 @@ QString ManageEngine::generateUuid()
     str_id.remove("{").remove("}").remove("-");
     return str_id;
 }
-
-void ManageEngine::removeEngine(EngineType /*type*/)
-{
-    // 保留实现占位，按需实现
-}
-
-
 void ManageEngine::initializeGl()
 {
 
@@ -194,14 +247,33 @@ void ManageEngine::paintGl()
     if (list_graphic_.empty()) return;
 
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    
+
+    
     for (const auto& graphic_ : list_graphic_)
     {
-        if (graphic_->m_shader)
+        if (graphic_->getDefaultShader())
         {
-            graphic_->m_shader->bind();
+            graphic_->getDefaultShader()->bind();
+            graphic_->Draw();
         }
-        graphic_->Draw();
     }
+    //如果模型是空，不进行离屏渲染
+    if (list_graphic_.empty())
+    {
+        return;
+    }
+
+	if (screen_render_model_)
+	{
+		screen_render_model_->drawTexture();
+		for (const auto& graphic_ : list_graphic_)
+		{
+				MeshPtr mesh = graphic_->getMesh();
+				screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas, graphic_->getDefaultShader());
+				screen_render_model_->Draw();
+		}
+	}
 }
 
 MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)

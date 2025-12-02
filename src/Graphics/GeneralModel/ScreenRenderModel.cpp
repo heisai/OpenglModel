@@ -1,14 +1,15 @@
 #include"ScreenRenderModel.h"
-ScreenRenderModel::ScreenRenderModel(EngineType type,std::shared_ptr<Shader> shader /*= nullptr*/):
+ScreenRenderModel::ScreenRenderModel(OperatorAction type,std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(type,shader)
 {
-	screen_shader_ = std::make_unique<Shader>("screen_vertex.vs", "screen_fragment.fs", "GeneralModel");
+	screen_shader_ = std::make_unique<Shader>("screen_vertex.vert", "screen_fragment.frag", "GeneralModel");
 	color_pick_shader_ = std::make_unique<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 }
 
 
 void ScreenRenderModel::Draw()
 {
+#if 0
 	// 将离屏帧缓冲添加到纹理中
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, 200, 200); // 设置视口大小为 200x200
@@ -20,11 +21,6 @@ void ScreenRenderModel::Draw()
 	glBindTexture(GL_TEXTURE_2D, m_PickTexture);	// use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
-
-
-
-
 	// 步骤二：创建拾取纹理
 		//// 清除缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
@@ -34,16 +30,21 @@ void ScreenRenderModel::Draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+#endif
 
 
 
-	m_shader->bind();
+	
+
+
+
+	default_shader_->bind();
 	//设置顶点属性指针
 	glBindVertexArray(default_render_vao_);
 	glDrawElements(GL_TRIANGLES, default_render_indices_.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glFinish();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
 
@@ -124,10 +125,11 @@ void ScreenRenderModel::InitBufferData()
 	std::cout << "FBO initialization completed" << std::endl;
 }
 
-void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices)
+void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices, std::shared_ptr<Shader>shader)
 {
 	 default_render_vao_ = vao;
 	 default_render_indices_ = indices;
+	 default_shader_ = shader;
 }
 
 
@@ -192,6 +194,36 @@ bool ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 pro
 	glViewport(0, 0, m_Width, m_Height);
 	return pickedID == objetc_id;
 #endif
+}
+
+void ScreenRenderModel::drawTexture()
+{
+	// 将离屏帧缓冲添加到纹理中
+	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, 260, 260); 
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	//glClear(GL_COLOR_BUFFER_BIT);
+	screen_shader_->bind();
+	screen_shader_->SetInt("rendertype", render_type_);
+	
+	glBindVertexArray(quadvao_);
+	glBindTexture(GL_TEXTURE_2D, m_PickTexture);	// use the color attachment texture as the texture of the quad plane
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
+	glViewport(0, 0, m_Width, m_Height);
+	// 清除缓冲
+	glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+}
+
+void ScreenRenderModel::setRenderType(int type)
+{
+	render_type_ = type;
 }
 
 glm::vec3 ScreenRenderModel::idToColor(int id)

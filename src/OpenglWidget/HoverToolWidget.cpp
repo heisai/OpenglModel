@@ -20,10 +20,10 @@ void HoverToolWidget::initializeWidget()
 	
 	m_layout->setContentsMargins(5, 5, 5, 5);
 	m_layout->setSpacing(6);
-	buttons_.emplace_back(new QPushButton("Move", this));
-	buttons_.emplace_back(new QPushButton("Rotate", this));
-	buttons_.emplace_back(new QPushButton("Scale", this));
-	buttons_.emplace_back(new QPushButton("Select", this));
+	buttons_.emplace_back(new QPushButton(TR("Move"), this));
+	buttons_.emplace_back(new QPushButton(TR("Rotate"), this));
+	buttons_.emplace_back(new QPushButton(TR("Scale"), this));
+	buttons_.emplace_back(new QPushButton(TR("Select"), this));
 	int index = 0;
 	for (QPushButton* button : buttons_)
 	{

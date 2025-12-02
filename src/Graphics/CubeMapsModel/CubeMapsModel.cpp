@@ -1,7 +1,7 @@
 #include"CubeMapsModel.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include"../stb_image.h"
-CubeMapsModel::CubeMapsModel(EngineType type, std::shared_ptr<Shader> shader /*= nullptr*/):
+CubeMapsModel::CubeMapsModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(type,shader)
 {
 	// 使用拾取着色器
@@ -13,10 +13,10 @@ void CubeMapsModel::Draw()
 {
 	glDepthFunc(GL_LEQUAL);
 
-	m_shader->bind();
+	default_shader_->bind();
 	glm::mat4 view_ = glm::translate(mvp_data_->view_, glm::vec3(0.0f, 0.0f, 10.0f));
-	m_shader->setMat4("view", view_);
-	m_shader->setMat4("projection", mvp_data_->projection_);
+	default_shader_->setMat4("view", view_);
+	default_shader_->setMat4("projection", mvp_data_->projection_);
 	// cubes
 	glBindVertexArray(m_VAO);
 	glActiveTexture(GL_TEXTURE0);
@@ -32,7 +32,7 @@ void CubeMapsModel::Draw()
 void CubeMapsModel::InitBufferData()
 {
 
-	m_shader->CreatProgram();
+	default_shader_->CreatProgram();
 
 	
 	//glEnable(GL_DEPTH_TEST);
@@ -51,7 +51,7 @@ void CubeMapsModel::InitBufferData()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	textureid_ = loadCubemap(faces);
 
-	m_shader->SetInt("skybox", 0);
+	default_shader_->SetInt("skybox", 0);
 }
 
 

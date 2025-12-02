@@ -3,30 +3,32 @@
 #include <sstream>
 #include <algorithm>
 
-Translator::Translator()
-{
-	addTranslator("Cube"); //立方体
-	addTranslator("Render");//渲染
-	addTranslator("Clear");//清除
-	addTranslator("SkyBox");//天空盒
-	translator_map_["123"] = tr("q1234");
-	translator_map_["1"] = tr("q1");
-	translator_map_["2"] = tr("q3");
-	translator_map_["1"] = tr("q7");
-	translator_map_["1"] = tr("q8");
-	translator_map_["1"] = tr("q5");
-	translator_map_["123"] = tr("nnnn");
 
+Translator& Translator::getInstance()
+{
+	static Translator instance;
+	instance.translator_map_["cube"] = tr("cube");
+	instance.translator_map_["ring"] = tr("ring");
+	instance.translator_map_["sky"] = tr("sky");
+	instance.translator_map_["model"] = tr("model");
+	instance.translator_map_["clear_sky"] = tr("clear_sky");
+	instance.translator_map_["cylinder"] = tr("cylinder");
+
+	instance.translator_map_["Move"] = tr("Move");	//移动
+	instance.translator_map_["Rotate"] = tr("Rotate");
+	instance.translator_map_["Scale"] = tr("Scale");
+	instance.translator_map_["Select"] = tr("Select");
+	instance.translator_map_["OpenGL"] = tr("OpenGL");
+
+	instance.translator_map_["Inversion"] = tr("Inversion");
+	instance.translator_map_["Grayscale"] = tr("Grayscale");
+	instance.translator_map_["Sharpen"] = tr("Sharpen");
+	instance.translator_map_["Blur"] = tr("Blur");
+	instance.translator_map_["Detection"] = tr("Detection");
+
+	return  instance;
 }
-void Translator::addTranslator(QString key)
+QString Translator::Tr(const QString& value)
 {
-
-	translator_map_["123"] = tr("q1234");
-	translator_map_["1"] = tr("q1");
-	translator_map_["2"] = tr("q3");
-	translator_map_["1"] = tr("q7");
-	translator_map_["1"] = tr("q8");
-	translator_map_["1"] = tr("q5");
-	translator_map_["1"] = tr(key.toStdString().c_str());
-	translator_map_["123"] = tr("qweqwewqe");
+	return translator_map_[value];
 }

@@ -5,16 +5,18 @@
 #include <shared_mutex>
 #include <optional>
 #include<QObject>
+#include <QString>
 #include<map>
+
 using TranslatoeMap = std::map <QString, QString>;
+#define TR(x) Translator::getInstance().Tr(x)
 class Translator : public QObject
 {
     Q_OBJECT
 public:     
-    Translator(); 
+    static Translator &getInstance(); 
     ~Translator() = default;
-    void addTranslator(QString key);
-private:
-    mutable std::shared_mutex m_mutex;
-    TranslatoeMap translator_map_;
+    QString Tr(const QString& value);
+	TranslatoeMap translator_map_;
+   
 }; 

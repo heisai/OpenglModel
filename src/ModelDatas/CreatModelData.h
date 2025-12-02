@@ -5,6 +5,6 @@ class CreatModelDataImpl;
 class CreatModelData
 {
 public:
-    ModelDataInfo GetModelDatas(EngineType type);
+    ModelDataInfo GetModelDatas(OperatorAction type);
 };
 #endif // CREATMODELDATA_H

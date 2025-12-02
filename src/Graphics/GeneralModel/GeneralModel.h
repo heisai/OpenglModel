@@ -4,7 +4,7 @@
 class GeneralModel : public GraphicsEngine
 {
 public:
-	explicit GeneralModel(EngineType type, std::shared_ptr<Shader> shader = nullptr);
+	explicit GeneralModel(OperatorAction type, std::shared_ptr<Shader> shader = nullptr);
 	void Draw() override;
 	void InitBufferData() override;
     void SetLightColor(glm::vec3 lightcolor);

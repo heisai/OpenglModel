@@ -7,7 +7,7 @@ class CreatModelDataImpl
 {
 public:
     CreatModelDataImpl();
-    ModelDataInfo GetModelDatas(EngineType type);
+    ModelDataInfo GetModelDatas(OperatorAction type);
 
 };
 

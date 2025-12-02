@@ -13,25 +13,16 @@ void MainWindow::InitUI()
 {
     m_PtrManageEngine = std::make_shared<ManageEngine>();
     ui->openGLWidget->BindManageEngine(m_PtrManageEngine);
-    this->setWindowTitle("OpenGLDemon");
+    this->setWindowTitle(TR("OpenGL"));
+    this->setMinimumSize(QSize(1240, 780));
 
-    QAction* ring_action = new QAction("ring", ui->model_menu);
-    ring_action->setObjectName("ring");
-    QAction* cube_action = new QAction("cube", ui->model_menu);
-    cube_action->setObjectName("cube_action");
-    QAction* cylinder_action = new QAction("cylinder", ui->model_menu);
-    cylinder_action->setObjectName("cylinder_action");
-	ui->model_menu->addAction(ring_action);
-    ui->model_menu->addAction(cube_action);
-	ui->model_menu->addAction(cylinder_action);
+    addEngineMenu();
+    addRenderMenu();
 
-    QAction* sky_action = new QAction("sky", ui->render_menu);
-    sky_action->setObjectName("sky");
-    ui->render_menu->addAction(sky_action);
 
-    QAction* clear_model_action = new QAction("model", ui->clear_menu);
+    QAction* clear_model_action = new QAction(TR("model"), ui->clear_menu);
     clear_model_action->setObjectName("clear_model");
-    QAction* clear_sky_action = new QAction("sky", ui->clear_menu);
+    QAction* clear_sky_action = new QAction(TR("sky"), ui->clear_menu);
     clear_sky_action->setObjectName("clear_sky");
     ui->clear_menu->addAction(clear_model_action);
     ui->clear_menu->addAction(clear_sky_action);
@@ -53,36 +44,103 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::addEngineMenu()
+{
+	QAction* ring_action = new QAction(TR("ring"), ui->model_menu);
+	ring_action->setObjectName("ring");
+
+	QAction* cube_action = new QAction(TR("cube"), ui->model_menu);
+	cube_action->setObjectName("cube_action");
+
+	QAction* cylinder_action = new QAction(TR("cylinder"), ui->model_menu);
+	cylinder_action->setObjectName("cylinder_action");
+
+	ui->model_menu->addAction(ring_action);
+	ui->model_menu->addAction(cube_action);
+	ui->model_menu->addAction(cylinder_action);
+}
+
+void MainWindow::addRenderMenu()
+{
+	QAction* sky_action = new QAction(TR("sky"), ui->render_menu);
+	sky_action->setObjectName("sky");
+
+	QAction* inversion_action = new QAction(TR("Inversion"), ui->render_menu);
+    inversion_action->setObjectName("Inversion");
+
+	QAction* grayscale_action = new QAction(TR("Grayscale"), ui->render_menu);
+    grayscale_action->setObjectName("Grayscale");
+
+	QAction* sharpen_action = new QAction(TR("Sharpen"), ui->render_menu);
+    sharpen_action->setObjectName("Sharpen");
+
+	QAction* blur_action = new QAction(TR("Blur"), ui->render_menu);
+    blur_action->setObjectName("Blur");
+
+	QAction* detection_action = new QAction(TR("Detection"), ui->render_menu);
+    detection_action->setObjectName("Detection");
+
+	ui->render_menu->addAction(sky_action);
+	ui->render_menu->addAction(inversion_action);
+    ui->render_menu->addAction(grayscale_action);
+    ui->render_menu->addAction(sharpen_action);
+    ui->render_menu->addAction(blur_action);
+    ui->render_menu->addAction(detection_action);
+
+}
+
 void MainWindow::createModel(bool checked)
 {
 	QString objname = sender()->objectName();
 	if (objname == "ring")
 	{
-        CreatEngine(true, EM_CYLINDERENGINE);
+        CreatEngine(true, OperatorAction::CreatCyliner);
 	}
 	else if (objname == "cube_action")
 	{
-        CreatEngine(true, EM_CUBEENGINE);
+        CreatEngine(true, OperatorAction::CreatCube);
 	}
 	else if (objname == "cylinder_action")
 	{
-        CreatEngine(true, EM_TOURSENGINE);
+        CreatEngine(true, OperatorAction::CreatTourse);
 	}
     else if (objname == "sky")
     {
-        CreatEngine(true, EM_SKYBOXENGINE);
+        CreatEngine(true, OperatorAction::ClearSkyBox);
     }
     else if (objname == "clear_model")
     {
-        CreatEngine(false, EM_GRIDENGINE);
+        CreatEngine(false, OperatorAction::ClearCreatModel);
     }
     else if (objname == "clear_sky")
     {
-        CreatEngine(false, EM_SKYBOXENGINE);
+        CreatEngine(false, OperatorAction::ClearSkyBox);
     }
+	else if (objname == "Inversion")
+	{
+		CreatEngine(true, OperatorAction::RenderInversion);
+	}
+	else if (objname == "Grayscale")
+	{
+		CreatEngine(true, OperatorAction::RenderGrayscale);
+	}
+	else if (objname == "Sharpen")
+	{
+		CreatEngine(true, OperatorAction::RenderSharpen);
+	}
+	else if (objname == "Blur")
+	{
+		CreatEngine(true, OperatorAction::RenderBlur);
+	}
+	else if (objname == "Detection")
+	{
+		CreatEngine(true, OperatorAction::RenderDetection);
+	}
+    LogInfo("create model type:{}", objname.toStdString());
+    qDebug() << objname;
 }
 
-void MainWindow::CreatEngine(bool checked, EngineType type)
+void MainWindow::CreatEngine(bool checked, OperatorAction type)
 {
     if(checked)
     {

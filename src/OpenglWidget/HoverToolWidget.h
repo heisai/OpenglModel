@@ -7,6 +7,7 @@
 #include <QString>
 #include<QPainter>
 #include<QDebug>
+#include"../Utils/Translator.h"
 class HoverToolWidget : public QWidget
 {
     Q_OBJECT

@@ -37,7 +37,7 @@ struct Mesh
     unsigned int ebo_;
 	std::vector<float> vertices_datas; //顶点数据
 	std::vector<unsigned int>indices_datas;
-    EngineType model_type_;   //模型类型
+    OperatorAction model_type_;   //模型类型
 };
 using MeshPtr = std::shared_ptr<Mesh>;
 
@@ -45,15 +45,9 @@ using MeshPtr = std::shared_ptr<Mesh>;
 class GraphicsEngine:public QOpenGLFunctions_4_5_Core
 {
 public:
-    GraphicsEngine(EngineType type,std::shared_ptr<Shader> shader = nullptr, std::shared_ptr<Shader>m_Stencilshader = nullptr);
+    GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shader = nullptr, std::shared_ptr<Shader>m_Stencilshader = nullptr);
     virtual void Draw() = 0;
     virtual void InitBufferData() = 0;
-    
-    virtual void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices) {};
-    virtual bool colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int xpos, int ypos,int objetc_id)
-    {
-        return false;
-    }
     virtual void SetViewSize(int width, int height);
     void UseShader();
     void setChecked(bool flag);
@@ -65,13 +59,15 @@ public:
     void setTranlstorPosition(const QVector2D& tranlstor_position_);
     MvpDataPtr getMvpData();
     MeshPtr getMesh();
-    EngineType getModeltype()const;
+    OperatorAction getModeltype()const;
     bool getCheck()const;
+    //获取默认Shader
+    std::shared_ptr<Shader> getDefaultShader();
     /*virtual ~ GraphicsEngine();*/
 private:
     void setModelInfo(const ModelDataInfo& model_datas);
 public:
-     std::shared_ptr<Shader>m_shader;
+     std::shared_ptr<Shader>default_shader_;
      std::shared_ptr<Shader>m_PickShader;
      std::shared_ptr<Shader>stencil_shader_;
      
@@ -85,7 +81,7 @@ protected:
 	 MvpDataPtr mvp_data_;      //世界空间坐标
      MeshPtr mesh_data_;           //模型数据
      bool selected_ = false;        //选中状态
-     EngineType model_type_;   //模型类型
+     OperatorAction model_type_;   //模型类型
 
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;

@@ -1,8 +1,8 @@
 ﻿#include"Graphics.h"
 
-GraphicsEngine::GraphicsEngine(EngineType type,std::shared_ptr<Shader> shader /*= nullptr*/,
+GraphicsEngine::GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shader /*= nullptr*/,
 	std::shared_ptr<Shader>m_Tshader /*= nullptr*/):
-	m_shader(shader),
+	default_shader_(shader),
 	m_PickShader(m_Tshader),
 	model_type_(type)
 {
@@ -46,7 +46,7 @@ MeshPtr GraphicsEngine::getMesh()
 	return mesh_data_;
 }
 
-EngineType GraphicsEngine::getModeltype()const
+OperatorAction GraphicsEngine::getModeltype()const
 {
 	return model_type_;
 }
@@ -56,6 +56,11 @@ bool GraphicsEngine::getCheck() const
 	return selected_;
 }
 
+std::shared_ptr<Shader> GraphicsEngine::getDefaultShader()
+{
+	return default_shader_;
+}
+
 void GraphicsEngine::SetViewSize(int width,int height)
 {
 	m_Width = width;
@@ -63,7 +68,7 @@ void GraphicsEngine::SetViewSize(int width,int height)
 }
 void GraphicsEngine::UseShader()
 {
-	glUseProgram(m_shader->ShaderPromger);
+	glUseProgram(default_shader_->ShaderPromger);
 
 }
 

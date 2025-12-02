@@ -45,49 +45,83 @@
 <context>
     <name>Translator</name>
     <message>
+        <location filename="../src/Utils/Translator.cpp" line="10"/>
+        <source>cube</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="11"/>
+        <source>ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/Utils/Translator.cpp" line="12"/>
-        <location filename="../src/Utils/Translator.cpp" line="24"/>
-        <source>q1234</source>
+        <source>sky</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="13"/>
-        <location filename="../src/Utils/Translator.cpp" line="25"/>
-        <source>q1</source>
+        <source>model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="14"/>
-        <location filename="../src/Utils/Translator.cpp" line="26"/>
-        <source>q3</source>
+        <source>clear_sky</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="15"/>
-        <location filename="../src/Utils/Translator.cpp" line="27"/>
-        <source>q7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Utils/Translator.cpp" line="16"/>
-        <location filename="../src/Utils/Translator.cpp" line="28"/>
-        <source>q8</source>
+        <source>cylinder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="17"/>
-        <location filename="../src/Utils/Translator.cpp" line="29"/>
-        <source>q5</source>
+        <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="18"/>
-        <source>nnnn</source>
+        <source>Rotate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="31"/>
-        <source>qweqwewqe</source>
+        <location filename="../src/Utils/Translator.cpp" line="19"/>
+        <source>Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="20"/>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="21"/>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="23"/>
+        <source>Inversion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="24"/>
+        <source>Grayscale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="25"/>
+        <source>Sharpen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="26"/>
+        <source>Blur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="27"/>
+        <source>Detection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -17,8 +17,8 @@ public:
     // 窗口/视口大小
     void setViewSize(int width, int height);
     // 创建模型
-    void createModel(EngineType type);
-    void removeModel(EngineType type);
+    void createModel(OperatorAction type);
+    void removeModel(OperatorAction type);
 	// 渲染 / 拾取 / 初始化
 	void paintGl();
 	MvpDataPtr pickModel(int xpos, int ypos);
@@ -26,14 +26,30 @@ public:
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
 private:
     void createGridEngine();
+    //创建立方体
     GraphicsEnginePtr createCubeEngine();
+    //创建圆柱体
     GraphicsEnginePtr createToursEngine();
+    //创建圆环体
     GraphicsEnginePtr createCylinderEngine();
+    //创建天空盒子
     GraphicsEnginePtr createSkyBoxEngine();
+    //反相
+    GraphicsEnginePtr createInversionRender();
+    //灰度
+    GraphicsEnginePtr createGrayscaleRender();
+    //瑞化
+    GraphicsEnginePtr createSharpenRender();
+    //模糊
+    GraphicsEnginePtr createBlurRender();
+    //检测
+    GraphicsEnginePtr createDetectionRender();
+    //GraphicsEnginePtr createInversionRender();
+
     void createLoadModelEngine();
     void createMixEngine();
     // 移除引擎
-    void removeEngine(EngineType type);
+    void removeEngine(OperatorAction type);
 protected:
     void addEngine( const GraphicsEnginePtr& graphics);
     QString generateUuid();
@@ -41,7 +57,7 @@ protected:
 public:
     //std::map<QString, GraphicsEnginePtr> map_graphic_;
     std::list<GraphicsEnginePtr>list_graphic_;
-    std::map<EngineType, std::function<GraphicsEnginePtr(void)>> map_graphicengine_createfunc_;
+    std::map<OperatorAction, std::function<GraphicsEnginePtr(void)>> map_graphicengine_createfunc_;
     int width_ = 0;
     int height_ = 0;
     std::unique_ptr<ScreenRenderModel>screen_render_model_;

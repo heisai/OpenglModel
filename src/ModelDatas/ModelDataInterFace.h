@@ -37,20 +37,24 @@ struct fmt::formatter<glm::vec3> {
 #define LogWarn(...)  SPDLOG_WARN(__VA_ARGS__)
 #define LogError(...) SPDLOG_ERROR(__VA_ARGS__)
 //模型类型
-enum EngineType
+enum class OperatorAction
 {
-    EM_GRIDENGINE = 0,	//网格引擎
-    EM_CUBEENGINE,	//立方体引擎
-    EM_TOURSENGINE, //圆环体引擎
-    EM_CYLINDERENGINE, //圆柱体引擎
-    EM_MODELENGINE,//模型引擎
-    EM_MIXENGINE,   //混合引擎
-	EM_SKYBOXENGINE,   //天空盒引擎
-};
-//操作动作
-enum OperatorAction
-{
-
+	//离屏渲染
+	ScreenRender = 0,
+	//模型动作
+	CreatCyliner ,
+	CreatCube,
+	CreatTourse,
+	//渲染动作
+	RenderInversion,   //
+	RenderGrayscale,   //
+	RenderSharpen,   //
+	RenderBlur,   //
+	RenderDetection,   //
+	//清除动作
+	ClearSkyBox,
+	ClearCreatModel,
+	ClearRender
 };
 struct ModelDataInfo
 {

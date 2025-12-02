@@ -1,5 +1,5 @@
 #include"GeneralModel.h"
-GeneralModel::GeneralModel(EngineType type, std::shared_ptr<Shader> shader /*= nullptr*/):
+GeneralModel::GeneralModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(type,shader),
 	m_RayTrack(false)
 {
@@ -18,23 +18,23 @@ void GeneralModel::Draw()
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 	}
-	m_shader->bind();
-	m_shader->setMat4("view", mvp_data_->view_);
-	m_shader->setMat4("projection", mvp_data_->projection_);
-	m_shader->setMat4("model", mvp_data_->model_);
+	default_shader_->bind();
+	default_shader_->setMat4("view", mvp_data_->view_);
+	default_shader_->setMat4("projection", mvp_data_->projection_);
+	default_shader_->setMat4("model", mvp_data_->model_);
 
 
 	//设置光源属性
-	m_shader->setVec3("viewPos", mvp_data_->view_[3]);
-	m_shader->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	m_shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	default_shader_->setVec3("viewPos", mvp_data_->view_[3]);
+	default_shader_->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
+	default_shader_->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	default_shader_->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+	default_shader_->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 	//设置材质属性
-	m_shader->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
-	m_shader->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
-	m_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-	m_shader->setFloat("material.shininess", 32.0f);
+	default_shader_->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
+	default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
+	default_shader_->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	default_shader_->setFloat("material.shininess", 32.0f);
 	glBindVertexArray(mesh_data_->vao_);
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 	if (selected_)
@@ -64,9 +64,9 @@ void GeneralModel::Draw()
 void GeneralModel::InitBufferData()
 {
 	
-	if (m_shader)
+	if (default_shader_)
 	{
-		m_shader->CreatProgram();
+		default_shader_->CreatProgram();
 	}
 	if (m_PickShader)
 	{

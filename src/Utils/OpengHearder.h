@@ -5,7 +5,7 @@
 #include"../Graphics/CubeMapsModel/CubeMapsModel.h"
 #include"../ModelDatas/CreatModelData.h"
 #include"../ModelDatas/ModelDataInterFace.h"
-
+#include"Translator.h"
 
 
 
