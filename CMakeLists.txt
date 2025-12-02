@@ -53,7 +53,7 @@ qt_add_executable(OpenglEngine ${PROJECT_SOURCES})
 
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
-        WIN32_EXECUTABLE TRUE
+        WIN32_EXECUTABLE false
 )
 target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::OpenGLWidgets )
 target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
