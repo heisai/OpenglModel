@@ -288,23 +288,24 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
 
 
     int object_id = 1;
+    std::map<float, GraphicsEnginePtr>map_engineptr;
     for (auto& graphic_ : list_graphic_)
     {
         MvpDataPtr mvp = graphic_->getMvpData();
-        //bool selected = pair.second->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
-
-
         MeshPtr mesh = graphic_->getMesh();
         screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas);
-        bool selected  = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
+        auto[selected,depth] = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
-            graphic_->setChecked(selected);
-            LogInfo("¡¾Selected ¡¿ ColorID: {}", object_id);
-            mvp_data = mvp;
-            break;
+            LogInfo("¡¾Selected ¡¿ ColorID: {} \n Depth: {}", object_id, depth);
+            map_engineptr[depth] = graphic_;
         }
         ++object_id;
+    }
+    if (!map_engineptr.empty())
+    {
+        map_engineptr.begin()->second->setChecked(true);
+        return map_engineptr.begin()->second->getMvpData();
     }
     return mvp_data;
 }

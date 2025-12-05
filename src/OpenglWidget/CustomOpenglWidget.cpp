@@ -40,8 +40,11 @@ void CustomOpenglWidget::initializeGL()
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glEnable(GL_MULTISAMPLE);
+	glHint(GL_LINE_SMOOTH, GL_NICEST);
 
- 
+
+
 
     if (m_PtrManageEngine)
     {

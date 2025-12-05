@@ -3,17 +3,13 @@ GeneralModel::GeneralModel(OperatorAction type, std::shared_ptr<Shader> shader /
     GraphicsEngine(type,shader),
 	m_RayTrack(false)
 {
-
-	// 使用拾取着色器
-	//m_PickShader = std::make_shared<Shader>("pick_vertex.vs", "pick_fragment.fs", "GeneralModel");
 	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
 }
 
 
 void GeneralModel::Draw()
 {
-
-	if (selected_)
+	//if (selected_)
 	{
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
@@ -37,6 +33,8 @@ void GeneralModel::Draw()
 	default_shader_->setFloat("material.shininess", 32.0f);
 	glBindVertexArray(mesh_data_->vao_);
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
+
+
 	if (selected_)
 	{
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -51,12 +49,11 @@ void GeneralModel::Draw()
 		glBindVertexArray(mesh_data_->vao_);
 		glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 
-
 	}
-
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
 	glEnable(GL_DEPTH_TEST);
+
 
 
 }
@@ -78,13 +75,11 @@ void GeneralModel::InitBufferData()
 	}
 
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_STENCIL_TEST);
-	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	glEnable(GL_MULTISAMPLE);
-	glHint(GL_LINE_SMOOTH, GL_NICEST);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS);
+	//glEnable(GL_STENCIL_TEST);
+	//glEnable(GL_MULTISAMPLE);
+	//glHint(GL_LINE_SMOOTH, GL_NICEST);
 
 	// 顶点数组对象
 	glGenVertexArrays(1, &mesh_data_->vao_);
@@ -118,27 +113,6 @@ void GeneralModel::SetLightColor(glm::vec3 lightcolor)
 void GeneralModel::SetObjectColor(glm::vec3 objectcolor)
 {
 	m_ObjectColor = objectcolor;
-}
-
-void GeneralModel::DrawStencil(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
-{
-#if 0
-	
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilMask(0x00);
-	glDisable(GL_DEPTH_TEST);
-	m_Stencilshader->UseProgram();
-	float scale = 1.025f;
-	model = glm::scale(model, glm::vec3(scale, scale, scale));
-	m_Stencilshader->setMat4("model", model);
-	m_Stencilshader->setMat4("view", view);
-	m_Stencilshader->setMat4("projection", projection);
-	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glStencilMask(0xFF);
-	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glEnable(GL_DEPTH_TEST);
-#endif 
 }
 
 

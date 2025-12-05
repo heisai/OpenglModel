@@ -133,7 +133,7 @@ void ScreenRenderModel::setScreenRenderVertexData(unsigned int vao, std::vector<
 }
 
 
-bool ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
+std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
 	int objetc_id)
 {
 	LogInfo("========================== START PICKING =======================");
@@ -176,23 +176,24 @@ bool ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 pro
 	glFinish();
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_PickFBO);
-	glReadBuffer(GL_COLOR_ATTACHMENT0);
-
+	//glReadBuffer(GL_COLOR_ATTACHMENT0);
 	// 读取像素
 	unsigned char pixel[3] = { 0, 0, 0 };
 	glReadPixels(readX, readY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-
 	// 转换回ID
 	int pickedID = colorToId(glm::vec3(pixel[0], pixel[1], pixel[2]));
 
-	GLint srgb;
-	glGetIntegerv(GL_FRAMEBUFFER_SRGB, &srgb);
-	LogInfo("Picked ID {} \t Pixel RGB:{},{},{}", pickedID, (int)pixel[0], (int)pixel[1], (int)pixel[2]);
+	//glReadBuffer(GL_COLOR_ATTACHMENT1);
+	float depth;
+	glReadPixels(readX, readY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+	/*GLint srgb;
+	glGetIntegerv(GL_FRAMEBUFFER_SRGB, &srgb);*/
+	LogInfo("Picked ID {} \t Pixel RGB:{},{},{}  Depth:{}", pickedID, (int)pixel[0], (int)pixel[1], (int)pixel[2], depth);
 	// === 关键修正7：正确恢复状态 ===
 	glReadBuffer(currentReadBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, m_Width, m_Height);
-	return pickedID == objetc_id;
+	return std::make_tuple(pickedID == objetc_id, depth);
 #endif
 }
 

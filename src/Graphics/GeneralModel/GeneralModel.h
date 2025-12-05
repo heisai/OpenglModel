@@ -9,7 +9,6 @@ public:
 	void InitBufferData() override;
     void SetLightColor(glm::vec3 lightcolor);
     void SetObjectColor(glm::vec3 objectcolor);
-    void DrawStencil(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 private:
     bool m_RayTrack = false;
     glm::vec3 m_ObjectColor = glm::vec3(1.0f, 0.5f, 0.31f);
