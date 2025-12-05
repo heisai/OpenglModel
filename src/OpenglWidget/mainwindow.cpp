@@ -137,7 +137,6 @@ void MainWindow::createModel(bool checked)
 		CreatEngine(true, OperatorAction::RenderDetection);
 	}
     LogInfo("create model type:{}", objname.toStdString());
-    qDebug() << objname;
 }
 
 void MainWindow::CreatEngine(bool checked, OperatorAction type)

@@ -111,7 +111,7 @@ GraphicsEnginePtr ManageEngine::createInversionRender()
     GraphicsEnginePtr basic_light_engine = nullptr;
 	if (screen_render_model_)
 	{
-		screen_render_model_->setRenderType(2);
+		screen_render_model_->setRenderType(1);
 	}
     return basic_light_engine;
 }
@@ -121,7 +121,7 @@ GraphicsEnginePtr ManageEngine::createGrayscaleRender()
 	GraphicsEnginePtr basic_light_engine = nullptr;
 	if (screen_render_model_)
 	{
-		screen_render_model_->setRenderType(1);
+		screen_render_model_->setRenderType(2);
 	}
 	return basic_light_engine;
 }
@@ -131,7 +131,7 @@ GraphicsEnginePtr ManageEngine::createSharpenRender()
 	GraphicsEnginePtr basic_light_engine = nullptr;
 	if (screen_render_model_)
 	{
-		screen_render_model_->setRenderType(2);
+		screen_render_model_->setRenderType(3);
 	}
 	return basic_light_engine;
 }
@@ -141,7 +141,7 @@ GraphicsEnginePtr ManageEngine::createBlurRender()
 	GraphicsEnginePtr basic_light_engine = nullptr;
 	if (screen_render_model_)
 	{
-		screen_render_model_->setRenderType(3);
+		screen_render_model_->setRenderType(4);
 	}
 	return basic_light_engine;
 }
@@ -151,7 +151,7 @@ GraphicsEnginePtr ManageEngine::createDetectionRender()
 	GraphicsEnginePtr basic_light_engine = nullptr;
 	if (screen_render_model_)
 	{
-		screen_render_model_->setRenderType(4);
+		screen_render_model_->setRenderType(5);
 	}
 	return basic_light_engine;
 }

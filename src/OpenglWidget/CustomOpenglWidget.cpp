@@ -41,7 +41,7 @@ void CustomOpenglWidget::initializeGL()
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-
+ 
 
     if (m_PtrManageEngine)
     {
