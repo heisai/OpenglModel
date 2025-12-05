@@ -106,6 +106,8 @@ void CustomOpenglWidget::mousePressEvent(QMouseEvent *e)
         if (mvp_data)
         {
             m_TranlstorPosition = m_TranlstorPositionOld = mvp_data->tranlstor_position_;
+            rotationAxistemp = rotationAxisold = mvp_data->model_;
+
         }
     }
 }
@@ -164,7 +166,6 @@ void CustomOpenglWidget::mouseMoveEvent(QMouseEvent *e)
 			rotationAxisold = glm::rotate(rotationAxisold, m_Angley, glm::vec3(0.0f, 1.0f, 0.0f));
 			rotationAxisold = glm::rotate(rotationAxisold, m_Anglex, glm::vec3(1.0f, 0.0f, 0.0f));
 			rotationAxisold *= rotationAxistemp;
-			qDebug() << "m_Anglex:" << m_Anglex << "m_Angley:" << m_Angley;
         
         }
 			break;
