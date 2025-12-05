@@ -2,9 +2,6 @@
 
 - __开发问题：在初始化 带有initializeOpenGLFunctions(); 的类的时候， 要在QOpenGLWidget 自定义类构造之后初始化。__
 
-<<<<<<< HEAD
-- __开发问题:__  __qt_wrap_ui(UI_HEADERS  ${UI_FILES} ) 强制生成ui_h 文件，默认生成在自定义buildRoot 路径， target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) 要将ui_*h目录包括进来__
-
 - __生成翻译文件:__
 
   ```cpp	
@@ -18,8 +15,27 @@
   add_dependencies(OpenglEngine update_translations)
   ```
 
+
+- __指定路径生成ui_*.h:___
+
+  __qt_wrap_ui(UI_HEADERS  ${UI_FILES} ) 强制生成ui_h 文件，默认生成在自定义buildRoot 路径， target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) 要将ui_*h目录包括进来__
+
+  ```cpp
+   qt_wrap_ui(OpenglEngine UI_HEADERS  ${UI_FILES} )
+   target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+  ```
+
   
 
-=======
-- __开发问题: qt_wrap_ui(UI_HEADERS  ${UI_FILES} ) 强制生成ui_h 文件，默认生成在自定义buildRoot 路径， target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) 要将ui_*h目录包括进来__
->>>>>>> dd5a14be887ddc3e1d27cbd57108fd4ac93f4729
+- __vs studio 设置生成命令行终端 便于log 调试：__
+
+  ```cpp
+  set_target_properties(${PROJECT_NAME}
+      PROPERTIES
+          WIN32_EXECUTABLE false
+  )
+   WIN32_EXECUTABLE true //则是隐藏
+  
+  ```
+
+  
