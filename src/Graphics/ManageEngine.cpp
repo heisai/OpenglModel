@@ -9,7 +9,7 @@ ManageEngine::ManageEngine():
     map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
     map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });
     map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
-
+    map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });
 
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   //反向
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });   //灰度
@@ -17,6 +17,7 @@ ManageEngine::ManageEngine():
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //模糊
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //检测
 
+   
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -61,20 +62,22 @@ void ManageEngine::removeModel(OperatorAction type)
     
 }
 
-void ManageEngine::createGridEngine()
+GraphicsEnginePtr ManageEngine::createGridEngine()
 {
- /*   ShaderPtr shader = std::make_shared<Shader>("123.txt", "456.txt", "Rectangle");
-    GraphicsEnginePtr graphics = std::make_shared<RectangleEngine>(shader);
-    addEngine(generateUuid(), graphics, shader);*/
+	/*ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "grid_fragment.frag", "GeneralModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<GridModel>(OperatorAction::CreatGrid, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;*/
+
+
+	ShaderPtr light_shader  = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag","axis_geometry.vert", "GeneralModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
-	//ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	//GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(light_shader);
-	//basic_light_engine->SetViewSize(width_, height_);
-	//addEngine(generateUuid(), basic_light_engine, light_shader);
-
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCube, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
@@ -215,41 +218,53 @@ void ManageEngine::initializeGl()
 	{
         screen_render_model_->InitBufferData();
 	}
+
 }
 
 
 
 void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
 {
-    int index = 0;
-    for (auto& graphic_ : list_graphic_)
-    {
-        if (graphic_->getCheck())
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            glm::mat4 view = glm::mat4(1.0f);
-            glm::mat4 projection = glm::mat4(1.0f);
+	int index = 0;
 
-            projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
-            view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
-            model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
-            graphic_->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
-            graphic_->setModelData(model * model_old);
-            graphic_->setProjectionData(projection);
-            graphic_->setTranlstorPosition(QVector2D(translate.x, -translate.y));
-        }
-        
-    }
+	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
+		return (graphic_->getCheck() == true);
+		});
+
+	if (iter != list_graphic_.end())
+	{
+		SetEngineScaleAndTranslate(*iter, scale, translate, model_old);
+		iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
+			return (graphic_->getModeltype() == OperatorAction::CreatAxis);
+			});
+		if (iter != list_graphic_.end())
+		{
+			SetEngineScaleAndTranslate(*iter, scale, translate, model_old);
+		}
+	}
+
+}
+void ManageEngine::SetEngineScaleAndTranslate(const GraphicsEnginePtr& engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
+{
+	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+	view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
+	model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
+	engine_ptr->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
+	engine_ptr->setModelData(model * model_old);
+	engine_ptr->setProjectionData(projection);
+	engine_ptr->setTranlstorPosition(QVector2D(translate.x, -translate.y));
 }
 
 void ManageEngine::paintGl()
 {
+
+
     if (list_graphic_.empty()) return;
 
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    
-
-    
     for (const auto& graphic_ : list_graphic_)
     {
         if (graphic_->getDefaultShader())

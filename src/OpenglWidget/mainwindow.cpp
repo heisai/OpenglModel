@@ -18,16 +18,9 @@ void MainWindow::InitUI()
 
     addEngineMenu();
     addRenderMenu();
+	addClearMenu();
 
-
-    QAction* clear_model_action = new QAction(TR("model"), ui->clear_menu);
-    clear_model_action->setObjectName("clear_model");
-    QAction* clear_sky_action = new QAction(TR("sky"), ui->clear_menu);
-    clear_sky_action->setObjectName("clear_sky");
-    ui->clear_menu->addAction(clear_model_action);
-    ui->clear_menu->addAction(clear_sky_action);
-    
-    
+	
 }
 
 void MainWindow::InitConnect()
@@ -36,6 +29,12 @@ void MainWindow::InitConnect()
 	{
 		connect(action, &QAction::triggered, this, &MainWindow::createModel,Qt::UniqueConnection);
 	}
+
+}
+
+void MainWindow::showGridEngine()
+{
+	m_PtrManageEngine->createModel(OperatorAction::CreatGrid);
 }
 
 MainWindow::~MainWindow()
@@ -47,38 +46,43 @@ MainWindow::~MainWindow()
 void MainWindow::addEngineMenu()
 {
 	QAction* ring_action = new QAction(TR("ring"), ui->model_menu);
-	ring_action->setObjectName("ring");
+	ring_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatTourse)));
 
 	QAction* cube_action = new QAction(TR("cube"), ui->model_menu);
-	cube_action->setObjectName("cube_action");
+	cube_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatCube)));
 
 	QAction* cylinder_action = new QAction(TR("cylinder"), ui->model_menu);
-	cylinder_action->setObjectName("cylinder_action");
+	cylinder_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatCyliner)));
+
+	QAction* grid_action = new QAction(TR("grid"), ui->model_menu);
+	grid_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatGrid)));
 
 	ui->model_menu->addAction(ring_action);
 	ui->model_menu->addAction(cube_action);
 	ui->model_menu->addAction(cylinder_action);
+	ui->model_menu->addAction(grid_action);
 }
 
 void MainWindow::addRenderMenu()
 {
+
 	QAction* sky_action = new QAction(TR("sky"), ui->render_menu);
-	sky_action->setObjectName("sky");
+	sky_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderSky)));
 
 	QAction* inversion_action = new QAction(TR("Inversion"), ui->render_menu);
-    inversion_action->setObjectName("Inversion");
+    inversion_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderInversion)));
 
 	QAction* grayscale_action = new QAction(TR("Grayscale"), ui->render_menu);
-    grayscale_action->setObjectName("Grayscale");
+    grayscale_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderGrayscale)));
 
 	QAction* sharpen_action = new QAction(TR("Sharpen"), ui->render_menu);
-    sharpen_action->setObjectName("Sharpen");
+    sharpen_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderSharpen)));
 
 	QAction* blur_action = new QAction(TR("Blur"), ui->render_menu);
-    blur_action->setObjectName("Blur");
+    blur_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderBlur)));
 
 	QAction* detection_action = new QAction(TR("Detection"), ui->render_menu);
-    detection_action->setObjectName("Detection");
+    detection_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderDetection)));
 
 	ui->render_menu->addAction(sky_action);
 	ui->render_menu->addAction(inversion_action);
@@ -89,61 +93,34 @@ void MainWindow::addRenderMenu()
 
 }
 
-void MainWindow::createModel(bool checked)
+void MainWindow::addClearMenu()
 {
-	QString objname = sender()->objectName();
-	if (objname == "ring")
-	{
-        CreatEngine(true, OperatorAction::CreatCyliner);
-	}
-	else if (objname == "cube_action")
-	{
-        CreatEngine(true, OperatorAction::CreatCube);
-	}
-	else if (objname == "cylinder_action")
-	{
-        CreatEngine(true, OperatorAction::CreatTourse);
-	}
-    else if (objname == "sky")
-    {
-        CreatEngine(true, OperatorAction::ClearSkyBox);
-    }
-    else if (objname == "clear_model")
-    {
-        CreatEngine(false, OperatorAction::ClearCreatModel);
-    }
-    else if (objname == "clear_sky")
-    {
-        CreatEngine(false, OperatorAction::ClearSkyBox);
-    }
-	else if (objname == "Inversion")
-	{
-		CreatEngine(true, OperatorAction::RenderInversion);
-	}
-	else if (objname == "Grayscale")
-	{
-		CreatEngine(true, OperatorAction::RenderGrayscale);
-	}
-	else if (objname == "Sharpen")
-	{
-		CreatEngine(true, OperatorAction::RenderSharpen);
-	}
-	else if (objname == "Blur")
-	{
-		CreatEngine(true, OperatorAction::RenderBlur);
-	}
-	else if (objname == "Detection")
-	{
-		CreatEngine(true, OperatorAction::RenderDetection);
-	}
-    LogInfo("create model type:{}", objname.toStdString());
+	QAction* clear_model_action = new QAction(TR("model"), ui->clear_menu);
+	clear_model_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearCreatModel)));
+	QAction* clear_sky_action = new QAction(TR("sky"), ui->clear_menu);
+	clear_sky_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearSkyBox)));
+	ui->clear_menu->addAction(clear_model_action);
+	ui->clear_menu->addAction(clear_sky_action);
 }
 
-void MainWindow::CreatEngine(bool checked, OperatorAction type)
+void MainWindow::createModel(bool checked)
 {
-    if(checked)
+	OperatorAction operator_action = static_cast<OperatorAction>(sender()->objectName().toInt());
+	 if (operator_action >= OperatorAction::ClearSkyBox && operator_action <= OperatorAction::ClearRender)
+	 {
+		 CreatEngine(false, operator_action);
+	 }
+	 else
+	 {
+		 CreatEngine(true, operator_action);
+	 }
+    LogInfo("create model type:{}", static_cast<int>(operator_action));
+}
+
+void MainWindow::CreatEngine(bool create_model, OperatorAction type)
+{
+    if(create_model)
     {
-       
         m_PtrManageEngine->createModel(type);
         ui->openGLWidget->makeCurrent();
         m_PtrManageEngine->initializeGl();

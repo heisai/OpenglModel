@@ -24,8 +24,9 @@ public:
 	MvpDataPtr pickModel(int xpos, int ypos);
 	void initializeGl();
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
+    void SetEngineScaleAndTranslate(const GraphicsEnginePtr&engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
 private:
-    void createGridEngine();
+    GraphicsEnginePtr createGridEngine();
     //创建立方体
     GraphicsEnginePtr createCubeEngine();
     //创建圆柱体

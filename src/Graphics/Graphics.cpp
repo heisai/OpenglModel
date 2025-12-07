@@ -3,7 +3,7 @@
 GraphicsEngine::GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shader /*= nullptr*/,
 	std::shared_ptr<Shader>m_Tshader /*= nullptr*/):
 	default_shader_(shader),
-	m_PickShader(m_Tshader),
+	/*m_PickShader(m_Tshader),*/
 	model_type_(type)
 {
 	initializeOpenGLFunctions();

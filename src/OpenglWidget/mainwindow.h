@@ -18,15 +18,18 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void InitUI();
     void InitConnect();
+	void showGridEngine();
     ~MainWindow();
 private:
     //添加引擎菜单
     void addEngineMenu();
     //添加渲染菜单
     void addRenderMenu();
+	//添加清除菜单
+	void addClearMenu();
 private slots:
     void createModel(bool checked);
-    void CreatEngine(bool checked,OperatorAction type);
+    void CreatEngine(bool create_model,OperatorAction type);
     void ChangeLightColorSlot(QColor color);
 private:
     Ui::MainWindow *ui;

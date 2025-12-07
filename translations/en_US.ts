@@ -75,52 +75,57 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="17"/>
-        <source>Move</source>
+        <location filename="../src/Utils/Translator.cpp" line="16"/>
+        <source>grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="18"/>
-        <source>Rotate</source>
+        <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="19"/>
-        <source>Scale</source>
+        <source>Rotate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="20"/>
-        <source>Select</source>
+        <source>Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="21"/>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="22"/>
         <source>OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="23"/>
+        <location filename="../src/Utils/Translator.cpp" line="24"/>
         <source>Inversion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="24"/>
+        <location filename="../src/Utils/Translator.cpp" line="25"/>
         <source>Grayscale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="25"/>
+        <location filename="../src/Utils/Translator.cpp" line="26"/>
         <source>Sharpen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="26"/>
+        <location filename="../src/Utils/Translator.cpp" line="27"/>
         <source>Blur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="27"/>
+        <location filename="../src/Utils/Translator.cpp" line="28"/>
         <source>Detection</source>
         <translation type="unfinished"></translation>
     </message>

@@ -5,17 +5,6 @@
 CustomOpenglWidget::CustomOpenglWidget(QWidget *parent):
     QOpenGLWidget(parent)
 {
-#if 0
-	std::string className = std::string(typeid(this).name());
-	//第一个空格索引
-	int firstSpaceIndex = className.find_first_of(" ") + 1;
-	//最后一个空格索引
-	int lastSpaceIndex = className.find_last_of(" ");
-	//类名长度
-	int nameLength = lastSpaceIndex - firstSpaceIndex - 2;
-    className = className.substr(firstSpaceIndex, nameLength);
-    qDebug()<<"===================" << className.c_str();
-#endif
 	widget_ = new HoverToolWidget(this);
 	widget_->show();
 }

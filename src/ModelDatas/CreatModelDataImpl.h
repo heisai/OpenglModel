@@ -3,6 +3,8 @@
 #include"CylinderVerticesData.h"
 #include"ToursVerticesData.h"
 #include"CubeVerticesData.h"
+#include "GridVerticeData.h"
+#include "AxisVerticeData.h"
 class CreatModelDataImpl
 {
 public:

@@ -45,12 +45,15 @@ enum class OperatorAction
 	CreatCyliner ,
 	CreatCube,
 	CreatTourse,
+	CreatGrid,
+	CreatAxis,
 	//渲染动作
 	RenderInversion,   //
 	RenderGrayscale,   //
 	RenderSharpen,   //
 	RenderBlur,   //
 	RenderDetection,   //
+	RenderSky,
 	//清除动作
 	ClearSkyBox,
 	ClearCreatModel,

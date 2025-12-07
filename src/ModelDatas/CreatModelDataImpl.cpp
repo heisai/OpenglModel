@@ -15,6 +15,13 @@ ModelDataInfo CreatModelDataImpl::GetModelDatas(OperatorAction type)
         break;
     case OperatorAction::CreatCube:
         model_data = move(std::make_unique<CubeVerticesData>());
+        break;
+    case OperatorAction::CreatGrid:
+        model_data = move(std::make_unique<GridVerticeData>());
+        break;
+	case OperatorAction::CreatAxis:
+		model_data = move(std::make_unique<AxisVerticeData>());
+		break;
     default:
         break;
     }

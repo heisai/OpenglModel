@@ -13,6 +13,7 @@ Translator& Translator::getInstance()
 	instance.translator_map_["model"] = tr("model");
 	instance.translator_map_["clear_sky"] = tr("clear_sky");
 	instance.translator_map_["cylinder"] = tr("cylinder");
+	instance.translator_map_["grid"] = tr("grid");
 
 	instance.translator_map_["Move"] = tr("Move");	//ÒÆ¶¯
 	instance.translator_map_["Rotate"] = tr("Rotate");

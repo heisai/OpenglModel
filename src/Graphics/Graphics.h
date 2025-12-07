@@ -63,13 +63,12 @@ public:
     bool getCheck()const;
     //获取默认Shader
     std::shared_ptr<Shader> getDefaultShader();
-    /*virtual ~ GraphicsEngine();*/
 private:
     void setModelInfo(const ModelDataInfo& model_datas);
 public:
+    //默认shader(用于基础模型绘制)
      std::shared_ptr<Shader>default_shader_;
-     std::shared_ptr<Shader>m_PickShader;
-     std::shared_ptr<Shader>stencil_shader_;
+    
      
 
 

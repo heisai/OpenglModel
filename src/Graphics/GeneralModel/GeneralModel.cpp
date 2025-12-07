@@ -1,9 +1,9 @@
 #include"GeneralModel.h"
 GeneralModel::GeneralModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/):
-    GraphicsEngine(type,shader),
-	m_RayTrack(false)
+    GraphicsEngine(type,shader)
 {
-	stencil_shader_ = std::make_shared<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
+	stencil_shader_ = std::make_unique<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
+
 }
 
 
@@ -65,10 +65,6 @@ void GeneralModel::InitBufferData()
 	{
 		default_shader_->CreatProgram();
 	}
-	if (m_PickShader)
-	{
-		m_PickShader->CreatProgram();
-	}
 	if (stencil_shader_)
 	{
 		stencil_shader_->CreatProgram();
@@ -104,15 +100,4 @@ void GeneralModel::InitBufferData()
 
 	//stencil_shader_->CreatProgram();	
 }
-
-void GeneralModel::SetLightColor(glm::vec3 lightcolor)
-{
-	m_LightColor = lightcolor;
-}
-
-void GeneralModel::SetObjectColor(glm::vec3 objectcolor)
-{
-	m_ObjectColor = objectcolor;
-}
-
 

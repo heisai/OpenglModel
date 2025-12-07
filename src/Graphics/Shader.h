@@ -11,12 +11,11 @@
 class Shader: public QOpenGLFunctions_4_5_Core {
 public:
     explicit Shader(const std::string& vs_filename,const std::string &fs_filename,
-		std::string dirname = "");
+		std::string dirname);
+	explicit Shader(const std::string& vs_filename, const std::string& fs_filename,
+        const std::string& gs_filename,const std::string& dirname);
    
-	std::string GetDirname()
-	{
-		return m_DirName;
-	}
+
 
     void bind();
     void release();
@@ -36,8 +35,9 @@ public:
 
 
 	void CreatProgram();
-    const char* vShaderCode;
-    const char* gShaderCode;
+     char* vShaderCode = nullptr ;
+     char* fShaderCode = nullptr;
+     char* gShaderCode = nullptr;
 protected:
    
     void CreatShader();
@@ -47,9 +47,11 @@ public:
     unsigned int ShaderPromger = 0;
     unsigned int VertecShader = 0;
     unsigned int FragmentShader = 0;
-	std::string m_DirName;
-    std::string vs_sourcecode;
-    std::string fs_sourcecode;
+    unsigned int geometry_shader_ = 0;
+
+	std::string vs_sourcecode;  //顶点着色器源码
+	std::string fs_sourcecode;  //片段着色器源码
+	std::string gs_sourcecode;//几何着色器源码
 
 };
 using ShaderPtr = std::shared_ptr<Shader>;

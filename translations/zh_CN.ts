@@ -75,52 +75,57 @@
         <translation>圆柱体</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="17"/>
+        <location filename="../src/Utils/Translator.cpp" line="16"/>
+        <source>grid</source>
+        <translation type="unfinished">网格</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="18"/>
         <source>Move</source>
         <translation>移动</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="18"/>
+        <location filename="../src/Utils/Translator.cpp" line="19"/>
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="19"/>
+        <location filename="../src/Utils/Translator.cpp" line="20"/>
         <source>Scale</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="20"/>
+        <location filename="../src/Utils/Translator.cpp" line="21"/>
         <source>Select</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="21"/>
+        <location filename="../src/Utils/Translator.cpp" line="22"/>
         <source>OpenGL</source>
         <translation>Opengl练习</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="23"/>
+        <location filename="../src/Utils/Translator.cpp" line="24"/>
         <source>Inversion</source>
         <translation>反相</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="24"/>
+        <location filename="../src/Utils/Translator.cpp" line="25"/>
         <source>Grayscale</source>
         <translation>灰度</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="25"/>
+        <location filename="../src/Utils/Translator.cpp" line="26"/>
         <source>Sharpen</source>
         <translation>锐化</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="26"/>
+        <location filename="../src/Utils/Translator.cpp" line="27"/>
         <source>Blur</source>
         <translation>模糊</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="27"/>
+        <location filename="../src/Utils/Translator.cpp" line="28"/>
         <source>Detection</source>
         <translation>检测</translation>
     </message>
