@@ -70,7 +70,7 @@ GraphicsEnginePtr ManageEngine::createGridEngine()
 	return basic_light_engine;*/
 
 
-	ShaderPtr light_shader  = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag","axis_geometry.vert", "GeneralModel");
+	ShaderPtr light_shader  = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag","axis_geometry.geom", "GeneralModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
