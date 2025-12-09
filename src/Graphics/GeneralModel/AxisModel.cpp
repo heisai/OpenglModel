@@ -8,7 +8,6 @@ AxisModel::AxisModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nul
 
 void AxisModel::Draw()
 {
-	glPointSize(100.0);
 	//if (selected_)
 	{
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);

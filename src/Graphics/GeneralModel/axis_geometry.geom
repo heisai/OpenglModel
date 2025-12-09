@@ -1,6 +1,6 @@
 #version 330 core
 layout(points) in;               // 输入类型是点
-layout(line_strip, max_vertices = 6) out;  // 输出线段
+layout(line_strip, max_vertices = 15) out;  // 输出线段
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -95,25 +95,55 @@ void drawAxis(vec3 origin, vec3 dir, vec3 color) {
 }
 void main()
 {
+    // 轴的长度和箭头的大小
+    float axisLength = 2.0f;
+    float arrowSize = 0.1f;
     // 起点位置
     vec3 origin = gl_in[0].gl_Position.xyz;
-  mat4 mvp = projection * view * model;
- axisColor = vec3(1.0, 0.0, 0.0);  // 红色
-    gl_Position = mvp *vec4(origin + vec3(4.0, 0.0, 0.0), 1.0);
+    mat4 mvp = projection * view * model;
+   axisColor = vec3(1.0, 0.0, 0.0);  // 红色
+    gl_Position = mvp *vec4(origin + vec3(2.0, 0.0, 0.0), 1.0);
     EmitVertex();
     gl_Position = mvp *vec4(origin, 1.0); 
     EmitVertex();
     EndPrimitive();
+ // 绘制 X 轴箭头（三角形）
+    gl_Position = mvp* vec4(origin + vec3(axisLength - arrowSize, 0.0, arrowSize), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(axisLength, 0.0, 0.0), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(axisLength - arrowSize, 0.0, -arrowSize), 1.0);
+    EmitVertex();
+    EndPrimitive();
+   
+
+
     axisColor = vec3(0.0, 1.0, 0.0);  // 绿色
-    gl_Position = mvp *vec4(origin + vec3(0.0, 4.0, 0.0), 1.0); 
+    gl_Position = mvp *vec4(origin + vec3(0.0, 2.0, 0.0), 1.0); 
     EmitVertex();
     gl_Position = mvp *vec4(origin, 1.0); 
     EmitVertex();
-EndPrimitive();
+  EndPrimitive();
+    gl_Position = mvp * vec4(origin + vec3(arrowSize, axisLength - arrowSize, 0.0), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(0.0, axisLength, 0.0), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(-arrowSize, axisLength - arrowSize, 0.0), 1.0);
+    EmitVertex();
+
+   EndPrimitive();
     axisColor = vec3(0.0, 0.0, 1.0);  // 蓝色
-    gl_Position = mvp *vec4(origin + vec3(0.0, 0.0, -4.0), 1.0); 
+    gl_Position = mvp *vec4(origin + vec3(0.0, 0.0, 2.0), 1.0); 
     EmitVertex();
     gl_Position = mvp *vec4(origin, 1.0); 
+    EmitVertex();
+  EndPrimitive();
+// 绘制 Z 轴箭头（三角形）
+    gl_Position = mvp * vec4(origin + vec3(arrowSize, 0.0, axisLength - arrowSize), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(0.0, 0.0, axisLength), 1.0);
+    EmitVertex();
+    gl_Position = mvp * vec4(origin + vec3(-arrowSize, 0.0, axisLength - arrowSize), 1.0);
     EmitVertex();
     EndPrimitive();
 
