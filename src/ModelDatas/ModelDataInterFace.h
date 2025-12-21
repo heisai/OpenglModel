@@ -53,11 +53,13 @@ enum class OperatorAction
 	RenderSharpen,   //
 	RenderBlur,   //
 	RenderDetection,   //
-	RenderSky,
+	RenderSky,	//天空盒
+	RenderBlasting,	//爆破
 	//清除动作
-	ClearSkyBox,
-	ClearCreatModel,
-	ClearRender
+	ClearSkyBox,//清除天空盒
+	ClearCreatModel,//清除模型
+	ClearRender,	//清除渲染
+	ClearBlasting	//清除爆破
 };
 struct ModelDataInfo
 {

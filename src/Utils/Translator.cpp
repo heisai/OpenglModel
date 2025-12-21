@@ -18,14 +18,15 @@ Translator& Translator::getInstance()
 	instance.translator_map_["Move"] = tr("Move");	//移动
 	instance.translator_map_["Rotate"] = tr("Rotate");
 	instance.translator_map_["Scale"] = tr("Scale");
-	instance.translator_map_["Select"] = tr("Select");
-	instance.translator_map_["OpenGL"] = tr("OpenGL");
+	instance.translator_map_["Select"] = tr("Select");//选择
+	instance.translator_map_["OpenGL"] = tr("OpenGL");//OpenGL
 
-	instance.translator_map_["Inversion"] = tr("Inversion");
-	instance.translator_map_["Grayscale"] = tr("Grayscale");
-	instance.translator_map_["Sharpen"] = tr("Sharpen");
-	instance.translator_map_["Blur"] = tr("Blur");
-	instance.translator_map_["Detection"] = tr("Detection");
+	instance.translator_map_["Inversion"] = tr("Inversion");//反色
+	instance.translator_map_["Grayscale"] = tr("Grayscale");//灰度
+	instance.translator_map_["Sharpen"] = tr("Sharpen");//锐化
+	instance.translator_map_["Blur"] = tr("Blur");	//模糊
+	instance.translator_map_["Detection"] = tr("Detection");//
+	instance.translator_map_["Blasting"] = tr("Blasting");	//爆破
 
 	return  instance;
 }

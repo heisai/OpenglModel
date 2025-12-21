@@ -129,5 +129,10 @@
         <source>Detection</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="29"/>
+        <source>Blasting</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

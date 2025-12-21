@@ -95,7 +95,12 @@ void drawAxis(vec3 origin, vec3 dir, vec3 color) {
 }
 void main()
 {
-    // 轴的长度和箭头的大小
+    if(true){
+
+    }
+else{
+
+// 轴的长度和箭头的大小
     float axisLength = 2.0f;
     float arrowSize = 0.1f;
     // 起点位置
@@ -146,6 +151,8 @@ void main()
     gl_Position = mvp * vec4(origin + vec3(-arrowSize, 0.0, axisLength - arrowSize), 1.0);
     EmitVertex();
     EndPrimitive();
+}
+    
 
 
 }

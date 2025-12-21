@@ -84,12 +84,16 @@ void MainWindow::addRenderMenu()
 	QAction* detection_action = new QAction(TR("Detection"), ui->render_menu);
     detection_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderDetection)));
 
+	QAction* blasting_action = new QAction(TR("Blasting"), ui->render_menu);
+	blasting_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderBlasting)));
+
 	ui->render_menu->addAction(sky_action);
 	ui->render_menu->addAction(inversion_action);
     ui->render_menu->addAction(grayscale_action);
     ui->render_menu->addAction(sharpen_action);
     ui->render_menu->addAction(blur_action);
     ui->render_menu->addAction(detection_action);
+	ui->render_menu->addAction(blasting_action);
 
 }
 
@@ -99,8 +103,13 @@ void MainWindow::addClearMenu()
 	clear_model_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearCreatModel)));
 	QAction* clear_sky_action = new QAction(TR("sky"), ui->clear_menu);
 	clear_sky_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearSkyBox)));
+
+	QAction* clear_blasting_action = new QAction(TR("Blasting"), ui->render_menu);
+	clear_blasting_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderBlasting)));
+
 	ui->clear_menu->addAction(clear_model_action);
 	ui->clear_menu->addAction(clear_sky_action);
+	ui->clear_menu->addAction(clear_blasting_action);
 }
 
 void MainWindow::createModel(bool checked)

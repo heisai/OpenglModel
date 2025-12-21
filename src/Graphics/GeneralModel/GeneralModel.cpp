@@ -3,6 +3,7 @@ GeneralModel::GeneralModel(OperatorAction type, std::shared_ptr<Shader> shader /
     GraphicsEngine(type,shader)
 {
 	stencil_shader_ = std::make_unique<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
+	elapsed_timer.start();
 
 }
 
@@ -31,6 +32,11 @@ void GeneralModel::Draw()
 	default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
 	default_shader_->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	default_shader_->setFloat("material.shininess", 32.0f);
+
+
+	//default_shader_->setBool("geom_flag", true);
+	default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed()/500));
+	qDebug() << "GeneralModel Draw time:" << elapsed_timer.elapsed();
 	glBindVertexArray(mesh_data_->vao_);
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 

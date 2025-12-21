@@ -77,7 +77,7 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="16"/>
         <source>grid</source>
-        <translation type="unfinished">网格</translation>
+        <translation>网格</translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="18"/>
@@ -128,6 +128,11 @@
         <location filename="../src/Utils/Translator.cpp" line="28"/>
         <source>Detection</source>
         <translation>检测</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="29"/>
+        <source>Blasting</source>
+        <translation>爆破</translation>
     </message>
 </context>
 </TS>

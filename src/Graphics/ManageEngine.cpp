@@ -78,7 +78,7 @@ GraphicsEnginePtr ManageEngine::createGridEngine()
 
 GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCube, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -87,7 +87,8 @@ GraphicsEnginePtr ManageEngine::createCubeEngine()
 
 GraphicsEnginePtr ManageEngine::createToursEngine()
 {
-    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
+	//"geometry_shader.geom"
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
     GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
     return basic_light_engine;
@@ -95,8 +96,10 @@ GraphicsEnginePtr ManageEngine::createToursEngine()
 
 GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
-    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "GeneralModel");
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner,light_shader);
+
+    
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner,light_shader);
     basic_light_engine->SetViewSize(width_, height_);
     return basic_light_engine;
 }
@@ -157,6 +160,11 @@ GraphicsEnginePtr ManageEngine::createDetectionRender()
 		screen_render_model_->setRenderType(5);
 	}
 	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createBlastingRender()
+{
+	return nullptr;
 }
 
 void ManageEngine::createLoadModelEngine()

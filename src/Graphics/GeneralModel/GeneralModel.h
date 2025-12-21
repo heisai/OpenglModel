@@ -1,6 +1,7 @@
 #pragma once
 #include"../Graphics.h"
 #include"ScreenRenderModel.h"
+#include <QElapsedTimer>
 class GeneralModel : public GraphicsEngine
 {
 public:
@@ -10,7 +11,7 @@ public:
 private:
 	//模板测试  shader(用户物体选中)
 	std::unique_ptr<Shader>stencil_shader_;
-
+	QElapsedTimer elapsed_timer;
 
 
 
