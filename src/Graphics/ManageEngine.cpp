@@ -260,7 +260,7 @@ void ManageEngine::SetEngineScaleAndTranslate(const GraphicsEnginePtr& engine_pt
 	projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 	view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
-	engine_ptr->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)));
+	engine_ptr->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -0.0f)));
 	engine_ptr->setModelData(model * model_old);
 	engine_ptr->setProjectionData(projection);
 	engine_ptr->setTranlstorPosition(QVector2D(translate.x, -translate.y));

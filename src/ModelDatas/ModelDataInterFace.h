@@ -42,11 +42,11 @@ enum class OperatorAction
 	//离屏渲染
 	ScreenRender = 0,
 	//模型动作
-	CreatCyliner ,
+	CreatCyliner ,//	
 	CreatCube,
 	CreatTourse,
 	CreatGrid,
-	CreatAxis,
+	CreatAxis,//	
 	//渲染动作
 	RenderInversion,   //
 	RenderGrayscale,   //
