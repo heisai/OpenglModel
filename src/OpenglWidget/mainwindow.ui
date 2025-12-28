@@ -28,9 +28,15 @@
       </item>
       <item>
        <widget class="ParaConfigWidget" name="widget" native="true">
-        <property name="maximumSize">
+        <property name="minimumSize">
          <size>
           <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
           <height>16777215</height>
          </size>
         </property>
@@ -46,11 +52,11 @@
      <x>0</x>
      <y>0</y>
      <width>888</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
    </property>
    <property name="defaultUp">
     <bool>false</bool>

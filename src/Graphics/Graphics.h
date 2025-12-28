@@ -19,6 +19,18 @@
 //世界空间坐标
 struct MvpData
 {
+    MvpData()
+    {
+		glm::mat4 model_ = glm::mat4(1.0f);
+		glm::mat4 view_ = glm::mat4(1.0f);
+		glm::mat4 projection_ = glm::mat4(1.0f);
+
+		//平移坐标
+		QVector2D tranlstor_position_;
+		//平移坐标备份
+		//QVector2D tranlstor_position_temp_;
+		bool blasting_flag_ = false; //爆破标志位
+    }
     glm::mat4 model_ = glm::mat4(1.0f);
     glm::mat4 view_ = glm::mat4(1.0f);
     glm::mat4 projection_ = glm::mat4(1.0f);
@@ -27,6 +39,7 @@ struct MvpData
 	QVector2D tranlstor_position_;
     //平移坐标备份
     //QVector2D tranlstor_position_temp_;
+	bool blasting_flag_ = false; //爆破标志位
 };
 using MvpDataPtr = std::shared_ptr<MvpData>;
 //网格基础单元

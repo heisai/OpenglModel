@@ -9,27 +9,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="60"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="66"/>
         <source>模型</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="65"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="71"/>
         <source>渲染</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="70"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="76"/>
         <source>文件</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="75"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="81"/>
         <source>编辑</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="80"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="86"/>
         <source>清除</source>
         <translation type="unfinished"></translation>
     </message>
@@ -132,6 +132,56 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="29"/>
         <source>Blasting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="32"/>
+        <source>SecenCollection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="33"/>
+        <source>Collection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="34"/>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="35"/>
+        <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="37"/>
+        <source>Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="38"/>
+        <source>Render</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="39"/>
+        <source>WorldSpace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="40"/>
+        <source>Material</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="41"/>
+        <source>Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="42"/>
+        <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

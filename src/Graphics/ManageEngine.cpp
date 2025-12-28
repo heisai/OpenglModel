@@ -17,7 +17,7 @@ ManageEngine::ManageEngine():
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //Ä£ºý
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //¼ì²â
 
-   
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //±¬ÆÆ
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -54,6 +54,17 @@ void ManageEngine::removeModel(OperatorAction type)
     {
         list_graphic_.remove_if([type](auto grahic) {   return grahic->getModeltype() == type; });
     }
+	else if (type == OperatorAction::ClearBlasting)
+	{
+		auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
+			return (graphic_->getCheck() == true);
+			});
+
+		if (iter != list_graphic_.end())
+		{
+			(*iter)->getMvpData()->blasting_flag_ = false;
+		}
+	}
     else
     {
         list_graphic_.remove_if([](auto grahic) {   return grahic->getCheck() == true; });
@@ -164,6 +175,15 @@ GraphicsEnginePtr ManageEngine::createDetectionRender()
 
 GraphicsEnginePtr ManageEngine::createBlastingRender()
 {
+	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
+		return (graphic_->getCheck() == true);
+		});
+
+	if (iter != list_graphic_.end())
+	{
+		(*iter)->getMvpData()->blasting_flag_ = true;
+	}
+
 	return nullptr;
 }
 

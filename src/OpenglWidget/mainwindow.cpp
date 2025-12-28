@@ -16,9 +16,9 @@ void MainWindow::InitUI()
     this->setWindowTitle(TR("OpenGL"));
     this->setMinimumSize(QSize(1240, 780));
 
-    addEngineMenu();
-    addRenderMenu();
-	addClearMenu();
+
+	initMenuBar();
+	initCenterWidget();
 
 	
 }
@@ -42,6 +42,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::initMenuBar()
+{
+	addEngineMenu();
+	addRenderMenu();
+	addClearMenu();
+}
 
 void MainWindow::addEngineMenu()
 {
@@ -105,17 +112,26 @@ void MainWindow::addClearMenu()
 	clear_sky_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearSkyBox)));
 
 	QAction* clear_blasting_action = new QAction(TR("Blasting"), ui->render_menu);
-	clear_blasting_action->setObjectName(QString::number(static_cast<int>(OperatorAction::RenderBlasting)));
+	clear_blasting_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearBlasting)));
 
 	ui->clear_menu->addAction(clear_model_action);
 	ui->clear_menu->addAction(clear_sky_action);
 	ui->clear_menu->addAction(clear_blasting_action);
 }
 
+void MainWindow::initCenterWidget()
+{
+	//this->horizontalLayout;
+	QSplitter* splitterHorizontal = new QSplitter(Qt::Horizontal, nullptr);
+	splitterHorizontal->addWidget(ui->openGLWidget);
+	splitterHorizontal->addWidget(ui->widget);
+	ui->horizontalLayout->addWidget(splitterHorizontal);
+}
+
 void MainWindow::createModel(bool checked)
 {
 	OperatorAction operator_action = static_cast<OperatorAction>(sender()->objectName().toInt());
-	 if (operator_action >= OperatorAction::ClearSkyBox && operator_action <= OperatorAction::ClearRender)
+	 if (operator_action >= OperatorAction::ClearSkyBox && operator_action <= OperatorAction::ClearBlasting)
 	 {
 		 CreatEngine(false, operator_action);
 	 }
@@ -130,8 +146,9 @@ void MainWindow::CreatEngine(bool create_model, OperatorAction type)
 {
     if(create_model)
     {
+		ui->openGLWidget->makeCurrent();
         m_PtrManageEngine->createModel(type);
-        ui->openGLWidget->makeCurrent();
+    
         m_PtrManageEngine->initializeGl();
         ui->openGLWidget->update();
         ui->openGLWidget->doneCurrent();

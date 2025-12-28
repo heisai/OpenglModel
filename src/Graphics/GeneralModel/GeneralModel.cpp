@@ -36,7 +36,8 @@ void GeneralModel::Draw()
 
 	//default_shader_->setBool("geom_flag", true);
 	default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed()/500));
-	qDebug() << "GeneralModel Draw time:" << elapsed_timer.elapsed();
+	default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
+	qDebug() << "GeneralModel Draw time:" << elapsed_timer.elapsed() << "\t" << mvp_data_->blasting_flag_;
 	glBindVertexArray(mesh_data_->vao_);
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 

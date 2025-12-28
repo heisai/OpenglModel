@@ -28,6 +28,18 @@ Translator& Translator::getInstance()
 	instance.translator_map_["Detection"] = tr("Detection");//
 	instance.translator_map_["Blasting"] = tr("Blasting");	//爆破
 
+	//右上角集合设置
+	instance.translator_map_["SecenCollection"] = tr("SecenCollection");//场景集合
+	instance.translator_map_["Collection"] = tr("Collection"); //集合
+	instance.translator_map_["Camera"] = tr("Camera"); //相机
+	instance.translator_map_["Light"] = tr("Light"); //灯光
+	//右下角属性设置
+	instance.translator_map_["Tool"] = tr("Tool"); //工具
+	instance.translator_map_["Render"] = tr("Render"); //渲染
+	instance.translator_map_["WorldSpace"] = tr("WorldSpace"); //世界空间
+	instance.translator_map_["Material"] = tr("Material"); //材质
+	instance.translator_map_["Object"] = tr("Object"); //物体
+	instance.translator_map_["Output"] = tr("Output"); //输出
 	return  instance;
 }
 QString Translator::Tr(const QString& value)

@@ -9,27 +9,27 @@
         <translation>主窗口</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="60"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="66"/>
         <source>模型</source>
         <translation>模型</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="65"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="71"/>
         <source>渲染</source>
         <translation>渲染</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="70"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="76"/>
         <source>文件</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="75"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="81"/>
         <source>编辑</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="80"/>
+        <location filename="../src/OpenglWidget/mainwindow.ui" line="86"/>
         <source>清除</source>
         <translation>清除</translation>
     </message>
@@ -133,6 +133,56 @@
         <location filename="../src/Utils/Translator.cpp" line="29"/>
         <source>Blasting</source>
         <translation>爆破</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="32"/>
+        <source>SecenCollection</source>
+        <translation>场景集合</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="33"/>
+        <source>Collection</source>
+        <translation>集合</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="34"/>
+        <source>Camera</source>
+        <translation>相机</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="35"/>
+        <source>Light</source>
+        <translation>灯光</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="37"/>
+        <source>Tool</source>
+        <translation>工具</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="38"/>
+        <source>Render</source>
+        <translation>渲染</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="39"/>
+        <source>WorldSpace</source>
+        <translation>世界空间</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="40"/>
+        <source>Material</source>
+        <translation>材质</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="41"/>
+        <source>Object</source>
+        <translation>对象</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="42"/>
+        <source>Output</source>
+        <translation>输出</translation>
     </message>
 </context>
 </TS>
