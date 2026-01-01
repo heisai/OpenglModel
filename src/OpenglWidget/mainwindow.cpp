@@ -64,10 +64,14 @@ void MainWindow::addEngineMenu()
 	QAction* grid_action = new QAction(TR("grid"), ui->model_menu);
 	grid_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatGrid)));
 
+	QAction* planet_action = new QAction(TR("Planet"), ui->model_menu);
+	planet_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatGrid)));
+
 	ui->model_menu->addAction(ring_action);
 	ui->model_menu->addAction(cube_action);
 	ui->model_menu->addAction(cylinder_action);
 	ui->model_menu->addAction(grid_action);
+	ui->model_menu->addAction(planet_action);
 }
 
 void MainWindow::addRenderMenu()
@@ -114,9 +118,13 @@ void MainWindow::addClearMenu()
 	QAction* clear_blasting_action = new QAction(TR("Blasting"), ui->render_menu);
 	clear_blasting_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearBlasting)));
 
+	QAction* clear_render_action = new QAction(TR("Render"), ui->render_menu);
+	clear_render_action->setObjectName(QString::number(static_cast<int>(OperatorAction::ClearRender)));
+
 	ui->clear_menu->addAction(clear_model_action);
 	ui->clear_menu->addAction(clear_sky_action);
 	ui->clear_menu->addAction(clear_blasting_action);
+	ui->clear_menu->addAction(clear_render_action);
 }
 
 void MainWindow::initCenterWidget()

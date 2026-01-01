@@ -201,7 +201,7 @@ void ScreenRenderModel::drawTexture()
 {
 	// 将离屏帧缓冲添加到纹理中
 	glDisable(GL_DEPTH_TEST);
-	glViewport(0, 0, 260, 260); 
+	glViewport(0, 0, m_Width, m_Height);
 	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//glClear(GL_COLOR_BUFFER_BIT);
@@ -225,6 +225,11 @@ void ScreenRenderModel::drawTexture()
 void ScreenRenderModel::setRenderType(int type)
 {
 	render_type_ = type;
+}
+
+int ScreenRenderModel::getRenderType()
+{
+	return render_type_;
 }
 
 glm::vec3 ScreenRenderModel::idToColor(int id)

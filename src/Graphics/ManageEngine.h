@@ -47,6 +47,7 @@ private:
     GraphicsEnginePtr createDetectionRender();
     //±¬ÆÆÄ£Ê½
 	GraphicsEnginePtr createBlastingRender();
+    GraphicsEnginePtr clearRender();
     //GraphicsEnginePtr createInversionRender();
 
     void createLoadModelEngine();

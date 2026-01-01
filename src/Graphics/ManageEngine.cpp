@@ -18,6 +18,7 @@ ManageEngine::ManageEngine():
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //¼ì²â
 
 	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //±¬ÆÆ
+	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //Çå³ýäÖÈ¾
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -187,6 +188,16 @@ GraphicsEnginePtr ManageEngine::createBlastingRender()
 	return nullptr;
 }
 
+GraphicsEnginePtr ManageEngine::clearRender()
+{
+	GraphicsEnginePtr basic_light_engine = nullptr;
+	if (screen_render_model_)
+	{
+		screen_render_model_->setRenderType(0);
+	}
+	return basic_light_engine;
+}
+
 void ManageEngine::createLoadModelEngine()
 {
     //ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "LoadModel");
@@ -307,7 +318,7 @@ void ManageEngine::paintGl()
         return;
     }
 
-	if (screen_render_model_)
+	if (screen_render_model_ && screen_render_model_->getRenderType() !=0)
 	{
 		screen_render_model_->drawTexture();
 		for (const auto& graphic_ : list_graphic_)

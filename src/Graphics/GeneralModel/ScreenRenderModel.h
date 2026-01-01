@@ -11,6 +11,7 @@ public:
 	void  drawTexture();
 	//…Ë÷√‰÷»æ¿‡–Õ
 	void setRenderType(int type);
+	int	getRenderType();
 private:
 	glm::vec3 idToColor(int id);
 	int colorToId(const glm::vec3& color);
@@ -27,5 +28,5 @@ private:
 
 	unsigned int quadvao_;
 	unsigned int quadvbo_;
-	int render_type_ = 1;
+	int render_type_ = 0;
 };

@@ -47,6 +47,7 @@ enum class OperatorAction
 	CreatTourse,
 	CreatGrid,
 	CreatAxis,//	
+	CreatPlanet,//	行星
 	//渲染动作
 	RenderInversion,   //
 	RenderGrayscale,   //
@@ -58,8 +59,8 @@ enum class OperatorAction
 	//清除动作
 	ClearSkyBox,//清除天空盒
 	ClearCreatModel,//清除模型
-	ClearRender,	//清除渲染
-	ClearBlasting	//清除爆破
+	ClearBlasting,	//清除爆破
+	ClearRender	//清除渲染
 };
 struct ModelDataInfo
 {

@@ -80,107 +80,112 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="18"/>
-        <source>Move</source>
+        <location filename="../src/Utils/Translator.cpp" line="17"/>
+        <source>Planet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="19"/>
-        <source>Rotate</source>
+        <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="20"/>
-        <source>Scale</source>
+        <source>Rotate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="21"/>
-        <source>Select</source>
+        <source>Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="22"/>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="23"/>
         <source>OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="24"/>
+        <location filename="../src/Utils/Translator.cpp" line="25"/>
         <source>Inversion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="25"/>
+        <location filename="../src/Utils/Translator.cpp" line="26"/>
         <source>Grayscale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="26"/>
+        <location filename="../src/Utils/Translator.cpp" line="27"/>
         <source>Sharpen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="27"/>
+        <location filename="../src/Utils/Translator.cpp" line="28"/>
         <source>Blur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="28"/>
+        <location filename="../src/Utils/Translator.cpp" line="29"/>
         <source>Detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="29"/>
+        <location filename="../src/Utils/Translator.cpp" line="30"/>
         <source>Blasting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="32"/>
+        <location filename="../src/Utils/Translator.cpp" line="33"/>
         <source>SecenCollection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="33"/>
+        <location filename="../src/Utils/Translator.cpp" line="34"/>
         <source>Collection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="34"/>
+        <location filename="../src/Utils/Translator.cpp" line="35"/>
         <source>Camera</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="35"/>
+        <location filename="../src/Utils/Translator.cpp" line="36"/>
         <source>Light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="37"/>
+        <location filename="../src/Utils/Translator.cpp" line="38"/>
         <source>Tool</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="38"/>
+        <location filename="../src/Utils/Translator.cpp" line="39"/>
         <source>Render</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="39"/>
+        <location filename="../src/Utils/Translator.cpp" line="40"/>
         <source>WorldSpace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="40"/>
+        <location filename="../src/Utils/Translator.cpp" line="41"/>
         <source>Material</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="41"/>
+        <location filename="../src/Utils/Translator.cpp" line="42"/>
         <source>Object</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="42"/>
+        <location filename="../src/Utils/Translator.cpp" line="43"/>
         <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
