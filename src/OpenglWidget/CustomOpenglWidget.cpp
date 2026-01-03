@@ -12,7 +12,7 @@ CustomOpenglWidget::CustomOpenglWidget(QWidget *parent):
 
 void CustomOpenglWidget::BindManageEngine(const std::shared_ptr<ManageEngine>& engine)
 {
-    m_PtrManageEngine = engine;
+    manage_engine_moudle_ = engine;
    
 }
 
@@ -35,10 +35,10 @@ void CustomOpenglWidget::initializeGL()
 
 
 
-    if (m_PtrManageEngine)
+    if (manage_engine_moudle_)
     {
-        m_PtrManageEngine->setViewSize(this->width(), this->height());
-        m_PtrManageEngine->initializeGl();
+        manage_engine_moudle_->setViewSize(this->width(), this->height());
+        manage_engine_moudle_->initializeGl();
        
     }
     timer.start(12, this);
@@ -52,10 +52,10 @@ void CustomOpenglWidget::resizeGL(int w, int h)
 	m_height = h;
 	makeCurrent();
 	glViewport(0, 0, m_width, m_height);
-	if (m_PtrManageEngine)
+	if (manage_engine_moudle_)
 	{
-		m_PtrManageEngine->setViewSize(w, h);
-		m_PtrManageEngine->initializeGl();
+		manage_engine_moudle_->setViewSize(w, h);
+		manage_engine_moudle_->initializeGl();
 
 	}
 	doneCurrent();
@@ -68,11 +68,11 @@ void CustomOpenglWidget::paintGL()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    if (m_PtrManageEngine)
+    if (manage_engine_moudle_)
     {
-        m_PtrManageEngine->setEngineScaleAndTranslate(m_sUUid, glm::vec3(scaleFactor, scaleFactor, scaleFactor),
+        manage_engine_moudle_->setEngineScaleAndTranslate(m_sUUid, glm::vec3(scaleFactor, scaleFactor, scaleFactor),
            glm::vec3(m_TranlstorPosition.x(), -m_TranlstorPosition.y(), -18.0f), rotationAxisold);
-        m_PtrManageEngine->paintGl();
+        manage_engine_moudle_->paintGl();
     }
 }
 
@@ -90,7 +90,7 @@ void CustomOpenglWidget::mousePressEvent(QMouseEvent *e)
         int readX = m_MousePressPosition.x();
         int readY = this->height() - m_MousePressPosition.y() ;       
         makeCurrent();
-        MvpDataPtr  mvp_data =  m_PtrManageEngine->pickModel(readX, readY);
+        MvpDataPtr  mvp_data =  manage_engine_moudle_->pickModel(readX, readY);
         doneCurrent();
         if (mvp_data)
         {
@@ -119,7 +119,6 @@ void CustomOpenglWidget::mouseMoveEvent(QMouseEvent *e)
 
     if(e->type() == QEvent::MouseMove && (e->buttons() & Qt::LeftButton ))
     {
-        LogInfo("Select Model State:{}", int(widget_->getModelState()));
         switch (widget_->getModelState())
         {
         case HoverToolWidget::MoveState:

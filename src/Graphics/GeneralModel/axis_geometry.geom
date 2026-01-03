@@ -1,6 +1,6 @@
 #version 330 core
 layout (points) in;
-layout (triangle_strip, max_vertices = 128) out; // 3¸öÈı½Ç×¶ + 3¸öÖáÉíÔ²Öù½üËÆ£¬Ô¤Áô×ã¹»¶¥µã
+layout (triangle_strip, max_vertices = 128) out; // 3ä¸ªä¸‰è§’é”¥ + 3ä¸ªè½´èº«åœ†æŸ±è¿‘ä¼¼ï¼Œé¢„ç•™è¶³å¤Ÿé¡¶ç‚¹
             
 in VS_OUT {
     vec3 position;
@@ -12,14 +12,14 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-// ÖáµÄ³¤¶ÈºÍ¼ıÍ·µÄ´óĞ¡
+// è½´çš„é•¿åº¦å’Œç®­å¤´çš„å¤§å°
 uniform float axisLength = 2.0f;
 uniform float arrowHeight = 0.2f;
 uniform float arrowRadius = 0.05f;
-uniform float shaftRadius = 0.02f; // ÖáÉí°ë¾¶
-uniform int shaftSegments = 12; // Ô²Öù½üËÆµÄ·Ö¶ÎÊı
+uniform float shaftRadius = 0.02f; // è½´èº«åŠå¾„
+uniform int shaftSegments = 12; // åœ†æŸ±è¿‘ä¼¼çš„åˆ†æ®µæ•°
 
-// ÔÚÖá·½ÏòÉÏÉú³ÉÔ²ÖùĞÎ×´£¨ÓÃ triangle_strip Êä³ö£©
+// åœ¨è½´æ–¹å‘ä¸Šç”Ÿæˆåœ†æŸ±å½¢çŠ¶ï¼ˆç”¨ triangle_strip è¾“å‡ºï¼‰
 void createCylinderShaft(vec3 start, vec3 end, vec3 color) {
     vec3 dir = normalize(end - start);
 
@@ -32,7 +32,7 @@ void createCylinderShaft(vec3 start, vec3 end, vec3 color) {
 
     mat4 mvp = projection * view * model;
 
-    // Êä³ö»·µÄ¶¥µã¶Ô£¬ÒÔ triangle_strip ĞÎÊ½Á¬½Ó
+    // è¾“å‡ºç¯çš„é¡¶ç‚¹å¯¹ï¼Œä»¥ triangle_strip å½¢å¼è¿æ¥
     int seg = max(3, shaftSegments);
     for (int i = 0; i <= seg; ++i) {
         float angle = 2.0 * 3.1415926 * float(i) / float(seg);
@@ -54,10 +54,10 @@ void createCylinderShaft(vec3 start, vec3 end, vec3 color) {
 
 void createPyramid(vec3 tip, vec3 direction, vec3 color) {
     vec3 dir = normalize(direction);
-    // ¼ÆËãÔ²×¶µ×²¿ÖĞĞÄ
+    // è®¡ç®—åœ†é”¥åº•éƒ¨ä¸­å¿ƒ
     vec3 baseCenter = tip - dir * arrowHeight;
 
-    // ¼ÆËãÁ½¸ö´¹Ö±ÏòÁ¿ÓÃÓÚ¹¹½¨µ×Ãæ
+    // è®¡ç®—ä¸¤ä¸ªå‚ç›´å‘é‡ç”¨äºæ„å»ºåº•é¢
     vec3 up = vec3(0.0, 1.0, 0.0);
     if (abs(dot(dir, up)) > 0.9) {
         up = vec3(1.0, 0.0, 0.0);
@@ -66,7 +66,7 @@ void createPyramid(vec3 tip, vec3 direction, vec3 color) {
     vec3 right = normalize(cross(dir, up));
     up = normalize(cross(right, dir));
 
-    // Èı½ÇĞÎµ×Ãæ 3 ¸ö¶¥µã
+    // ä¸‰è§’å½¢åº•é¢ 3 ä¸ªé¡¶ç‚¹
     vec3 base0 = baseCenter + arrowRadius * (cos(0.0) * right + sin(0.0) * up);
     float angle120 = 2.0 * 3.1415926 / 3.0;
     vec3 base1 = baseCenter + arrowRadius * (cos(angle120) * right + sin(angle120) * up);
@@ -74,7 +74,7 @@ void createPyramid(vec3 tip, vec3 direction, vec3 color) {
 
     mat4 mvp = projection * view * model;
 
-    // Èı¸ö²àÃæ£¨¼â¶Ë -> basei -> base(i+1)£©
+    // ä¸‰ä¸ªä¾§é¢ï¼ˆå°–ç«¯ -> basei -> base(i+1)ï¼‰
     for (int i = 0; i < 3; ++i) {
         vec3 b0 = (i == 0) ? base0 : (i == 1) ? base1 : base2;
         vec3 b1 = (i == 0) ? base1 : (i == 1) ? base2 : base0;
@@ -94,7 +94,7 @@ void createPyramid(vec3 tip, vec3 direction, vec3 color) {
         EndPrimitive();
     }
 
-    // µ×Ãæ£¨Èı½ÇĞÎ£©£¬ÑÕÉ«ÉÔ°µ
+    // åº•é¢ï¼ˆä¸‰è§’å½¢ï¼‰ï¼Œé¢œè‰²ç¨æš—
     axisColor = color * 0.7;
     gl_Position = mvp * vec4(base0, 1.0);
     EmitVertex();
@@ -113,7 +113,7 @@ void createPyramid(vec3 tip, vec3 direction, vec3 color) {
 void main() {
     vec3 origin = gs_in[0].position;
 
-    // ×¼±¸ÖáµÄ·½ÏòÓëÑÕÉ«
+    // å‡†å¤‡è½´çš„æ–¹å‘ä¸é¢œè‰²
     vec3 xDir = vec3(1.0, 0.0, 0.0);
     vec3 yDir = vec3(0.0, 1.0, 0.0);
     vec3 zDir = vec3(0.0, 0.0, 1.0);
@@ -126,12 +126,12 @@ void main() {
     vec3 yTip = origin + yDir * axisLength;
     vec3 zTip = origin + zDir * axisLength;
 
-    // »æÖÆÖáÉíÔ²Öù£¨Ô²»··Ö¶Î£©Ö±µ½¼ıÍ·µ×²¿
+    // ç»˜åˆ¶è½´èº«åœ†æŸ±ï¼ˆåœ†ç¯åˆ†æ®µï¼‰ç›´åˆ°ç®­å¤´åº•éƒ¨
     createCylinderShaft(origin, xTip - normalize(xDir) * arrowHeight, xColor);
     createCylinderShaft(origin, yTip - normalize(yDir) * arrowHeight, yColor);
     createCylinderShaft(origin, zTip - normalize(zDir) * arrowHeight, zColor);
 
-    // »æÖÆÈı½Ç×¶¼ıÍ·
+    // ç»˜åˆ¶ä¸‰è§’é”¥ç®­å¤´
     createPyramid(xTip, xDir * arrowHeight, xColor);
     createPyramid(yTip, yDir * arrowHeight, yColor);
     createPyramid(zTip, zDir * arrowHeight, zColor);

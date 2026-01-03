@@ -11,14 +11,15 @@
 
 class ManageEngine : public QObject
 {
+    Q_OBJECT
 public:
     ManageEngine();
 
     // 窗口/视口大小
     void setViewSize(int width, int height);
     // 创建模型
-    void createModel(OperatorAction type);
-    void removeModel(OperatorAction type);
+    QString createModel(OperatorAction type);
+    QString removeModel(OperatorAction type);
 	// 渲染 / 拾取 / 初始化
 	void paintGl();
 	MvpDataPtr pickModel(int xpos, int ypos);
@@ -56,8 +57,10 @@ private:
     void removeEngine(OperatorAction type);
 protected:
     void addEngine( const GraphicsEnginePtr& graphics);
-    QString generateUuid();
-
+    void  generateUuid(QString &model_name);
+signals:
+    //选中模型信号
+    void selectModelSignals(const QString model_uuid);
 public:
     //std::map<QString, GraphicsEnginePtr> map_graphic_;
     std::list<GraphicsEnginePtr>list_graphic_;
@@ -65,5 +68,7 @@ public:
     int width_ = 0;
     int height_ = 0;
     std::unique_ptr<ScreenRenderModel>screen_render_model_;
+	//映射模型ID与引擎ID关系
+	std::map<QString, unsigned int>map_model_id_;
 };
 

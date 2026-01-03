@@ -1,13 +1,13 @@
 #ifndef MODELDATAINTERFACE_H
 #define MODELDATAINTERFACE_H
-#include<iostream>
-#include<vector>
-#include<memory>
+#include <iostream>
+#include <vector>
+#include <memory>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <glm/glm.hpp>
-
-
+#include <QString>
+#include "../Utils/Translator.h"
 inline void InitLogging()
 {
 	try {
@@ -17,6 +17,10 @@ inline void InitLogging()
 		spdlog::set_default_logger(logger);
 		spdlog::set_level(spdlog::level::info);
 		spdlog::flush_on(spdlog::level::info);
+		//// 设置控制台输出编码为 UTF-8
+		//SetConsoleOutputCP(CP_UTF8);
+		//// 可选：同时设置输入编码，保证一致性
+		//SetConsoleCP(CP_UTF8);
 	}
 	catch (...) {
 		// 如果多次初始化导致异常，这里捕获以防程序崩溃
@@ -66,6 +70,7 @@ struct ModelDataInfo
 {
 	std::vector<float> vertices_datas; //顶点数据
 	std::vector<unsigned int>indices_datas;
+	QString model_name_; //模型名称
 };
 
 class ModelDataInterFace{

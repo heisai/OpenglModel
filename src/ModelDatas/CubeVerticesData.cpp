@@ -5,6 +5,7 @@ ModelDataInfo CubeVerticesData::GetModelDatas()
 	ModelDataInfo info;
 	info.vertices_datas = GenerateCubeVertices(1.0f);
 	info.indices_datas = GenerateCubeIndices();
+	info.model_name_ = TR("cube");
 	return info;
 }
 // 简化的顶点数据生成（位置和法线交错存储）

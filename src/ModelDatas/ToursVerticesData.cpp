@@ -5,6 +5,8 @@ ModelDataInfo ToursVerticesData::GetModelDatas()
     ModelDataInfo info;
     info.vertices_datas = GenerateTorusVertices(1.0f, 0.4f, 32 *16, 16 *16);
     info.indices_datas = GenerateTorusIndices(32 *16, 16 *16);
+	info.model_name_ = TR("ring");
+
     return info;
 }
 

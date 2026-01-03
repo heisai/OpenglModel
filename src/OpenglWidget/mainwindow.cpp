@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::InitUI()
 {
-    m_PtrManageEngine = std::make_shared<ManageEngine>();
-    ui->openGLWidget->BindManageEngine(m_PtrManageEngine);
+    manage_engine_moudle_ = std::make_shared<ManageEngine>();
+    ui->openGLWidget->BindManageEngine(manage_engine_moudle_);
     this->setWindowTitle(TR("OpenGL"));
     this->setMinimumSize(QSize(1240, 780));
 
@@ -27,14 +27,19 @@ void MainWindow::InitConnect()
 {
 	for (auto action : this->findChildren<QAction*>())
 	{
-		connect(action, &QAction::triggered, this, &MainWindow::createModel,Qt::UniqueConnection);
+		connect(action, &QAction::triggered, this, &MainWindow::operatorModel,Qt::UniqueConnection);
 	}
+
+	//更新模型集合树Item 选中状态
+	connect(manage_engine_moudle_.get(), &ManageEngine::selectModelSignals, [this] (const QString model_uuid){
+		ui->widget->updateTreewidgetItem(model_uuid);
+		});
 
 }
 
 void MainWindow::showGridEngine()
 {
-	m_PtrManageEngine->createModel(OperatorAction::CreatGrid);
+	manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
 }
 
 MainWindow::~MainWindow()
@@ -136,40 +141,43 @@ void MainWindow::initCenterWidget()
 	ui->horizontalLayout->addWidget(splitterHorizontal);
 }
 
-void MainWindow::createModel(bool checked)
+void MainWindow::operatorModel(bool checked)
 {
 	OperatorAction operator_action = static_cast<OperatorAction>(sender()->objectName().toInt());
 	 if (operator_action >= OperatorAction::ClearSkyBox && operator_action <= OperatorAction::ClearBlasting)
 	 {
-		 CreatEngine(false, operator_action);
+		 removeModel(operator_action);
 	 }
 	 else
 	 {
-		 CreatEngine(true, operator_action);
+		 createModel(operator_action);
 	 }
-    LogInfo("create model type:{}", static_cast<int>(operator_action));
+   
 }
 
-void MainWindow::CreatEngine(bool create_model, OperatorAction type)
+void MainWindow::createModel(OperatorAction type)
 {
-    if(create_model)
-    {
-		ui->openGLWidget->makeCurrent();
-        m_PtrManageEngine->createModel(type);
-    
-        m_PtrManageEngine->initializeGl();
-        ui->openGLWidget->update();
-        ui->openGLWidget->doneCurrent();
-    }
-    else
-    {
-         m_PtrManageEngine->removeModel(type);
-    }
+	ui->openGLWidget->makeCurrent();
+	QString model_uuid = manage_engine_moudle_->createModel(type);
+
+	manage_engine_moudle_->initializeGl();
+	ui->openGLWidget->update();
+	ui->openGLWidget->doneCurrent();
+	LogInfo("create model type:{}", static_cast<int>(type));
+
+	ui->widget->addCollectionToTreewidget(model_uuid);
 }
+
+void MainWindow::removeModel(OperatorAction type)
+{
+	QString model_uuid  = manage_engine_moudle_->removeModel(type);
+	ui->widget->removeCollectionFromTreewidget(model_uuid);
+}
+
 
 void MainWindow::ChangeLightColorSlot(QColor color)
 {
-    //m_PtrManageEngine->ChangeLightColor(color.red()/255.0, color.green()/255.0, color.blue()/255.0);
+    //manage_engine_moudle_->ChangeLightColor(color.red()/255.0, color.green()/255.0, color.blue()/255.0);
 }
 
 

@@ -8,9 +8,6 @@ Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, s
      fs_sourcecode = Utils::ReadFile(Utils::joinPaths( dirname, fs_filename));
     vShaderCode = vs_sourcecode.data();
     fShaderCode = fs_sourcecode.data();
-    std::cout<<vs_sourcecode<<std::endl;
-    std::cout<<fs_sourcecode<<std::endl;
-    
    
 }
 Shader::Shader(const std::string& vs_filename, const std::string& fs_filename, const std::string& gs_filename, const std::string& dirname)
@@ -22,9 +19,6 @@ Shader::Shader(const std::string& vs_filename, const std::string& fs_filename, c
 	vShaderCode = vs_sourcecode.data();
 	fShaderCode = fs_sourcecode.data();
     gShaderCode = gs_sourcecode.data();
-	std::cout << vs_sourcecode << std::endl;
-	std::cout << fs_sourcecode << std::endl;
-    std::cout << gs_sourcecode << std::endl;
     //LogInfo("===========Vert GLSL=========");
 }
 

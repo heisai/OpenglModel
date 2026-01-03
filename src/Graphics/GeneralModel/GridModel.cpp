@@ -7,7 +7,7 @@ GridModel::GridModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nul
 }
 
 void GridModel::Draw()
-{
+{		
 	default_shader_->bind();
 	default_shader_->setMat4("view", mvp_data_->view_);
 	default_shader_->setMat4("projection", mvp_data_->projection_);

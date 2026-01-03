@@ -51,6 +51,7 @@ struct Mesh
 	std::vector<float> vertices_datas; //顶点数据
 	std::vector<unsigned int>indices_datas;
     OperatorAction model_type_;   //模型类型
+    QString model_name_; //模型名称
 };
 using MeshPtr = std::shared_ptr<Mesh>;
 
@@ -73,6 +74,10 @@ public:
     MvpDataPtr getMvpData();
     MeshPtr getMesh();
     OperatorAction getModeltype()const;
+    //获取模型名称
+	QString getModelName();
+    //设置模型名称
+    void setModelName(const QString& model_name);
     bool getCheck()const;
     //获取默认Shader
     std::shared_ptr<Shader> getDefaultShader();
@@ -89,7 +94,7 @@ public:
     
 protected:
   
-	 int m_Width, m_Height;
+	 int m_Width, m_Height;        
 	 MvpDataPtr mvp_data_;      //世界空间坐标
      MeshPtr mesh_data_;           //模型数据
      bool selected_ = false;        //选中状态

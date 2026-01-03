@@ -10,7 +10,7 @@ public:
 	std::tuple<bool,float> colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,int objetc_id);
 	void  drawTexture();
 	//…Ë÷√‰÷»æ¿‡–Õ
-	void setRenderType(int type);
+	void setRenderType(int type);	
 	int	getRenderType();
 private:
 	glm::vec3 idToColor(int id);

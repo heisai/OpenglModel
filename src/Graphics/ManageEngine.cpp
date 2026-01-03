@@ -33,29 +33,44 @@ void ManageEngine::setViewSize(int width, int height)
 	}
 }
 
-void ManageEngine::createModel(OperatorAction type)
+QString ManageEngine::createModel(OperatorAction type)
 {
+	QString model_uuid = "";
     //判断包装器中是否包含该函数
    auto iter = map_graphicengine_createfunc_.find(type);
    if (iter != map_graphicengine_createfunc_.end())
    {
        GraphicsEnginePtr ptr = iter->second();
-       addEngine(ptr);
+	   addEngine(ptr);
+	   model_uuid =  ptr->getModelName();
+	
+
+	 
    }
    if (screen_render_model_ == nullptr)
    {
 	   screen_render_model_ = std::make_unique<ScreenRenderModel>(OperatorAction::CreatTourse);
 	   screen_render_model_->SetViewSize(width_, height_);
    }
+   return model_uuid;
 }
 
-void ManageEngine::removeModel(OperatorAction type)
+QString ManageEngine::removeModel(OperatorAction type)
 {
-    if (type == OperatorAction::ClearSkyBox)
+
+	QString model_uuid = "";
+    if (type == OperatorAction::ClearSkyBox)	//删除天空盒
     {
-        list_graphic_.remove_if([type](auto grahic) {   return grahic->getModeltype() == type; });
+        list_graphic_.remove_if([type, &model_uuid](auto grahic) {  
+			if (grahic->getModeltype() == type)
+			{
+				model_uuid = grahic->getModelName();
+				return true;
+			}
+			return false;
+			});
     }
-	else if (type == OperatorAction::ClearBlasting)
+	else if (type == OperatorAction::ClearBlasting)		//删除爆破功能
 	{
 		auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
 			return (graphic_->getCheck() == true);
@@ -66,12 +81,19 @@ void ManageEngine::removeModel(OperatorAction type)
 			(*iter)->getMvpData()->blasting_flag_ = false;
 		}
 	}
-    else
+    else   //删除正常模型
     {
-        list_graphic_.remove_if([](auto grahic) {   return grahic->getCheck() == true; });
+        list_graphic_.remove_if([&model_uuid](auto grahic) {   
+			if (grahic->getCheck() == true)
+			{
+				model_uuid = grahic->getModelName();
+				return true;
+			}
+			return false;
+			});
     }
  
-    
+	return model_uuid;
 }
 
 GraphicsEnginePtr ManageEngine::createGridEngine()
@@ -237,14 +259,25 @@ void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 	{
 		LogInfo("OperatorAction:{} ", int(graphic->getMesh()->model_type_));
 	}
+
+	QString model_name = graphics->getModelName();
+	generateUuid(model_name);
+	graphics->setModelName(model_name);
 }
 
-QString ManageEngine::generateUuid()
+void ManageEngine::generateUuid(QString& model_name)
 {
-    QUuid id = QUuid::createUuid();
-    QString str_id = id.toString();
-    str_id.remove("{").remove("}").remove("-");
-    return str_id;
+    auto iter = map_model_id_.find(model_name);
+    if (iter != map_model_id_.end())
+    {
+		map_model_id_[model_name]++;
+		model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
+    }
+    else
+    {
+        map_model_id_[model_name] = 0;
+		model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
+    }
 }
 void ManageEngine::initializeGl()
 {
@@ -353,6 +386,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
         {
             LogInfo("【Selected 】 ColorID: {} \n Depth: {}", object_id, depth);
             map_engineptr[depth] = graphic_;
+			selectModelSignals(graphic_->getModelName());
         }
         ++object_id;
     }

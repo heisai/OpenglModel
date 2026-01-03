@@ -129,7 +129,7 @@ private:
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 	QString  m_sUUid = "";
-	std::shared_ptr<ManageEngine>m_PtrManageEngine;
+	std::shared_ptr<ManageEngine>manage_engine_moudle_;
 	int m_width, m_height;
 	//QWidget* widget_;
 

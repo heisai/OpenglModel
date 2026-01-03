@@ -22,12 +22,14 @@ public:
     ~ParaConfigWidget();
     void InitUI();
     void InitConnect(); 
+    void addCollectionToTreewidget(const QString& item_text);
+    void  removeCollectionFromTreewidget(const QString& item_text);
+    void updateTreewidgetItem(const QString& item_text);
+
 private:
     //集合树界面
     void initCollectionWidget();
     void initTreewidget();
-    void addCollectionToTreewidget(const QString &item_text);
-
     //属性设置界面
     void initPropertiesConfigWidget();
     QWidget* initToolButtons();

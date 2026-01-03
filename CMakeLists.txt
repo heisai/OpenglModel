@@ -13,7 +13,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Od")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG")
-add_compile_options(/utf-8)
+if (MSVC)
+    add_compile_options(/utf-8)
+endif()
 
 # ÃÌº”“¿¿µø‚
 set(LibDir   ./DependLib/assimp/lib   ./DependLib/spdlog/lib )

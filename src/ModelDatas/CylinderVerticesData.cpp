@@ -4,6 +4,7 @@ ModelDataInfo CylinderVerticesData::GetModelDatas()
     ModelDataInfo info;
     info.vertices_datas = GenerateCylinderVertices(0.8f, 2.5f, 36 *3);
     info.indices_datas = GenerateCylinderIndices(36 *3);
+	info.model_name_ = TR("cylinder");
     return info;
 }
 

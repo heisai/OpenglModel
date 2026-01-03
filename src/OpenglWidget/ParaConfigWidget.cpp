@@ -24,7 +24,9 @@ void ParaConfigWidget::InitUI()
 
 void ParaConfigWidget::InitConnect()
 {
-
+	connect(collection_treewidget_, &QTreeWidget::itemClicked, [this](QTreeWidgetItem* item, int column) {
+		LogInfo("Select Item: {}", item->text(column).toStdString());
+		});
 }
 
 void ParaConfigWidget::initCollectionWidget()
@@ -51,11 +53,39 @@ void ParaConfigWidget::initTreewidget()
 
 	collection_treewidget_->setFrameShape(QFrame::NoFrame);
 	//collection_treewidget_->setIndentation(0);  // 设置为0完全移除缩进
+	collection_treewidget_->expandAll();
 }
 
 void ParaConfigWidget::addCollectionToTreewidget(const QString& item_text)
 {
 	treewidgetitem_->addChild(new QTreeWidgetItem({ item_text }));
+}
+
+void ParaConfigWidget::removeCollectionFromTreewidget(const QString& item_text)
+{
+
+	QList<QTreeWidgetItem*> items = collection_treewidget_->findItems(item_text, Qt::MatchExactly| Qt::MatchRecursive);
+	if (!items.isEmpty())
+	{
+		treewidgetitem_->removeChild(items.at(0));
+	}
+}
+
+void ParaConfigWidget::updateTreewidgetItem(const QString& item_text)
+{
+	//清空当前节点的选中状态
+	int count = treewidgetitem_->childCount();
+	for (int index = 0; index < count; index++)
+	{
+		treewidgetitem_->child(index)->setSelected(false);
+	}
+
+	//设置选中状态
+	QList<QTreeWidgetItem*>items = collection_treewidget_->findItems(item_text, Qt::MatchExactly | Qt::MatchRecursive);
+	if (!items.isEmpty())
+	{
+		items.at(0)->setSelected(true);
+	}
 }
 
 void ParaConfigWidget::initPropertiesConfigWidget()
@@ -76,10 +106,12 @@ QWidget*ParaConfigWidget::initToolButtons()
 	QPushButton* tool_btn3 = new QPushButton(TR("Material"));
 	QPushButton* tool_btn4 = new QPushButton(TR("Object"));
 	QPushButton* tool_btn5 = new QPushButton(TR("Output"));
+
+	vec_toolbtns.push_back(tool_btn3);
 	vec_toolbtns.push_back(tool_btn);
 	vec_toolbtns.push_back(tool_btn1);
 	vec_toolbtns.push_back(tool_btn2);
-	vec_toolbtns.push_back(tool_btn3);
+
 	vec_toolbtns.push_back(tool_btn4);
 	vec_toolbtns.push_back(tool_btn5);
 

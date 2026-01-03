@@ -34,12 +34,17 @@ private:
     //初始化中心界面
     void initCenterWidget();
 private slots:
-    void createModel(bool checked);
-    void CreatEngine(bool create_model,OperatorAction type);
+    //操作模型（创建、删除、渲染）
+    void operatorModel(bool checked);
+    //创建模型
+    void createModel(OperatorAction type);
+    //移除模型
+    void removeModel(OperatorAction type);
+
     void ChangeLightColorSlot(QColor color);
 private:
     Ui::MainWindow *ui;
-    std::shared_ptr<ManageEngine>m_PtrManageEngine;
+    std::shared_ptr<ManageEngine>manage_engine_moudle_;
   
 
    

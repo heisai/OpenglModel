@@ -17,8 +17,15 @@ void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
 {
 	mesh_data_->vertices_datas = model_datas.vertices_datas;
 	mesh_data_->indices_datas = model_datas.indices_datas;
+	mesh_data_->model_name_ = model_datas.model_name_;
 	mesh_data_->model_type_ = model_type_;
 }
+
+
+
+
+
+
 
 void GraphicsEngine::setModelData(const glm::mat4& model_)
 {
@@ -50,6 +57,17 @@ OperatorAction GraphicsEngine::getModeltype()const
 {
 	return model_type_;
 }
+
+QString GraphicsEngine::getModelName() 
+{
+	return mesh_data_->model_name_;
+}
+
+void GraphicsEngine::setModelName(const QString& model_name)
+{
+	mesh_data_->model_name_ = model_name;
+}
+
 
 bool GraphicsEngine::getCheck() const
 {
