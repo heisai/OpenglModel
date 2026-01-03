@@ -49,8 +49,8 @@ enum class OperatorAction
 	CreatCyliner ,//	
 	CreatCube,
 	CreatTourse,
-	CreatGrid,
-	CreatAxis,//	
+	CreatGrid,	//网格
+	CreatAxis,//	坐标
 	CreatPlanet,//	行星
 	//渲染动作
 	RenderInversion,   //

@@ -60,7 +60,11 @@ OperatorAction GraphicsEngine::getModeltype()const
 
 QString GraphicsEngine::getModelName() 
 {
-	return mesh_data_->model_name_;
+	if (mesh_data_)
+	{
+		return mesh_data_->model_name_;
+	}
+	return "";
 }
 
 void GraphicsEngine::setModelName(const QString& model_name)

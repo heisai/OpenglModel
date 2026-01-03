@@ -36,6 +36,9 @@ private:
     GraphicsEnginePtr createCylinderEngine();
     //创建天空盒子
     GraphicsEnginePtr createSkyBoxEngine();
+	//创建行星
+    GraphicsEnginePtr createPlanteEngine();
+
     //反相
     GraphicsEnginePtr createInversionRender();
     //灰度

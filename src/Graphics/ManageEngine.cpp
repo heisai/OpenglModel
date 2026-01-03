@@ -5,11 +5,12 @@ ManageEngine::ManageEngine():
 {
 
 	// 注册引擎创建函数
-    map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });
-    map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
-    map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });
-    map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
-    map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });	//立方体
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });	//圆环体
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });	//圆柱体
+	map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });	//天空盒
+    map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });	//网格
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this) });	//行星
 
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   //反向
     map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });   //灰度
@@ -142,6 +143,14 @@ GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
 {
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(OperatorAction::ClearSkyBox, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
+}
+
+GraphicsEnginePtr ManageEngine::createPlanteEngine()
+{
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "PlanteModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<PlanetModel>(OperatorAction::CreatTourse, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
 }

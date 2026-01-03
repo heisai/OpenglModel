@@ -70,7 +70,7 @@ void MainWindow::addEngineMenu()
 	grid_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatGrid)));
 
 	QAction* planet_action = new QAction(TR("Planet"), ui->model_menu);
-	planet_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatGrid)));
+	planet_action->setObjectName(QString::number(static_cast<int>(OperatorAction::CreatPlanet)));
 
 	ui->model_menu->addAction(ring_action);
 	ui->model_menu->addAction(cube_action);
