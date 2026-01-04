@@ -11,30 +11,24 @@ PlanetModel::PlanetModel(OperatorAction type, std::shared_ptr<Shader> shader /*=
 
 	unsigned int amount = 1000;
 
-	srand(static_cast<unsigned int>(static_cast<float>(elapsed_timer.elapsed()))); // initialize random seed
+	srand(static_cast<unsigned int>(static_cast<float>(elapsed_timer.elapsed()/20))); // initialize random seed
 
-	float radius = 150.0;
-	float offset = 25.0f;
+	float radius = 1.0;
+	float offset = 1.5f;
 	for (unsigned int i = 0; i < amount; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
 		float angle = (float)i / (float)amount * 360.0f;
-		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float displacement = (rand() % (int)(2 * offset ))  - offset;
 		float x = sin(angle) * radius + displacement;
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+
 		float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float z = cos(angle) * radius + displacement;
+
+		float z = cos(angle) * radius;
 		model = glm::translate(model, glm::vec3(x, y, z));
+		qDebug() << x << y << z;
 
-		// 2. scale: Scale between 0.05 and 0.25f
-		float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
-		model = glm::scale(model, glm::vec3(scale));
-
-		// 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
-		float rotAngle = static_cast<float>((rand() % 360));
-		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
 
 		// 4. now add to list of matrices
 		model_matrices_.push_back(model) ;
@@ -48,7 +42,7 @@ PlanetModel::PlanetModel(OperatorAction type, std::shared_ptr<Shader> shader /*=
 void PlanetModel::Draw()
 {
 
-		//if (selected_)s
+		//if (selected_)
 		{
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilMask(0xFF);

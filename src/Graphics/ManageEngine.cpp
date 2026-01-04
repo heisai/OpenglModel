@@ -251,7 +251,7 @@ void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
-	graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f)));
+	graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f)));
 	graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
 	graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 	if (graphics->getMesh()->model_type_ == OperatorAction::ClearSkyBox)

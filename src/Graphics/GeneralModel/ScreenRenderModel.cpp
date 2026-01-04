@@ -76,7 +76,31 @@ void ScreenRenderModel::InitBufferData()
 
 
 
+	// configure MSAA framebuffer
+   // --------------------------
 
+	glGenFramebuffers(1, &framebuffe_fbo_);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffe_fbo_);
+	// create a multisampled color attachment texture
+	unsigned int textureColorBufferMultiSampled;
+	glGenTextures(1, &textureColorBufferMultiSampled);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, m_Width, m_Height, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled, 0);
+	// create a (also multisampled) renderbuffer object for depth and stencil attachments
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, m_Width, m_Height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LogInfo("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 
@@ -212,7 +236,12 @@ void ScreenRenderModel::drawTexture()
 	glBindTexture(GL_TEXTURE_2D, m_PickTexture);	// use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
+	//glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffe_fbo_);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_PickFBO);
+	glBlitFramebuffer(0, 0, m_Width, m_Height, 0, 0, m_Width, m_Height ,GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+
 	glViewport(0, 0, m_Width, m_Height);
 	// Çå³ý»º³å
 	glClearColor(0.5f, 0.3f, 0.7f, 1.0f);

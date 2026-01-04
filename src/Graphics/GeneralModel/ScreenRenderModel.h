@@ -25,6 +25,7 @@ private:
 	unsigned int m_PickFBO;
 	unsigned int m_PickTexture;
 	unsigned int m_PickRBO;
+	unsigned int framebuffe_fbo_;
 
 	unsigned int quadvao_;
 	unsigned int quadvbo_;
