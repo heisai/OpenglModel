@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <QtOpenGL/QOpenGLFunctions_4_5_Core>
-
+#include "../Utils/Utils.h"
 class Shader: public QOpenGLFunctions_4_5_Core {
 public:
     explicit Shader(const std::string& vs_filename,const std::string &fs_filename,
@@ -16,9 +16,14 @@ public:
         const std::string& gs_filename,const std::string& dirname);
    
 
-
+    //绑定着色器
     void bind();
+    //解绑着色器
     void release();
+	//设置材质属性
+    void setMaterial(const Utils::Material& material_info);
+	//设置光照属性
+	//void setLight(const Utils::Light& light_info);
     void setBool(const std::string& name, bool value) ;
     void SetInt(const std::string& name, int value) ;
     void SetuInt(const std::string& name, unsigned int value) ;

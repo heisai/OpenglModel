@@ -32,7 +32,16 @@ void Shader::release()
     glUseProgram(0);
 }
 
-void Shader::setBool(const std::string &name, bool value) 
+void Shader::setMaterial(const Utils::Material& material_info)
+{
+	setVec3("Material.Ka", material_info.ambient_);
+	setVec3("Material.Kd", material_info.diffsue_);
+	setVec3("Material.Ks", material_info.specular_);
+	setFloat("Material.Shininess", material_info.shininess_);
+
+}
+
+void Shader::setBool(const std::string &name, bool value)
 {
     glUniform1i(glGetUniformLocation(ShaderPromger, name.c_str()), (int)value);
 }

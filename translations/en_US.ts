@@ -50,48 +50,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="26"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="170"/>
         <source>材质</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="49"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="163"/>
         <source>光照</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="62"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="250"/>
         <source>位置</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="75"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="243"/>
         <source>旋转</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="88"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="257"/>
         <source>缩放</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="228"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="293"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="332"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="39"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="60"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="206"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="241"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="267"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="306"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="123"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="185"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="227"/>
         <source>y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="254"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="280"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="319"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="81"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="102"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="147"/>
         <source>z</source>
         <translation type="unfinished"></translation>
     </message>
@@ -241,6 +241,126 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="43"/>
         <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="46"/>
+        <source>emerald</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="47"/>
+        <source>jade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="48"/>
+        <source>obsidian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="49"/>
+        <source>pearl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="50"/>
+        <source>ruby</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="51"/>
+        <source>turquoise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="54"/>
+        <source>brass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="55"/>
+        <source>bronze</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="56"/>
+        <source>chrome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="57"/>
+        <source>copper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="58"/>
+        <source>gold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="59"/>
+        <source>silver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="62"/>
+        <source>black_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="63"/>
+        <source>cyan_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="64"/>
+        <source>green_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="65"/>
+        <source>red_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="66"/>
+        <source>white_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="67"/>
+        <source>yellow_plastic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="70"/>
+        <source>black_rubber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="71"/>
+        <source>cyan_rubber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="72"/>
+        <source>green_rubber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="73"/>
+        <source>red_rubber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="74"/>
+        <source>white_rubber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="75"/>
+        <source>yellow_rubber</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

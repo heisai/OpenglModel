@@ -10,7 +10,12 @@ GraphicsEngine::GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shade
 	mvp_data_ = std::make_shared<MvpData>();
 	mesh_data_ = std::make_shared<Mesh>();
 	setModelInfo(CreatModelData().GetModelDatas(type));
-	
+
+	//默认材质信息
+	materal_.ambient_ = glm::vec3(0.0215f, 0.1745f, 0.0215f);
+	materal_.diffsue_ = glm::vec3(0.07568f, 0.61424f, 0.07568f);
+	materal_.specular_ = glm::vec3(0.633f, 0.727811f, 0.633f);
+	materal_.shininess_ = 76.8f;
 }
 
 void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
@@ -39,6 +44,11 @@ void GraphicsEngine::setProjectionData(const glm::mat4& projection_)
 void GraphicsEngine::setTranlstorPosition(const QVector2D& tranlstor_position_)
 {
 	mvp_data_->tranlstor_position_ = tranlstor_position_;
+}
+
+void GraphicsEngine::setMaterialData(const Utils::Material& material)
+{
+	materal_ = material;
 }
 
 MvpDataPtr GraphicsEngine::getMvpData()

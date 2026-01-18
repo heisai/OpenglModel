@@ -9,6 +9,7 @@
 #include<QStackedWidget>
 #include<QHBoxLayout>
 #include<QSpacerItem>
+#include"PropertyEditorWidget.h"
 namespace Ui {
 class ParaConfigWidget;
 }
@@ -25,15 +26,15 @@ public:
     void addCollectionToTreewidget(const QString& item_text);
     void  removeCollectionFromTreewidget(const QString& item_text);
     void updateTreewidgetItem(const QString& item_text);
-
+signals:
+	void sigUpdateMaterialPropertyToEngine(const Utils::Material& value);
 private:
     //集合树界面
     void initCollectionWidget();
     void initTreewidget();
     //属性设置界面
-    void initPropertiesConfigWidget();
+    void initPropertyConfigWidget();
     QWidget* initToolButtons();
-    QWidget *initParamterConfigPage();
 private:
     Ui::ParaConfigWidget *ui;
     QTreeWidget *collection_treewidget_;
@@ -41,6 +42,7 @@ private:
     std::vector<QPushButton*>vec_toolbtns;
 
     QStackedWidget* stackwidget_;
+	PropertyEditorWidget* property_editor_widget_;
 };
 
 #endif // PARACONFIGWIDGET_H

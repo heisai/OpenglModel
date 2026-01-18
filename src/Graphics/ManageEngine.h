@@ -26,6 +26,8 @@ public:
 	void initializeGl();
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
     void SetEngineScaleAndTranslate(const GraphicsEnginePtr&engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
+	//设置材质数据
+    void setMaterialData(const Utils::Material& material_);
 private:
     GraphicsEnginePtr createGridEngine();
     //创建立方体

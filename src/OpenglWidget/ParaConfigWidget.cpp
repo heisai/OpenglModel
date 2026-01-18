@@ -2,7 +2,11 @@
 #include"ui_ParaConfigWidget.h"
 ParaConfigWidget::ParaConfigWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::ParaConfigWidget)
+    , ui(new Ui::ParaConfigWidget),
+	collection_treewidget_(nullptr),
+	treewidgetitem_(nullptr),
+	stackwidget_(nullptr),
+	property_editor_widget_(nullptr)
 {
     ui->setupUi(this);
     InitUI();
@@ -19,7 +23,7 @@ void ParaConfigWidget::InitUI()
 	//集合界面
 	initCollectionWidget();
 	//属性界面
-	initPropertiesConfigWidget();
+	initPropertyConfigWidget();
 }
 
 void ParaConfigWidget::InitConnect()
@@ -87,14 +91,24 @@ void ParaConfigWidget::updateTreewidgetItem(const QString& item_text)
 		items.at(0)->setSelected(true);
 	}
 }
-
-void ParaConfigWidget::initPropertiesConfigWidget()
+void ParaConfigWidget::initPropertyConfigWidget()
 {
+	stackwidget_ = new QStackedWidget;
+	property_editor_widget_ = new PropertyEditorWidget(this);
+	stackwidget_->insertWidget(0, property_editor_widget_);
+
+
+
 	QHBoxLayout* hboxLayout = new QHBoxLayout;
-	hboxLayout->addWidget(initToolButtons());
-	hboxLayout->addWidget(initParamterConfigPage());
+	//hboxLayout->addWidget(initToolButtons());
+	hboxLayout->addWidget(stackwidget_);
 	hboxLayout->setContentsMargins(6, 6, 6, 6);
 	ui->SceneWidget->setLayout(hboxLayout);
+
+	connect(property_editor_widget_, &PropertyEditorWidget::sigMaterialChanged,[this](const Utils::Material& value)
+		{
+			emit sigUpdateMaterialPropertyToEngine(value);
+		});
 }
 
 QWidget*ParaConfigWidget::initToolButtons()
@@ -134,15 +148,4 @@ QWidget*ParaConfigWidget::initToolButtons()
 	QWidget* widget = new QWidget;
 	widget->setLayout(verticalLayout);
 	return widget;
-}
-
-QWidget* ParaConfigWidget::initParamterConfigPage()
-{
-	stackwidget_ = new QStackedWidget;
-	for (int index = 0; index < vec_toolbtns.size(); index++)
-	{
-		stackwidget_->insertWidget(index, new QWidget());
-	}
-	return stackwidget_;
-
 }

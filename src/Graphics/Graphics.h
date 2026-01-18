@@ -71,6 +71,8 @@ public:
     void setModelData(const glm::mat4& model_);
     void setProjectionData(const glm::mat4& projection_);
     void setTranlstorPosition(const QVector2D& tranlstor_position_);
+    //设置材质属性
+	void setMaterialData(const Utils::Material& material);
     MvpDataPtr getMvpData();
     MeshPtr getMesh();
     OperatorAction getModeltype()const;
@@ -86,12 +88,6 @@ private:
 public:
     //默认shader(用于基础模型绘制)
      std::shared_ptr<Shader>default_shader_;
-    
-     
-
-
-
-    
 protected:
   
 	 int m_Width, m_Height;        
@@ -99,6 +95,7 @@ protected:
      MeshPtr mesh_data_;           //模型数据
      bool selected_ = false;        //选中状态
      OperatorAction model_type_;   //模型类型
+     Utils::Material materal_;  //材质信息
 
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;

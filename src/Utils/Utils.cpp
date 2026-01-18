@@ -1,304 +1,255 @@
 ﻿#include"Utils.h"
 
-std::string Utils::ReadFile(const std::string &file_name)
+std::string Utils::ReadFile(const std::string& file_name)
 {
-    std::ifstream  file;
-    std::stringstream filestream;
+    std::ifstream file;
+    std::stringstream file_stream;
+
+    // 读取失败时抛异常（便于在 catch 中统一处理）
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
     try
     {
         file.open(file_name);
-        filestream << file.rdbuf();
+        file_stream << file.rdbuf();
         file.close();
     }
-    catch (std::ifstream::failure& e)
+    catch (std::ifstream::failure& ex)
     {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << e.what() << std::endl;
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << ex.what() << std::endl;
     }
-    return filestream.str();
+
+    return file_stream.str();
 }
 
-void Utils::CreatShaderProgram(const std::string &vs, const std::string &fs)
+void Utils::CreatShaderProgram(const std::string& vs, const std::string& fs)
 {
+    // 当前函数用于预读取 shader 源码，后续可扩展为实际编译/缓存等流程
     std::string vs_text = ReadFile(vs);
     std::string fs_text = ReadFile(fs);
 }
 
-
-Utils::MaterialAttrib::MaterialAttrib(const std::string& attrib):
-    m_MaterialName(attrib)
+Utils::MaterialAttrib::MaterialAttrib()
 {
-#if 0
-    //翠
+
+    // 初始化材质表（map_material_）
+    // 说明：
+    // 1) 所有材质使用一套统一字段：ambient_/diffsue_/specular_/shininess_
+    // 2) 参数范围一般在 [0,1]；shininess_ 为高光指数
+    // 3) 这些数据常用于 Phong/Blinn-Phong 光照模型
+
+    // ==============================
+    // 经典材质（宝石/金属）
+    // ==============================
+
+    // 翠（Emerald）
     Material emerald;
-    emerald.m_Ambient = glm::vec3(0.0215, 0.1745, 0.0215);
-    emerald.m_Diffsue = glm::vec3(0.07568, 0.61424, 0.07568);
-    emerald.m_Specular = glm::vec3(0.633, 0.727811, 0.633);
-    emerald.m_Shininess = 76.8;
-   
+    emerald.ambient_ = glm::vec3(0.0215f, 0.1745f, 0.0215f);
+    emerald.diffsue_ = glm::vec3(0.07568f, 0.61424f, 0.07568f);
+    emerald.specular_ = glm::vec3(0.633f, 0.727811f, 0.633f);
+    emerald.shininess_ = 76.8f;
+	emerald.alpha_ = 0.55f;
 
-    //玉
+    // 玉（Jade）
     Material jade;
-    jade.m_Ambient = glm::vec3(0.135,0.2225,0.1575);
-    jade.m_Diffsue = glm::vec3(0.54,0.89,0.63);
-    jade.m_Specular = glm::vec3(0.316228,0.316228,0.316228);
-    jade.m_Shininess = 12.8;
-   
+    jade.ambient_ = glm::vec3(0.135f, 0.2225f, 0.1575f);
+    jade.diffsue_ = glm::vec3(0.54f, 0.89f, 0.63f);
+    jade.specular_ = glm::vec3(0.316228f, 0.316228f, 0.316228f);
+    jade.shininess_ = 12.8f;
+    jade.alpha_ = 0.95f;
 
-    //黑曜石
+    // 黑曜石（Obsidian）
     Material obsidian;
-    obsidian.m_Ambient = glm::vec3(0.05375,0.05,0.06625);
-    obsidian.m_Diffsue = glm::vec3(0.18275,0.17,0.22525);
-    obsidian.m_Specular = glm::vec3(0.332741,0.328634,0.346435);
-    obsidian.m_Shininess = 38.4;
-  
+    obsidian.ambient_ = glm::vec3(0.05375f, 0.05f, 0.06625f);
+    obsidian.diffsue_ = glm::vec3(0.18275f, 0.17f, 0.22525f);
+    obsidian.specular_ = glm::vec3(0.332741f, 0.328634f, 0.346435f);
+    obsidian.shininess_ = 38.4f;
+	obsidian.alpha_ = 0.95f;
 
-    //珍珠
+    // 珍珠（Pearl）
     Material pearl;
-    pearl.m_Ambient = glm::vec3(0.25,0.20725,0.20725);
-    pearl.m_Diffsue = glm::vec3(1,0.829,0.829);
-    pearl.m_Specular = glm::vec3(0.296648,0.296648,0.296648);
-    pearl.m_Shininess = 11.264;
-  
+    pearl.ambient_ = glm::vec3(0.25f, 0.20725f, 0.20725f);
+    pearl.diffsue_ = glm::vec3(1.0f, 0.829f, 0.829f);
+    pearl.specular_ = glm::vec3(0.296648f, 0.296648f, 0.296648f);
+    pearl.shininess_ = 11.264f;
+	pearl.alpha_ = 0.922f;
 
-    //红宝石
+    // 红宝石（Ruby）
     Material ruby;
-    ruby.m_Ambient = glm::vec3(0.1745,0.01175,0.01175);
-    ruby.m_Diffsue = glm::vec3(0.61424,0.04136,0.04136);
-    ruby.m_Specular = glm::vec3(0.727811,0.626959,0.626959);
-    ruby.m_Shininess = 76.8;
-    
+    ruby.ambient_ = glm::vec3(0.1745f, 0.01175f, 0.01175f);
+    ruby.diffsue_ = glm::vec3(0.61424f, 0.04136f, 0.04136f);
+    ruby.specular_ = glm::vec3(0.727811f, 0.626959f, 0.626959f);
+    ruby.shininess_ = 76.8f;
+	ruby.alpha_ = 0.55f;
 
-    //绿松石
+    // 绿松石（Turquoise）
     Material turquoise;
-    turquoise.m_Ambient = glm::vec3(0.1,0.18725,0.1745);
-    turquoise.m_Diffsue = glm::vec3(0.396,0.74151,0.69102);
-    turquoise.m_Specular = glm::vec3(0.297254,0.30829,0.306678);
-    turquoise.m_Shininess = 12.8;
-  
-
-    //黄铜
+    turquoise.ambient_ = glm::vec3(0.1f, 0.18725f, 0.1745f);
+    turquoise.diffsue_ = glm::vec3(0.396f, 0.74151f, 0.69102f);
+    turquoise.specular_ = glm::vec3(0.297254f, 0.30829f, 0.306678f);
+    turquoise.shininess_ = 12.8f;
+    turquoise.alpha_ = 0.8f;
+    // 黄铜（Brass）
     Material brass;
-    brass.m_Ambient = glm::vec3(0.329412,0.223529,0.027451);
-    brass.m_Diffsue = glm::vec3(0.780392,0.568627,0.113725);
-    brass.m_Specular = glm::vec3(0.992157,0.941176,0.807843);
-    brass.m_Shininess = 27.8974;
-    
+    brass.ambient_ = glm::vec3(0.329412f, 0.223529f, 0.027451f);
+    brass.diffsue_ = glm::vec3(0.780392f, 0.568627f, 0.113725f);
+    brass.specular_ = glm::vec3(0.992157f, 0.941176f, 0.807843f);
+    brass.shininess_ = 27.8974f;
+    brass.alpha_ = 1.0f;
 
-    //青铜
+    // 青铜（Bronze）
     Material bronze;
-    brass.m_Ambient = glm::vec3(0.2125,0.1275,0.054);
-    brass.m_Diffsue = glm::vec3(0.714,0.4284,0.18144);
-    brass.m_Specular = glm::vec3(0.393548,0.271906,0.166721);
-    brass.m_Shininess = 25.6;
-   
-
-    //铬合金
+    bronze.ambient_ = glm::vec3(0.2125f, 0.1275f, 0.054f);
+    bronze.diffsue_ = glm::vec3(0.714f, 0.4284f, 0.18144f);
+    bronze.specular_ = glm::vec3(0.393548f, 0.271906f, 0.166721f);
+    bronze.shininess_ = 25.6f;
+    bronze.alpha_ = 1.0f;
+    // 铬合金（Chrome）
     Material chrome;
-    chrome.m_Ambient = glm::vec3(0.25,0.25,0.25);
-    chrome.m_Diffsue = glm::vec3(0.4,0.4,0.4);
-    chrome.m_Specular = glm::vec3(0.774597,0.774597,0.774597);
-    chrome.m_Shininess = 76.8;
-   
-
-    //铜
+    chrome.ambient_ = glm::vec3(0.25f, 0.25f, 0.25f);
+    chrome.diffsue_ = glm::vec3(0.4f, 0.4f, 0.4f);
+    chrome.specular_ = glm::vec3(0.774597f, 0.774597f, 0.774597f);
+    chrome.shininess_ = 76.8f;
+    chrome.alpha_ = 1.0f;
+    // 铜（Copper）
     Material copper;
-    copper.m_Ambient = glm::vec3(0.19125,0.0735,0.0225);
-    copper.m_Diffsue = glm::vec3(0.7038,0.27048,0.0828);
-    copper.m_Specular = glm::vec3(0.256777,0.137622,0.086014);
-    copper.m_Shininess = 12.8;
-   
-
-    //金子
+    copper.ambient_ = glm::vec3(0.19125f, 0.0735f, 0.0225f);
+    copper.diffsue_ = glm::vec3(0.7038f, 0.27048f, 0.0828f);
+    copper.specular_ = glm::vec3(0.256777f, 0.137622f, 0.086014f);
+    copper.shininess_ = 12.8f;
+    copper.alpha_ = 1.0f;
+    // 金（Gold）
     Material gold;
-    gold.m_Ambient = glm::vec3(0.24725,0.1995,0.0745);
-    gold.m_Diffsue = glm::vec3(0.75164,0.60648,0.22648);
-    gold.m_Specular = glm::vec3(0.628281,0.555802,0.366065);
-    gold.m_Shininess = 51.2;
-   
-
-    //银
+    gold.ambient_ = glm::vec3(0.24725f, 0.1995f, 0.0745f);
+    gold.diffsue_ = glm::vec3(0.75164f, 0.60648f, 0.22648f);
+    gold.specular_ = glm::vec3(0.628281f, 0.555802f, 0.366065f);
+    gold.shininess_ = 51.2f;
+    gold.alpha_ = 1.0f;
+    // 银（Silver）
     Material silver;
-    silver.m_Ambient = glm::vec3(0.19225,0.19225,0.19225);
-    silver.m_Diffsue = glm::vec3(0.50754,0.50754,0.50754);
-    silver.m_Specular = glm::vec3(0.508273,0.508273,0.508273);
-    silver.m_Shininess = 51.2;
-#endif  
-#if 1
-    //翠
-    Material emerald;
-    emerald.m_Ambient = glm::vec4(0.0215, 0.1745, 0.0215, 0.55);
-    emerald.m_Diffsue = glm::vec4(0.07568, 0.61424, 0.07568, 0.55);
-    emerald.m_Specular = glm::vec4(0.633, 0.727811, 0.633, 0.55);
-    emerald.m_Shininess = 76.8;
+    silver.ambient_ = glm::vec3(0.19225f, 0.19225f, 0.19225f);
+    silver.diffsue_ = glm::vec3(0.50754f, 0.50754f, 0.50754f);
+    silver.specular_ = glm::vec3(0.508273f, 0.508273f, 0.508273f);
+    silver.shininess_ = 51.2f;
+    silver.alpha_ = 1.0f;
+    // ==============================
+    // 标准材质（塑料 / 橡胶）
+    // ==============================
 
-
-    //玉
-    Material jade;
-    jade.m_Ambient = glm::vec4(0.135, 0.2225, 0.1575, 0.95);
-    jade.m_Diffsue = glm::vec4(0.54, 0.89, 0.63, 0.95);
-    jade.m_Specular = glm::vec4(0.316228, 0.316228, 0.316228, 0.95);
-    jade.m_Shininess = 12.8;
-
-
-    //黑曜石
-    Material obsidian;
-    obsidian.m_Ambient = glm::vec4(0.05375, 0.05, 0.06625, 0.95);
-    obsidian.m_Diffsue = glm::vec4(0.18275, 0.17, 0.22525, 0.95);
-    obsidian.m_Specular = glm::vec4(0.332741, 0.328634, 0.346435, 0.95);
-    obsidian.m_Shininess = 38.4;
-
-
-    //珍珠
-    Material pearl;
-    pearl.m_Ambient = glm::vec4(0.25, 0.20725, 0.20725, 0.922);
-    pearl.m_Diffsue = glm::vec4(1, 0.829, 0.829, 0.922);
-    pearl.m_Specular = glm::vec4(0.296648, 0.296648, 0.296648, 0.922);
-    pearl.m_Shininess = 11.264;
-
-
-    //红宝石
-    Material ruby;
-    ruby.m_Ambient = glm::vec4(0.1745, 0.01175, 0.01175, 0.55);
-    ruby.m_Diffsue = glm::vec4(0.61424, 0.04136, 0.04136, 0.55);
-    ruby.m_Specular = glm::vec4(0.727811, 0.626959, 0.626959, 0.55);
-    ruby.m_Shininess = 76.8;
-
-
-    //绿松石
-    Material turquoise;
-    turquoise.m_Ambient = glm::vec4(0.1, 0.18725, 0.1745, 0.8);
-    turquoise.m_Diffsue = glm::vec4(0.396, 0.74151, 0.69102, 0.8);
-    turquoise.m_Specular = glm::vec4(0.297254, 0.30829, 0.306678, 0.8);
-    turquoise.m_Shininess = 12.8;
-
-
-    //黄铜
-    Material brass;
-    brass.m_Ambient = glm::vec4(0.329412, 0.223529, 0.027451, 1.0);
-    brass.m_Diffsue = glm::vec4(0.780392, 0.568627, 0.113725, 1.0);
-    brass.m_Specular = glm::vec4(0.992157, 0.941176, 0.807843, 1.0);
-    brass.m_Shininess = 27.8974;
-
-
-    //青铜
-    Material bronze;
-    brass.m_Ambient = glm::vec4(0.2125, 0.1275, 0.054, 1.0);
-    brass.m_Diffsue = glm::vec4(0.714, 0.4284, 0.18144, 1.0);
-    brass.m_Specular = glm::vec4(0.393548, 0.271906, 0.166721, 1.0);
-    brass.m_Shininess = 25.6;
-
-
-    //铬合金
-    Material chrome;
-    chrome.m_Ambient = glm::vec4(0.25, 0.25, 0.25, 1.0);
-    chrome.m_Diffsue = glm::vec4(0.4, 0.4, 0.4, 1.0);
-    chrome.m_Specular = glm::vec4(0.774597, 0.774597, 0.774597, 1.0);
-    chrome.m_Shininess = 76.8;
-
-
-    //铜
-    Material copper;
-    copper.m_Ambient = glm::vec4(0.19125, 0.0735, 0.0225, 1.0);
-    copper.m_Diffsue = glm::vec4(0.7038, 0.27048, 0.0828, 1.0);
-    copper.m_Specular = glm::vec4(0.256777, 0.137622, 0.086014, 1.0);
-    copper.m_Shininess = 12.8;
-
-
-    //金子
-    Material gold;
-    gold.m_Ambient = glm::vec4(0.24725, 0.1995, 0.0745, 1.0);
-    gold.m_Diffsue = glm::vec4(0.75164, 0.60648, 0.22648, 1.0);
-    gold.m_Specular = glm::vec4(0.628281, 0.555802, 0.366065, 1.0);
-    gold.m_Shininess = 51.2;
-
-
-    //银
-    Material silver;
-    silver.m_Ambient = glm::vec4(0.19225, 0.19225, 0.19225, 1.0);
-    silver.m_Diffsue = glm::vec4(0.50754, 0.50754, 0.50754, 1.0);
-    silver.m_Specular = glm::vec4(0.508273, 0.508273, 0.508273, 1.0);
-    silver.m_Shininess = 51.2;
-#endif 
-
-    //黑色塑料
- /*   Material black_plastic;
- 
-    //青色塑料
+    // 黑色塑料
+    Material black_plastic;
+    black_plastic.ambient_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    black_plastic.diffsue_ = glm::vec3(0.01f, 0.01f, 0.01f);
+    black_plastic.specular_ = glm::vec3(0.50f, 0.50f, 0.50f);
+    black_plastic.shininess_ = 32.0f;
+    black_plastic.alpha_ = 1.0f;
+    // 青色塑料
     Material cyan_plastic;
-    //绿色塑料
+    cyan_plastic.ambient_ = glm::vec3(0.0f, 0.10f, 0.06f);
+    cyan_plastic.diffsue_ = glm::vec3(0.0f, 0.51f, 0.51f);
+    cyan_plastic.specular_ = glm::vec3(0.50f, 0.50f, 0.50f);
+    cyan_plastic.shininess_ = 32.0f;
+    cyan_plastic.alpha_ = 1.0f;
+    // 绿色塑料
     Material green_plastic;
-    //红色塑料
-	Material red_plastic;
-    //白色塑料
-	Material white_plastic;
-    //黄色塑料
-	Material yellow_plastic;
-    //黑色橡胶
-	Material black_rubber;
-    //青色橡胶
-	Material cyan_rubber;
-    //绿色橡胶
-	Material green_rubber;
-    //红色橡胶
-	Material red_rubber;
-    //白色橡胶
-	Material white_rubber;
-   // 黄色橡胶
-	Material yellow_rubber;*/
+    green_plastic.ambient_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    green_plastic.diffsue_ = glm::vec3(0.10f, 0.35f, 0.10f);
+    green_plastic.specular_ = glm::vec3(0.45f, 0.55f, 0.45f);
+    green_plastic.shininess_ = 32.0f;
+    green_plastic.alpha_ = 1.0f;
+    // 红色塑料
+    Material red_plastic;
+    red_plastic.ambient_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    red_plastic.diffsue_ = glm::vec3(0.50f, 0.0f, 0.0f);
+    red_plastic.specular_ = glm::vec3(0.70f, 0.60f, 0.60f);
+    red_plastic.shininess_ = 32.0f;
+    red_plastic.alpha_ = 1.0f;
+    // 白色塑料
+    Material white_plastic;
+    white_plastic.ambient_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    white_plastic.diffsue_ = glm::vec3(0.55f, 0.55f, 0.55f);
+    white_plastic.specular_ = glm::vec3(0.70f, 0.70f, 0.70f);
+    white_plastic.shininess_ = 32.0f;
+    white_plastic.alpha_ = 1.0f;
+    // 黄色塑料
+    Material yellow_plastic;
+    yellow_plastic.ambient_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    yellow_plastic.diffsue_ = glm::vec3(0.50f, 0.50f, 0.0f);
+    yellow_plastic.specular_ = glm::vec3(0.60f, 0.60f, 0.50f);
+    yellow_plastic.shininess_ = 32.0f;
+    yellow_plastic.alpha_ = 1.0f;
+    // 黑色橡胶
+    Material black_rubber;
+    black_rubber.ambient_ = glm::vec3(0.02f, 0.02f, 0.02f);
+    black_rubber.diffsue_ = glm::vec3(0.01f, 0.01f, 0.01f);
+    black_rubber.specular_ = glm::vec3(0.40f, 0.40f, 0.40f);
+    black_rubber.shininess_ = 10.0f;
+    black_rubber.alpha_ = 1.0f;
+    // 青色橡胶
+    Material cyan_rubber;
+    cyan_rubber.ambient_ = glm::vec3(0.0f, 0.05f, 0.05f);
+    cyan_rubber.diffsue_ = glm::vec3(0.4f, 0.5f, 0.5f);
+    cyan_rubber.specular_ = glm::vec3(0.04f, 0.70f, 0.70f);
+    cyan_rubber.shininess_ = 10.0f;
+    cyan_rubber.alpha_ = 1.0f;
+    // 绿色橡胶
+    Material green_rubber;
+    green_rubber.ambient_ = glm::vec3(0.0f, 0.05f, 0.0f);
+    green_rubber.diffsue_ = glm::vec3(0.4f, 0.5f, 0.4f);
+    green_rubber.specular_ = glm::vec3(0.04f, 0.70f, 0.04f);
+    green_rubber.shininess_ = 10.0f;
+    green_rubber.alpha_ = 1.0f;
+    // 红色橡胶
+    Material red_rubber;
+    red_rubber.ambient_ = glm::vec3(0.05f, 0.0f, 0.0f);
+    red_rubber.diffsue_ = glm::vec3(0.5f, 0.4f, 0.4f);
+    red_rubber.specular_ = glm::vec3(0.70f, 0.04f, 0.04f);
+    red_rubber.shininess_ = 10.0f;
+    red_rubber.alpha_ = 1.0f;
+    // 白色橡胶
+    Material white_rubber;
+    white_rubber.ambient_ = glm::vec3(0.05f, 0.05f, 0.05f);
+    white_rubber.diffsue_ = glm::vec3(0.5f, 0.5f, 0.5f);
+    white_rubber.specular_ = glm::vec3(0.70f, 0.70f, 0.70f);
+    white_rubber.shininess_ = 10.0f;
+    white_rubber.alpha_ = 1.0f;
+    // 黄色橡胶
+    Material yellow_rubber;
+    yellow_rubber.ambient_ = glm::vec3(0.05f, 0.05f, 0.0f);
+    yellow_rubber.diffsue_ = glm::vec3(0.5f, 0.5f, 0.4f);
+    yellow_rubber.specular_ = glm::vec3(0.70f, 0.70f, 0.04f);
+    yellow_rubber.shininess_ = 10.0f;
+    yellow_rubber.alpha_ = 1.0f;
+    // 将所有条目写入材质表（key -> Material）
+    map_material_.insert(std::make_pair(TR("emerald"), emerald));
+    map_material_.insert(std::make_pair(TR("jade"), jade));
+    map_material_.insert(std::make_pair(TR("obsidian"), obsidian));
+    map_material_.insert(std::make_pair(TR("pearl"), pearl));
+    map_material_.insert(std::make_pair(TR("ruby"), ruby));
+    map_material_.insert(std::make_pair(TR("turquoise"), turquoise));
+    map_material_.insert(std::make_pair(TR("brass"), brass));
+    map_material_.insert(std::make_pair(TR("bronze"), bronze));
+    map_material_.insert(std::make_pair(TR("chrome"), chrome));
+    map_material_.insert(std::make_pair(TR("copper"), copper));
+    map_material_.insert(std::make_pair(TR("gold"), gold));
+    map_material_.insert(std::make_pair(TR("silver"), silver));
 
+    map_material_.insert(std::make_pair("black_plastic", black_plastic));
+    map_material_.insert(std::make_pair("cyan_plastic", cyan_plastic));
+    map_material_.insert(std::make_pair("green_plastic", green_plastic));
+    map_material_.insert(std::make_pair("red_plastic", red_plastic));
+    map_material_.insert(std::make_pair("white_plastic", white_plastic));
+    map_material_.insert(std::make_pair("yellow_plastic", yellow_plastic));
 
-    m_MapMaterial.insert(std::make_pair("emerald", emerald));
-    m_MapMaterial.insert(std::make_pair("jade", jade));
-    m_MapMaterial.insert(std::make_pair("obsidian", obsidian));
-    m_MapMaterial.insert(std::make_pair("pearl", pearl));
-    m_MapMaterial.insert(std::make_pair("ruby", ruby));
-    m_MapMaterial.insert(std::make_pair("turquoise", turquoise));
-    m_MapMaterial.insert(std::make_pair("brass", brass));
-    m_MapMaterial.insert(std::make_pair("bronze", bronze));
-    m_MapMaterial.insert(std::make_pair("chrome", chrome));
-    m_MapMaterial.insert(std::make_pair("copper", copper));
-    m_MapMaterial.insert(std::make_pair("gold", gold));
-    m_MapMaterial.insert(std::make_pair("silver", silver));
-
+    map_material_.insert(std::make_pair("black_rubber", black_rubber));
+    map_material_.insert(std::make_pair("cyan_rubber", cyan_rubber));
+    map_material_.insert(std::make_pair("green_rubber", green_rubber));
+    map_material_.insert(std::make_pair("red_rubber", red_rubber));
+    map_material_.insert(std::make_pair("white_rubber", white_rubber));
+    map_material_.insert(std::make_pair("yellow_rubber", yellow_rubber));
 }
-
-void Utils::MaterialAttrib::SetMaterialAttrib(const std::string& attrib)
+Utils::Material Utils::MaterialAttrib::getMaterial(const QString& name)
 {
-    m_MaterialName = attrib;
+    return map_material_[name];
 }
 
-glm::vec3 Utils::MaterialAttrib::GetAmbient()
-{
-    return m_MapMaterial[m_MaterialName].m_Ambient;
-}
-
-glm::vec3 Utils::MaterialAttrib::GetDiffsue()
-{
-    return m_MapMaterial[m_MaterialName].m_Diffsue;
-}
-
-glm::vec3 Utils::MaterialAttrib::GetSpecular()
-{
-    return m_MapMaterial[m_MaterialName].m_Specular;
-}
-
-glm::vec4 Utils::MaterialAttrib::GetAmbientExt()
-{
-    return m_MapMaterial[m_MaterialName].m_Ambient;
-}
-
-glm::vec4 Utils::MaterialAttrib::GetDiffsueExt()
-{
-    return m_MapMaterial[m_MaterialName].m_Ambient;
-}
-
-glm::vec4 Utils::MaterialAttrib::GetSpecularExt()
-{
-    return m_MapMaterial[m_MaterialName].m_Ambient;
-}
-
-float Utils::MaterialAttrib::GetShininess()
-{
-    return m_MapMaterial[m_MaterialName].m_Shininess;
-}

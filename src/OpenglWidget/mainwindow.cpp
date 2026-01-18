@@ -34,7 +34,10 @@ void MainWindow::InitConnect()
 	connect(manage_engine_moudle_.get(), &ManageEngine::selectModelSignals, [this] (const QString model_uuid){
 		ui->widget->updateTreewidgetItem(model_uuid);
 		});
-
+	//更新材质属性到引擎
+	connect(ui->widget, &ParaConfigWidget::sigUpdateMaterialPropertyToEngine, [this](const Utils::Material& material) {
+		manage_engine_moudle_->setMaterialData(material);
+	});
 }
 
 void MainWindow::showGridEngine()

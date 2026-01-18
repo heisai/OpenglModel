@@ -122,21 +122,24 @@ GraphicsEnginePtr ManageEngine::createCubeEngine()
 
 GraphicsEnginePtr ManageEngine::createToursEngine()
 {
-	//"geometry_shader.geom"
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
-    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
-    basic_light_engine->SetViewSize(width_, height_);
-    return basic_light_engine;
+	////"geometry_shader.geom"
+	//ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
+ //   GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
+ //   basic_light_engine->SetViewSize(width_, height_);
+ //   return basic_light_engine;
+
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "ShaderModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatTourse, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
-
-    
 	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner,light_shader);
-    basic_light_engine->SetViewSize(width_, height_);
-    return basic_light_engine;
+	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
@@ -337,6 +340,18 @@ void ManageEngine::SetEngineScaleAndTranslate(const GraphicsEnginePtr& engine_pt
 	engine_ptr->setModelData(model * model_old);
 	engine_ptr->setProjectionData(projection);
 	engine_ptr->setTranlstorPosition(QVector2D(translate.x, -translate.y));
+}
+
+void ManageEngine::setMaterialData(const Utils::Material& material_)
+{
+	
+	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
+		return (graphic_->getCheck() == true);
+		});
+	if (iter != list_graphic_.end())
+	{
+		(*iter)->setMaterialData(material_);
+	}
 }
 
 void ManageEngine::paintGl()

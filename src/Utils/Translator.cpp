@@ -26,7 +26,7 @@ Translator& Translator::getInstance()
 	instance.translator_map_["Grayscale"] = tr("Grayscale");//灰度
 	instance.translator_map_["Sharpen"] = tr("Sharpen");//锐化
 	instance.translator_map_["Blur"] = tr("Blur");	//模糊
-	instance.translator_map_["Detection"] = tr("Detection");//
+	instance.translator_map_["Detection"] = tr("Detection");//检测
 	instance.translator_map_["Blasting"] = tr("Blasting");	//爆破
 
 	//右上角集合设置
@@ -41,6 +41,39 @@ Translator& Translator::getInstance()
 	instance.translator_map_["Material"] = tr("Material"); //材质
 	instance.translator_map_["Object"] = tr("Object"); //物体
 	instance.translator_map_["Output"] = tr("Output"); //输出
+
+	// --- 宝石类（Gemstones） ---
+	instance.translator_map_["emerald"] = tr("emerald");   // 翠（祖母绿）
+	instance.translator_map_["jade"] = tr("jade");         // 玉
+	instance.translator_map_["obsidian"] = tr("obsidian"); // 黑曜石
+	instance.translator_map_["pearl"] = tr("pearl");       // 珍珠
+	instance.translator_map_["ruby"] = tr("ruby");         // 红宝石
+	instance.translator_map_["turquoise"] = tr("turquoise"); // 绿松石
+
+	// --- 金属类（Metals） ---
+	instance.translator_map_["brass"] = tr("brass");   // 黄铜
+	instance.translator_map_["bronze"] = tr("bronze"); // 青铜
+	instance.translator_map_["chrome"] = tr("chrome"); // 铬合金
+	instance.translator_map_["copper"] = tr("copper"); // 铜
+	instance.translator_map_["gold"] = tr("gold");     // 金
+	instance.translator_map_["silver"] = tr("silver"); // 银
+
+	// --- 塑料类（Plastics） ---
+	instance.translator_map_["black_plastic"] = tr("black_plastic");   // 黑色塑料
+	instance.translator_map_["cyan_plastic"] = tr("cyan_plastic");     // 青色塑料
+	instance.translator_map_["green_plastic"] = tr("green_plastic");   // 绿色塑料
+	instance.translator_map_["red_plastic"] = tr("red_plastic");       // 红色塑料
+	instance.translator_map_["white_plastic"] = tr("white_plastic");   // 白色塑料
+	instance.translator_map_["yellow_plastic"] = tr("yellow_plastic"); // 黄色塑料
+
+	// --- 橡胶类（Rubbers） ---
+	instance.translator_map_["black_rubber"] = tr("black_rubber");   // 黑色橡胶
+	instance.translator_map_["cyan_rubber"] = tr("cyan_rubber");     // 青色橡胶
+	instance.translator_map_["green_rubber"] = tr("green_rubber");   // 绿色橡胶
+	instance.translator_map_["red_rubber"] = tr("red_rubber");       // 红色橡胶
+	instance.translator_map_["white_rubber"] = tr("white_rubber");   // 白色橡胶
+	instance.translator_map_["yellow_rubber"] = tr("yellow_rubber"); // 黄色橡胶
+
 	return  instance;
 }
 QString Translator::Tr(const QString& value)
