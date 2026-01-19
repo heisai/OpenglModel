@@ -71,7 +71,7 @@ void CustomOpenglWidget::paintGL()
     if (manage_engine_moudle_)
     {
         manage_engine_moudle_->setEngineScaleAndTranslate(m_sUUid, glm::vec3(scaleFactor, scaleFactor, scaleFactor),
-           glm::vec3(m_TranlstorPosition.x(), -m_TranlstorPosition.y(), -18.0f), rotationAxisold);
+           glm::vec3(m_TranlstorPosition.x(), -m_TranlstorPosition.y(), -12.0f), rotationAxisold);
         manage_engine_moudle_->paintGl();
     }
 }

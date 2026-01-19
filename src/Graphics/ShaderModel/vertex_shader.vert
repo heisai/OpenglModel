@@ -12,6 +12,6 @@ void main()
 
      FragPos = vec3(ModelMatrix *vec4(VertexPosition,1.0f));
 	 Normal = mat3(transpose(inverse(ModelMatrix))) * VertexNormal;  
-    gl_Position = ProjectionMatrix * ViewMatrix *  ModelMatrix *vec4(VertexPosition, 1.0);
+     gl_Position = ProjectionMatrix * ViewMatrix *  ModelMatrix *vec4(VertexPosition, 1.0);
 }      
 
