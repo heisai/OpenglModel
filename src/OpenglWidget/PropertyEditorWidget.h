@@ -12,10 +12,11 @@ class PropertyEditorWidget : public QWidget
 
 public:
     PropertyEditorWidget(QWidget *parent = nullptr);
-    ~PropertyEditorWidget();
+    ~PropertyEditorWidget() = default;
 
     void initUI();
     void initConnect();
+    void yang();
 
 signals:
     void sigMaterialChanged(const Utils::Material& value);

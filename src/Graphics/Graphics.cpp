@@ -17,9 +17,14 @@ GraphicsEngine::GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shade
 	materal_.specular_ = glm::vec3(0.633f, 0.727811f, 0.633f);
 	materal_.shininess_ = 76.8f;
 }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="model_datas"></param>
 void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
 {
+	//解释下下面的代码的意思
+
 	mesh_data_->vertices_datas = model_datas.vertices_datas;
 	mesh_data_->indices_datas = model_datas.indices_datas;
 	mesh_data_->model_name_ = model_datas.model_name_;

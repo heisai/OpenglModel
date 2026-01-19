@@ -9,8 +9,7 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *parent)
 	initConnect();
 }
 
-PropertyEditorWidget::~PropertyEditorWidget()
-{}
+
 
 void PropertyEditorWidget::initUI()
 {

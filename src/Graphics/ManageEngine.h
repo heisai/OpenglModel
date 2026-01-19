@@ -58,8 +58,6 @@ private:
 
     void createLoadModelEngine();
     void createMixEngine();
-    // 移除引擎
-    void removeEngine(OperatorAction type);
 protected:
     void addEngine( const GraphicsEnginePtr& graphics);
     void  generateUuid(QString &model_name);
@@ -67,7 +65,6 @@ signals:
     //选中模型信号
     void selectModelSignals(const QString model_uuid);
 public:
-    //std::map<QString, GraphicsEnginePtr> map_graphic_;
     std::list<GraphicsEnginePtr>list_graphic_;
     std::map<OperatorAction, std::function<GraphicsEnginePtr(void)>> map_graphicengine_createfunc_;
     int width_ = 0;

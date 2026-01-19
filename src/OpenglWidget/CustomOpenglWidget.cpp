@@ -174,7 +174,7 @@ void CustomOpenglWidget::wheelEvent(QWheelEvent *event)
     {
         // 计算缩放因子
         qreal delta = event->angleDelta().y() / 120.0;
-        scaleFactor += delta * 0.7; // 缩放因子的调整量
+        scaleFactor += delta ; // 缩放因子的调整量
         LogInfo("wheelEvent:{}", scaleFactor);
     }
     else
@@ -184,3 +184,6 @@ void CustomOpenglWidget::wheelEvent(QWheelEvent *event)
 
 
 }
+
+
+

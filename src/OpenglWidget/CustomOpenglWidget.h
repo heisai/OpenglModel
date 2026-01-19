@@ -38,8 +38,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *e) override;
 	void wheelEvent(QWheelEvent* event)override;
 
-
 	
+
 signals:
     void CheckBoxType(QString type,bool check);
 
