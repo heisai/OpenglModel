@@ -4,8 +4,14 @@ Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, s
 {
    
     initializeOpenGLFunctions();
-     vs_sourcecode = Utils::ReadFile(Utils::joinPaths(dirname, vs_filename));
-     fs_sourcecode = Utils::ReadFile(Utils::joinPaths( dirname, fs_filename));
+    std::string vs_path = Utils::joinPaths(dirname, vs_filename);
+    std::string fs_path = Utils::joinPaths(dirname, fs_filename);
+    // 调试：打印实际加载的着色器路径
+    std::cout << "[Shader] Loading VS: " << vs_path << std::endl;
+    std::cout << "[Shader] Loading FS: " << fs_path << std::endl;
+    
+    vs_sourcecode = Utils::ReadFile(vs_path);
+    fs_sourcecode = Utils::ReadFile(fs_path);
     vShaderCode = vs_sourcecode.data();
     fShaderCode = fs_sourcecode.data();
    
@@ -38,7 +44,8 @@ void Shader::setMaterial(const Utils::Material& material_info)
 	setVec3("Material.Kd", material_info.diffsue_);
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
-
+    setBool("blinn", material_info.light_model_type_);
+    //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
 
 void Shader::setBool(const std::string &name, bool value)

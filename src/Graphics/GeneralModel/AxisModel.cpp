@@ -8,28 +8,29 @@ AxisModel::AxisModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nul
 
 void AxisModel::Draw()
 {
-	//if (selected_)
+	if (shown_)
 	{
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		//if (selected_)
+		{
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF);
+		}
+		default_shader_->bind();
+		default_shader_->setMat4("view", mvp_data_->view_);
+		default_shader_->setMat4("projection", mvp_data_->projection_);
+		default_shader_->setMat4("model", mvp_data_->model_);
+		//if (selected_)
+		{
+
+			glBindVertexArray(mesh_data_->vao_);
+			glDrawArrays(GL_POINTS, 0, 1); // 绘制一个点作为坐标轴的起点
+		}
 		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glEnable(GL_DEPTH_TEST);
+
 	}
-	default_shader_->bind();
-	default_shader_->setMat4("view", mvp_data_->view_);
-	default_shader_->setMat4("projection", mvp_data_->projection_);
-	default_shader_->setMat4("model", mvp_data_->model_);
-
-
-
-	//if (selected_)
-	{
-		
-		glBindVertexArray(mesh_data_->vao_);
-		glDrawArrays(GL_POINTS, 0, 1); // 绘制一个点作为坐标轴的起点
-	}
-	glStencilMask(0xFF);
-	glStencilFunc(GL_ALWAYS, 0, 0xFF);
-	glEnable(GL_DEPTH_TEST);
-
+	
 
 
 }

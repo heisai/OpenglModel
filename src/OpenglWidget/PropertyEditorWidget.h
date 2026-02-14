@@ -16,10 +16,8 @@ public:
 
     void initUI();
     void initConnect();
-    void yang();
-
 signals:
-    void sigMaterialChanged(const Utils::Material& value);
+    void sigUpdatePropertyInfo(const Utils::Material& value);
 
 private:
     Ui::PropertyEditorWidgetClass ui;

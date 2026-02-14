@@ -29,13 +29,9 @@ namespace Utils {
         fs::path result;
         (result /= ... /= fs::path(std::forward<Args>(args)));
 
-        std::string current_dir = fs::current_path().string();
-        const size_t last_slash_idx = current_dir.rfind('\\');
-        if (std::string::npos != last_slash_idx)
-        {
-            current_dir = current_dir.substr(0, last_slash_idx);
-        }
-        std::string file_path = std::format("{}\\src\\Graphics\\{}", current_dir, result.string());
+        // 使用项目根目录的绝对路径，确保着色器文件从源码目录加载
+        std::string project_root = "E:\\OPenglProduct";
+        std::string file_path = std::format("{}\\src\\Graphics\\{}", project_root, result.string());
         return file_path;
     }
 
@@ -47,11 +43,21 @@ namespace Utils {
 	class Material
 	{
 	public:
-		glm::vec3 ambient_;
-		glm::vec3 diffsue_;
-		glm::vec3 specular_;
-		float shininess_{};
-        float alpha_{};
+        Material() = default;
+
+        Material(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess, float alpha = 1.0f, int lightModelType = 0)
+            : ambient_(ambient), diffsue_(diffuse), specular_(specular), shininess_(shininess), alpha_(alpha), light_model_type_(lightModelType)
+        {
+        }
+
+        //材质属性
+		glm::vec3 ambient_{ 0.0f };
+		glm::vec3 diffsue_{ 0.0f };
+		glm::vec3 specular_{ 0.0f };
+		float shininess_{ 0.0f };
+        float alpha_{ 1.0f };
+        //光照类型
+        int light_model_type_{ 0 };
 	};
 
     // 材质属性表：根据材质名称（key）返回对应的环境光/漫反射/高光/光泽度
