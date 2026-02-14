@@ -27,23 +27,32 @@ void MainWindow::InitConnect()
 {
 	for (auto action : this->findChildren<QAction*>())
 	{
-		connect(action, &QAction::triggered, this, &MainWindow::operatorModel,Qt::UniqueConnection);
+		connect(action, &QAction::triggered, this, &MainWindow::operatorModel, Qt::UniqueConnection);
 	}
 
 	//更新模型集合树Item 选中状态
-	connect(manage_engine_moudle_.get(), &ManageEngine::selectModelSignals, [this] (const QString model_uuid){
+	connect(manage_engine_moudle_.get(), &ManageEngine::selectModelSignals, [this](const QString model_uuid) {
 		ui->widget->updateTreewidgetItem(model_uuid);
 		});
-	//更新材质属性到引擎
-	connect(ui->widget, &ParaConfigWidget::sigUpdateMaterialPropertyToEngine, [this](const Utils::Material& material) {
-		manage_engine_moudle_->setMaterialData(material);
-	});
+	//更新属性配置信息
+	connect(ui->widget, &ParaConfigWidget::sigUpdatePropertyToEngine, [this](const Utils::Material& material) {
+		manage_engine_moudle_->setPropertyData(material);
+		});
+
 }
 
-void MainWindow::showGridEngine()
+void MainWindow::initCollectionEngine()
 {
-	manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
+	//创建网格
+	//manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
+	//创建坐标轴
+	manage_engine_moudle_->createModel(OperatorAction::CreatAxis);
+
+
+	
 }
+
+
 
 MainWindow::~MainWindow()
 {

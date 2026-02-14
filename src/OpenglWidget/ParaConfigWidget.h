@@ -27,7 +27,9 @@ public:
     void  removeCollectionFromTreewidget(const QString& item_text);
     void updateTreewidgetItem(const QString& item_text);
 signals:
-	void sigUpdateMaterialPropertyToEngine(const Utils::Material& value);
+	void sigUpdatePropertyToEngine(const Utils::Material& value);
+private  slots:
+    void slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
 private:
     //集合树界面
     void initCollectionWidget();
@@ -35,6 +37,8 @@ private:
     //属性设置界面
     void initPropertyConfigWidget();
     QWidget* initToolButtons();
+    //更新属性编辑界面
+    void updatePropertyEditorWidget();
 private:
     Ui::ParaConfigWidget *ui;
     QTreeWidget *collection_treewidget_;

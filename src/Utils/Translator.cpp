@@ -74,6 +74,12 @@ Translator& Translator::getInstance()
 	instance.translator_map_["white_rubber"] = tr("white_rubber");   // 白色橡胶
 	instance.translator_map_["yellow_rubber"] = tr("yellow_rubber"); // 黄色橡胶
 
+	//光照模型
+	instance.translator_map_["phone"] = tr("phone"); //  phone 模型
+	instance.translator_map_["blinn"] = tr("blinn"); // blinn 模型
+	instance.translator_map_["floor"] = tr("floor"); // 地板
+	
+
 	return  instance;
 }
 QString Translator::Tr(const QString& value)

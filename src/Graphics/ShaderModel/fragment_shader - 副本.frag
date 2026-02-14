@@ -61,26 +61,16 @@ vec3 blinnModel(vec3 position,vec3 norm)
 void main()
 {
     //光照位置不对，导致正面和背面相反
-    vec3 n;
+   vec3 norm;
     if(flatShading)
     {
         // 通过屏幕空间导数计算真实面法线，实现平面着色
-        n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
+        norm = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
     }
     else
     {
-        n = normalize(Normal);
+        norm = normalize(norm);
     }
-
-   // vec3 norm = gl_FrontFacing ? -n : n;
-    vec3 norm = n;
-
-    // Debug: 平面着色模式下直接输出面法线，确认是否按三角形变化
- /*  if (flatShading)
-    {
-        FragColor = vec4(norm * 0.5 + 0.5, 1.0);
-        return;
-    }*/
     vec3  LightIntensity = vec3(0.0);
     switch(blinn)
     {

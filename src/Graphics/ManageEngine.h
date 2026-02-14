@@ -26,9 +26,15 @@ public:
 	void initializeGl();
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
     void SetEngineScaleAndTranslate(const GraphicsEnginePtr&engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
-	//设置材质数据
-    void setMaterialData(const Utils::Material& material_);
+	//设置属性配置信息
+    void setPropertyData(const Utils::Material& material_);
 private:
+
+    //注册引擎创建函数
+	void registerEngineModel();
+	//创建坐标轴
+    GraphicsEnginePtr createAxisEngine();
+	//创建网格
     GraphicsEnginePtr createGridEngine();
     //创建立方体
     GraphicsEnginePtr createCubeEngine();
@@ -58,6 +64,8 @@ private:
 
     void createLoadModelEngine();
     void createMixEngine();
+	//展示坐标轴模型
+    void showAxisModel(bool flag);
 protected:
     void addEngine( const GraphicsEnginePtr& graphics);
     void  generateUuid(QString &model_name);

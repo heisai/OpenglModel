@@ -45,16 +45,27 @@ void PropertyEditorWidget::initUI()
 	ui.MaterialComBox->addItem(TR("green_rubber"));
 	ui.MaterialComBox->addItem(TR("red_rubber"));
 	ui.MaterialComBox->addItem(TR("white_rubber"));
-	ui.MaterialComBox->addItem(TR("yellow_rubber"));
+	ui.MaterialComBox->addItem(TR("yellow_rubber")); 
+
+		// 设置默认光照模型
+	ui.LightModelCombox->addItem(TR("phone"));	//phone 光照模型
+	ui.LightModelCombox->addItem(TR("blinn"));		//blinn 光照模型
 }
 
 void PropertyEditorWidget::initConnect()
 {
+	//更新材质属性
 	connect(ui.MaterialComBox, &QComboBox::currentTextChanged, this, [this](const QString& text) {
 		const Utils::Material value = material_attrib_->getMaterial(text);
-		qDebug() <<text;
-		emit sigMaterialChanged(value);
+		emit sigUpdatePropertyInfo(value);
 	});
+	//更新光照模型属性
+	connect(ui.LightModelCombox, &QComboBox::currentIndexChanged, this, [this](const int &value) {
+		QString text = ui.MaterialComBox->currentText();
+		 Utils::Material material_value = material_attrib_->getMaterial(text);
+		 material_value.light_model_type_ = value;
+		emit sigUpdatePropertyInfo(material_value);
+		});
 }
 
 	

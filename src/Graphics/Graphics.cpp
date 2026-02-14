@@ -114,6 +114,11 @@ void GraphicsEngine::setChecked(bool flag)
 	selected_ = flag;
 }
 
+void GraphicsEngine::setShown(bool flag)
+{
+	shown_ = flag;
+}
+
 void GraphicsEngine::setViewData(const glm::mat4& view_)
 {
 	mvp_data_->view_ = view_;

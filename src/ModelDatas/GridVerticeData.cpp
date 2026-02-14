@@ -8,32 +8,15 @@ ModelDataInfo GridVerticeData::GetModelDatas()
 
 std::vector<float> GridVerticeData::GenerateGridVertices()
 {
-	std::vector<float> vertices;
-	for (int i = 0; i <= gridSize; ++i)
-	{
-		float x = -5.0f + i;
+    std::vector<float>vertices = {
+        // positions            // normals         // texcoords
+         10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+        -10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
+        -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
 
-		x = i * gridSpacing - (gridSize * gridSpacing) / 2;
-		vertices.push_back(x);
-
-		vertices.push_back(-0.5f);
-		vertices.push_back(-(gridSize * gridSpacing) / 2);
-		vertices.push_back(x);
-
-		vertices.push_back(-0.5f);
-		vertices.push_back((gridSize * gridSpacing) / 2);
-	}
-	for (int i = 0; i <= gridSize; ++i) {
-		float z = -5.0f + i;
-		z = i * gridSpacing - (gridSize * gridSpacing) / 2;
-		vertices.push_back(-(gridSize * gridSpacing) / 2);
-
-		vertices.push_back(-0.5f);
-		vertices.push_back(z);
-		vertices.push_back((gridSize * gridSpacing) / 2);
-
-		vertices.push_back(-0.5f);
-		vertices.push_back(z);
-	}
+         10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
+        -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+         10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,  10.0f, 10.0f
+    };
 	return vertices;
 }

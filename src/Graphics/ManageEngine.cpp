@@ -3,23 +3,7 @@
 ManageEngine::ManageEngine():
     screen_render_model_(nullptr)
 {
-
-	// 注册引擎创建函数
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });	//立方体
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });	//圆环体
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });	//圆柱体
-	map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });	//天空盒
-    map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });	//网格
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this) });	//行星
-
-    map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   //反向
-    map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });   //灰度
-    map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //锐化
-    map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //模糊
-    map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //检测
-
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //爆破
-	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //清除渲染
+	registerEngineModel();
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -97,16 +81,53 @@ QString ManageEngine::removeModel(OperatorAction type)
 	return model_uuid;
 }
 
+void ManageEngine::registerEngineModel()
+{
+
+	// 注册引擎创建函数
+	//立方体
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });	
+	//圆环体
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
+	//圆柱体
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });	
+	//天空盒
+	map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
+	//网格
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });	
+	//行星
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this) });	
+	//反向
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   
+	//灰度
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });  
+	
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //锐化
+	
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //模糊
+	
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //检测
+
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //爆破
+	
+	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //清除渲染
+
+	//坐标轴
+	map_graphicengine_createfunc_.insert({ OperatorAction::CreatAxis, std::bind(&ManageEngine::createAxisEngine, this) });  
+}
+
+GraphicsEnginePtr ManageEngine::createAxisEngine()
+{
+	ShaderPtr light_shader = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag", "axis_geometry.geom", "GeneralModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
+	basic_light_engine->SetViewSize(width_, height_);
+	return basic_light_engine;
+}
+
 GraphicsEnginePtr ManageEngine::createGridEngine()
 {
-	/*ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "grid_fragment.frag", "GeneralModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "grid_fragment.frag", "GridModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GridModel>(OperatorAction::CreatGrid, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;*/
-
-
-	ShaderPtr light_shader  = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag","axis_geometry.geom", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
 }
@@ -245,6 +266,16 @@ void ManageEngine::createMixEngine()
     //GraphicsEnginePtr mix_engine = std::make_shared<MixEngine>(model_shader);
     //addEngine(generateUuid(), mix_engine, model_shader);
 }
+void ManageEngine::showAxisModel(bool flag)
+{
+	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [flag](GraphicsEnginePtr graphic_) {
+		return graphic_->getModeltype() == OperatorAction::CreatAxis;
+	});
+	if (iter != list_graphic_.end())
+	{
+		(*iter)->setShown(flag);
+	}
+}
 void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 {
 	if (graphics == nullptr)
@@ -342,7 +373,7 @@ void ManageEngine::SetEngineScaleAndTranslate(const GraphicsEnginePtr& engine_pt
 	engine_ptr->setTranlstorPosition(QVector2D(translate.x, -translate.y));
 }
 
-void ManageEngine::setMaterialData(const Utils::Material& material_)
+void ManageEngine::setPropertyData(const Utils::Material& material_)
 {
 	
 	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
@@ -392,7 +423,8 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     MvpDataPtr mvp_data = nullptr;
     if (list_graphic_.empty())
     {
-        mvp_data;
+		showAxisModel(false);
+        return mvp_data;
     }
     //清空物体选中状态
     std::for_each(list_graphic_.begin(), list_graphic_.end(), [](auto graphic_) {graphic_->setChecked(false); });
@@ -417,7 +449,13 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     if (!map_engineptr.empty())
     {
         map_engineptr.begin()->second->setChecked(true);
+		showAxisModel(true);
         return map_engineptr.begin()->second->getMvpData();
     }
-    return mvp_data;
+	else
+	{
+		showAxisModel(false);
+		return mvp_data;
+	}
+   
 }

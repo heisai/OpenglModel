@@ -44,14 +44,15 @@ void ShaderModel::Draw()
 
 	default_shader_->setMaterial(materal_);
 
+	//设置平面着色
+	default_shader_->setBool("flatShading", false);
 
-
-
-
-	//default_shader_->setBool("geom_flag", true);
-	default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed()/500));
-	default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
+	////default_shader_->setBool("geom_flag", true);
+	//default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed()/500));
+	//default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
+	
 	glBindVertexArray(mesh_data_->vao_);
+
 	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
 
 
@@ -96,7 +97,8 @@ void ShaderModel::InitBufferData()
 	//glEnable(GL_STENCIL_TEST);
 	//glEnable(GL_MULTISAMPLE);
 	//glHint(GL_LINE_SMOOTH, GL_NICEST);
-
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	// 顶点数组对象
 	glGenVertexArrays(1, &mesh_data_->vao_);
 	//绑定VAO
@@ -117,7 +119,8 @@ void ShaderModel::InitBufferData()
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
+	//设置单面着色
+	//glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 	//stencil_shader_->CreatProgram();	
 }
 

@@ -33,6 +33,10 @@ void ParaConfigWidget::InitConnect()
 		});
 }
 
+void ParaConfigWidget::slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
+{
+}
+
 void ParaConfigWidget::initCollectionWidget()
 {
 	initTreewidget();
@@ -53,6 +57,7 @@ void ParaConfigWidget::initTreewidget()
 	treewidgetitem_->setText(0, TR("Collection"));
 	treewidgetitem_->addChild(new QTreeWidgetItem({ TR("Camera") }));
 	treewidgetitem_->addChild(new QTreeWidgetItem({ TR("Light") }));
+	treewidgetitem_->addChild(new QTreeWidgetItem({ TR("floor") }));
 	collection_treewidget_->addTopLevelItem(treewidgetitem_);
 
 	collection_treewidget_->setFrameShape(QFrame::NoFrame);
@@ -105,9 +110,9 @@ void ParaConfigWidget::initPropertyConfigWidget()
 	hboxLayout->setContentsMargins(6, 6, 6, 6);
 	ui->SceneWidget->setLayout(hboxLayout);
 
-	connect(property_editor_widget_, &PropertyEditorWidget::sigMaterialChanged,[this](const Utils::Material& value)
+	connect(property_editor_widget_, &PropertyEditorWidget::sigUpdatePropertyInfo, [this](const Utils::Material& value)
 		{
-			emit sigUpdateMaterialPropertyToEngine(value);
+			emit sigUpdatePropertyToEngine(value);
 		});
 }
 
@@ -148,4 +153,9 @@ QWidget*ParaConfigWidget::initToolButtons()
 	QWidget* widget = new QWidget;
 	widget->setLayout(verticalLayout);
 	return widget;
+}
+
+void ParaConfigWidget::updatePropertyEditorWidget()
+{
+
 }

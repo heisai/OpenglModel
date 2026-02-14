@@ -3,8 +3,13 @@
 ModelDataInfo ToursVerticesData::GetModelDatas()
 {
     ModelDataInfo info;
-    info.vertices_datas = GenerateTorusVertices(1.0f, 0.4f, 32 *16, 16 *16);
-    info.indices_datas = GenerateTorusIndices(32 *16, 16 *16);
+    // 低面数圆环：方便观察平面着色的“棱角分明”效果
+    // 如果需要更平滑的外观，把分段数调大即可
+    constexpr unsigned int kMajorSegments = 64;
+    constexpr unsigned int kMinorSegments = 16;
+
+    info.vertices_datas = GenerateTorusVertices(1.0f, 0.4f, kMajorSegments, kMinorSegments);
+    info.indices_datas = GenerateTorusIndices(kMajorSegments, kMinorSegments);
 	info.model_name_ = TR("ring");
 
     return info;

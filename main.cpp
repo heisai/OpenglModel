@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	InitLogging();
     MainWindow w;
     w.show();
-	//w.showGridEngine();
+	w.initCollectionEngine();
     QFont f;
 	a.setFont(font);
     return a.exec();

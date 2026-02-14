@@ -19,7 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void InitUI();
     void InitConnect();
-	void showGridEngine();
+	void initCollectionEngine();
     ~MainWindow();
 private:
     //≥ı ºªØ≤Àµ•¿∏

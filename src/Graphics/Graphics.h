@@ -11,7 +11,7 @@
 #include"Shader.h"
 #include"../ModelDatas/CreatModelData.h"
 #include <QtOpenGL/QOpenGLFunctions_4_5_Core>
-
+#include"stb_image.h"
 /*
     1: 图形引擎基类
     2: Draw: 采用多态机制 运行时绑定
@@ -29,7 +29,7 @@ struct MvpData
 		QVector2D tranlstor_position_;
 		//平移坐标备份
 		//QVector2D tranlstor_position_temp_;
-		bool blasting_flag_ = false; //爆破标志位
+		blasting_flag_ = false; //爆破标志位
     }
     glm::mat4 model_ = glm::mat4(1.0f);
     glm::mat4 view_ = glm::mat4(1.0f);
@@ -40,6 +40,7 @@ struct MvpData
     //平移坐标备份
     //QVector2D tranlstor_position_temp_;
 	bool blasting_flag_ = false; //爆破标志位
+
 };
 using MvpDataPtr = std::shared_ptr<MvpData>;
 //网格基础单元
@@ -65,6 +66,9 @@ public:
     virtual void SetViewSize(int width, int height);
     void UseShader();
     void setChecked(bool flag);
+    //设置模型是否显示（影响渲染时的可见性）
+    void setShown(bool flag);
+
 
 
     void setViewData(const glm::mat4& view_);
@@ -94,6 +98,7 @@ protected:
 	 MvpDataPtr mvp_data_;      //世界空间坐标
      MeshPtr mesh_data_;           //模型数据
      bool selected_ = false;        //选中状态
+	 bool shown_ = false;          //显示状态
      OperatorAction model_type_;   //模型类型
      Utils::Material materal_;  //材质信息
 
