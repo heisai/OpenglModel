@@ -45,13 +45,14 @@ void Shader::setMaterial(const Utils::Material& material_info)
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
     setBool("flatShading", material_info.render_type_);
-    if (material_info.light_model_type_)
+    if (shade_model_location_ >= 0 && num_subroutine_uniforms_ > 0)
     {
-        glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &phong_index_);
-    }
-    else
-    {
-        glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &blinn_index_);
+        GLuint active_index = material_info.light_model_type_ ? phong_index_ : blinn_index_;
+        if (active_index != GL_INVALID_INDEX)
+        {
+            subroutine_indices_[shade_model_location_] = active_index;
+            glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, num_subroutine_uniforms_, subroutine_indices_.data());
+        }
     }
     //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
@@ -162,6 +163,14 @@ void Shader::BindShader()
 
     phong_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "phongModel");
     blinn_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "blinnModel");
+    if (phong_index_ == GL_INVALID_INDEX || blinn_index_ == GL_INVALID_INDEX)
+    {
+        std::cerr << "[Shader] Warning: subroutine indices not found (phong="
+                  << phong_index_ << " blinn=" << blinn_index_ << ")" << std::endl;
+    }
+    shade_model_location_ = glGetSubroutineUniformLocation(ShaderPromger, GL_FRAGMENT_SHADER, "shadeModel");
+    glGetProgramStageiv(ShaderPromger, GL_FRAGMENT_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORMS, &num_subroutine_uniforms_);
+    subroutine_indices_.assign(num_subroutine_uniforms_, 0);
     // glDeleteShader(VertecShader);
     // glDeleteShader(FragmentShader);
 

@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <QtOpenGL/QOpenGLFunctions_4_5_Core>
 #include "../Utils/Utils.h"
+#include <vector>
 class Shader: public QOpenGLFunctions_4_5_Core {
 public:
     explicit Shader(const std::string& vs_filename,const std::string &fs_filename,
@@ -58,8 +59,11 @@ public:
 	std::string fs_sourcecode;  //片段着色器源码
 	std::string gs_sourcecode;//几何着色器源码
 
-    GLuint phong_index_;
-    GLuint blinn_index_;
+    GLuint phong_index_ = GL_INVALID_INDEX;
+    GLuint blinn_index_ = GL_INVALID_INDEX;
+    GLint  shade_model_location_ = -1;
+    GLint  num_subroutine_uniforms_ = 0;
+    std::vector<GLuint> subroutine_indices_;
 
 };
 using ShaderPtr = std::shared_ptr<Shader>;
