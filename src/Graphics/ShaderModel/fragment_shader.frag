@@ -20,18 +20,12 @@ struct MaterialInfo {
     float Shininess;    // Specular shininess factor
 };
 uniform MaterialInfo Material;
-
-
-uniform mat3 NormalMatrix;
-uniform mat4 ProjectionMatrix;
-uniform mat4 ViewMatrix;
-uniform mat4 ModelMatrix;
 uniform vec3 viewPos;
-
+uniform bool flatShading; // 平面着色开关
 in vec3 Normal;
 in vec3 FragPos; 
 
-uniform bool flatShading; // 平面着色开关
+
 subroutine (shadeModelType)
 vec3 phongModel( vec3 position, vec3 norm )
 {
