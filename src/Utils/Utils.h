@@ -57,7 +57,7 @@ namespace Utils {
 		float shininess_{ 0.0f };
         float alpha_{ 1.0f };
         //光照类型
-        int light_model_type_{ 0 };
+        int light_model_type_{ 0 };  // 0 :phong    1：blinn
 		int render_type_{ 0 }; // 0: 双面遮光   1： 单面遮光
 	};
 

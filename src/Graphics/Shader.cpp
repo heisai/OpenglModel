@@ -44,8 +44,15 @@ void Shader::setMaterial(const Utils::Material& material_info)
 	setVec3("Material.Kd", material_info.diffsue_);
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
-    SetInt("blinn", material_info.light_model_type_);
     setBool("flatShading", material_info.render_type_);
+    if (material_info.light_model_type_)
+    {
+        glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &phong_index_);
+    }
+    else
+    {
+        glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &blinn_index_);
+    }
     //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
 
@@ -153,7 +160,8 @@ void Shader::BindShader()
   
     glLinkProgram(ShaderPromger);
 
-
+    phong_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "phongModel");
+    blinn_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "blinnModel");
     // glDeleteShader(VertecShader);
     // glDeleteShader(FragmentShader);
 

@@ -58,6 +58,9 @@ public:
 	std::string fs_sourcecode;  //片段着色器源码
 	std::string gs_sourcecode;//几何着色器源码
 
+    GLuint phong_index_;
+    GLuint blinn_index_;
+
 };
 using ShaderPtr = std::shared_ptr<Shader>;
 #endif // SHADER_H

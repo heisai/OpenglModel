@@ -101,7 +101,6 @@ protected:
 	 bool shown_ = false;          //显示状态
      OperatorAction model_type_;   //模型类型
      Utils::Material materal_;  //材质信息
-
 };
 using GraphicsEnginePtr = std::shared_ptr<GraphicsEngine>;
 
