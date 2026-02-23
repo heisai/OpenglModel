@@ -18,10 +18,6 @@ void ShaderModel::Draw()
 	
 	default_shader_->bind();
 
-	// mat3 => ÓÃ setMat3
-	glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(mvp_data_->model_)));
-	default_shader_->setMat3("NormalMatrix", normalMatrix);
-
 	default_shader_->setMat4("ViewMatrix", mvp_data_->view_);
 	default_shader_->setMat4("ProjectionMatrix", mvp_data_->projection_);
 	default_shader_->setMat4("ModelMatrix", mvp_data_->model_);
