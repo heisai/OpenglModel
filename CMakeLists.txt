@@ -30,10 +30,7 @@ include_directories(${IncludeDir})
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets OpenGL OpenGLWidgets  LinguistTools )
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGL OpenGLWidgets LinguistTools )
-set(TS_FILES
-    translations/zh_CN.ts
-    translations/en_US.ts
-)
+
 
 
 # # 添加 .cpp
@@ -60,13 +57,17 @@ set_target_properties(${PROJECT_NAME}
 target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::OpenGLWidgets )
 target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-
+set(TS_FILES
+    translations/zh_CN.ts
+    translations/en_US.ts
+)
 # 生成 以及更新ts qm 文件
+set(QM_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/translations")
 qt_add_translations(OpenglEngine
     TS_FILES 
         translations/zh_CN.ts
         translations/en_US.ts
-     QM_OUTPUT_DIRECTORY translations
+     QM_OUTPUT_DIRECTORY ${QM_OUTPUT_PATH}
 )
 # 关键：添加依赖，确保构建主目标前更新翻译
 add_dependencies(OpenglEngine update_translations)

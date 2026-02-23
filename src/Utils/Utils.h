@@ -30,7 +30,7 @@ namespace Utils {
         (result /= ... /= fs::path(std::forward<Args>(args)));
 
         // 使用项目根目录的绝对路径，确保着色器文件从源码目录加载
-        std::string project_root = "E:\\OPenglProduct";
+        std::string project_root = fs::current_path().parent_path().string();
         std::string file_path = std::format("{}\\src\\Graphics\\{}", project_root, result.string());
         return file_path;
     }
