@@ -36,20 +36,19 @@ int main(int argc, char *argv[])
 
 
 	
-	std::cout << "上级目录: " << fs::current_path().parent_path().string() << std::endl;
-	if (appTranslator.load("translations/zh_CN.qm", QString::fromStdString(fs::current_path().parent_path().string())))
+	InitLogging();
+	std::string translationDir = fs::current_path().parent_path().string();
+	std::cout << "上级目录: " << translationDir << std::endl;
+	if (appTranslator.load("translations/zh_CN.qm", QString::fromStdString(translationDir)))
 	{ 
-		appTranslator.filePath(); // 获取QM文件的完整路径，调试用
 		a.installTranslator(&appTranslator);
 		LogInfo("Successfully loaded translation file: {}", appTranslator.filePath().toStdString());
 	}
 	else
 	{
-		LogInfo("Failed to load translation file: {}", appTranslator.filePath().toStdString());
+		LogInfo("Failed to load translation file from: {}/translations/zh_CN.qm", translationDir);
 	}
 	QFont font("Microsoft YaHei", 10); // 设置字体为 微软雅黑，字号为 10
-	
-	InitLogging();
     MainWindow w;
     w.show();
 	w.initCollectionEngine();
