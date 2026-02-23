@@ -13,9 +13,9 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *parent)
 
 void PropertyEditorWidget::initUI()
 {
-	// Ìí¼Ó²ÄÖÊ£¨key ÐèÓë Translator / Utils::MaterialAttrib ÖÐ±£³ÖÒ»ÖÂ£©
+	// æ·»åŠ æè´¨ï¼ˆkey éœ€ä¸Ž Translator / Utils::MaterialAttrib ä¸­ä¿æŒä¸€è‡´ï¼‰
 
-	// --- ±¦Ê¯Àà£¨Gemstones£© ---
+	// --- å®çŸ³ç±»ï¼ˆGemstonesï¼‰ ---
 	ui.MaterialComBox->addItem(TR("emerald"));
 	ui.MaterialComBox->addItem(TR("jade"));
 	ui.MaterialComBox->addItem(TR("obsidian"));
@@ -23,7 +23,7 @@ void PropertyEditorWidget::initUI()
 	ui.MaterialComBox->addItem(TR("ruby"));
 	ui.MaterialComBox->addItem(TR("turquoise"));
 
-	// --- ½ðÊôÀà£¨Metals£© ---
+	// --- é‡‘å±žç±»ï¼ˆMetalsï¼‰ ---
 	ui.MaterialComBox->addItem(TR("brass"));
 	ui.MaterialComBox->addItem(TR("bronze"));
 	ui.MaterialComBox->addItem(TR("chrome"));
@@ -31,7 +31,7 @@ void PropertyEditorWidget::initUI()
 	ui.MaterialComBox->addItem(TR("gold"));
 	ui.MaterialComBox->addItem(TR("silver"));
 
-	// --- ËÜÁÏÀà£¨Plastics£© ---
+	// --- å¡‘æ–™ç±»ï¼ˆPlasticsï¼‰ ---
 	ui.MaterialComBox->addItem(TR("black_plastic"));
 	ui.MaterialComBox->addItem(TR("cyan_plastic"));
 	ui.MaterialComBox->addItem(TR("green_plastic"));
@@ -39,7 +39,7 @@ void PropertyEditorWidget::initUI()
 	ui.MaterialComBox->addItem(TR("white_plastic"));
 	ui.MaterialComBox->addItem(TR("yellow_plastic"));
 
-	// --- Ïð½ºÀà£¨Rubbers£© ---
+	// --- æ©¡èƒ¶ç±»ï¼ˆRubbersï¼‰ ---
 	ui.MaterialComBox->addItem(TR("black_rubber"));
 	ui.MaterialComBox->addItem(TR("cyan_rubber"));
 	ui.MaterialComBox->addItem(TR("green_rubber"));
@@ -47,26 +47,26 @@ void PropertyEditorWidget::initUI()
 	ui.MaterialComBox->addItem(TR("white_rubber"));
 	ui.MaterialComBox->addItem(TR("yellow_rubber")); 
 
-		// ÉèÖÃÄ¬ÈÏ¹âÕÕÄ£ÐÍ
-	ui.LightModelCombox->addItem(TR("phone"));	//phone ¹âÕÕÄ£ÐÍ
-	ui.LightModelCombox->addItem(TR("blinn"));		//blinn ¹âÕÕÄ£ÐÍ
+		// è®¾ç½®é»˜è®¤å…‰ç…§æ¨¡åž‹
+	ui.LightModelCombox->addItem(TR("phone"));	//phone å…‰ç…§æ¨¡åž‹
+	ui.LightModelCombox->addItem(TR("blinn"));		//blinn å…‰ç…§æ¨¡åž‹
 
 
-	// ÉèÖÃÄ¬ÈÏ¹âÕÕÄ£ÐÍ
-	ui.RenderCombox->addItem(TR("double_render"));	//Ë«ÃæÕÚ¹â
-	ui.RenderCombox->addItem(TR("single_render"));		//µ¥ÃæÕÚ¹â
+	// è®¾ç½®é»˜è®¤å…‰ç…§æ¨¡åž‹
+	ui.RenderCombox->addItem(TR("double_render"));	//åŒé¢é®å…‰
+	ui.RenderCombox->addItem(TR("single_render"));		//å•é¢é®å…‰
 }
 
 void PropertyEditorWidget::initConnect()
 {
-	//¸üÐÂ²ÄÖÊÊôÐÔ
+	//æ›´æ–°æè´¨å±žæ€§
 	connect(ui.MaterialComBox, &QComboBox::currentTextChanged, this, [this](const QString& text) {
 		Utils::Material material_value = material_attrib_->getMaterial(text);
 		material_value.light_model_type_ = ui.LightModelCombox->currentIndex();
 		material_value.render_type_ = ui.RenderCombox->currentIndex();
 		emit sigUpdatePropertyInfo(material_value);
 	});
-	//¸üÐÂ¹âÕÕÄ£ÐÍÊôÐÔ
+	//æ›´æ–°å…‰ç…§æ¨¡åž‹å±žæ€§
 	connect(ui.LightModelCombox, &QComboBox::currentIndexChanged, this, [this](const int &value) {
 		QString text = ui.MaterialComBox->currentText();
 		 Utils::Material material_value = material_attrib_->getMaterial(text);
@@ -74,7 +74,7 @@ void PropertyEditorWidget::initConnect()
 		emit sigUpdatePropertyInfo(material_value);
 		});
 
-	//¸üÐÂ¹âÕÕÄ£ÐÍÊôÐÔ
+	//æ›´æ–°å…‰ç…§æ¨¡åž‹å±žæ€§
 	connect(ui.RenderCombox, &QComboBox::currentIndexChanged, this, [this](const int& value) {
 		QString text = ui.MaterialComBox->currentText();
 		Utils::Material material_value = material_attrib_->getMaterial(text);

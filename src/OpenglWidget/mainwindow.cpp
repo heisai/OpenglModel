@@ -30,11 +30,11 @@ void MainWindow::InitConnect()
 		connect(action, &QAction::triggered, this, &MainWindow::operatorModel, Qt::UniqueConnection);
 	}
 
-	//¸üÐÂÄ£ÐÍ¼¯ºÏÊ÷Item Ñ¡ÖÐ×´Ì¬
+	//æ›´æ–°æ¨¡åž‹é›†åˆæ ‘Item é€‰ä¸­çŠ¶æ€
 	connect(manage_engine_moudle_.get(), &ManageEngine::selectModelSignals, [this](const QString model_uuid) {
 		ui->widget->updateTreewidgetItem(model_uuid);
 		});
-	//¸üÐÂÊôÐÔÅäÖÃÐÅÏ¢
+	//æ›´æ–°å±žæ€§é…ç½®ä¿¡æ¯
 	connect(ui->widget, &ParaConfigWidget::sigUpdatePropertyToEngine, [this](const Utils::Material& material) {
 		manage_engine_moudle_->setPropertyData(material);
 		});
@@ -43,9 +43,9 @@ void MainWindow::InitConnect()
 
 void MainWindow::initCollectionEngine()
 {
-	//´´½¨Íø¸ñ
+	//åˆ›å»ºç½‘æ ¼
 	//manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
-	//´´½¨×ø±êÖá
+	//åˆ›å»ºåæ ‡è½´
 	manage_engine_moudle_->createModel(OperatorAction::CreatAxis);
 
 

@@ -20,9 +20,9 @@ ParaConfigWidget::~ParaConfigWidget()
 
 void ParaConfigWidget::InitUI()
 {
-	//¼¯ºÏ½çÃæ
+	//é›†åˆç•Œé¢
 	initCollectionWidget();
-	//ÊôĞÔ½çÃæ
+	//å±æ€§ç•Œé¢
 	initPropertyConfigWidget();
 }
 
@@ -61,7 +61,7 @@ void ParaConfigWidget::initTreewidget()
 	collection_treewidget_->addTopLevelItem(treewidgetitem_);
 
 	collection_treewidget_->setFrameShape(QFrame::NoFrame);
-	//collection_treewidget_->setIndentation(0);  // ÉèÖÃÎª0ÍêÈ«ÒÆ³ıËõ½ø
+	//collection_treewidget_->setIndentation(0);  // è®¾ç½®ä¸º0å®Œå…¨ç§»é™¤ç¼©è¿›
 	collection_treewidget_->expandAll();
 }
 
@@ -82,14 +82,14 @@ void ParaConfigWidget::removeCollectionFromTreewidget(const QString& item_text)
 
 void ParaConfigWidget::updateTreewidgetItem(const QString& item_text)
 {
-	//Çå¿Õµ±Ç°½ÚµãµÄÑ¡ÖĞ×´Ì¬
+	//æ¸…ç©ºå½“å‰èŠ‚ç‚¹çš„é€‰ä¸­çŠ¶æ€
 	int count = treewidgetitem_->childCount();
 	for (int index = 0; index < count; index++)
 	{
 		treewidgetitem_->child(index)->setSelected(false);
 	}
 
-	//ÉèÖÃÑ¡ÖĞ×´Ì¬
+	//è®¾ç½®é€‰ä¸­çŠ¶æ€
 	QList<QTreeWidgetItem*>items = collection_treewidget_->findItems(item_text, Qt::MatchExactly | Qt::MatchRecursive);
 	if (!items.isEmpty())
 	{

@@ -9,7 +9,7 @@ public:
 	void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices, std::shared_ptr<Shader>shader = nullptr);
 	std::tuple<bool,float> colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,int objetc_id);
 	void  drawTexture();
-	//ÉèÖÃäÖÈ¾ÀàĞÍ
+	//è®¾ç½®æ¸²æŸ“ç±»å‹
 	void setRenderType(int type);	
 	int	getRenderType();
 private:

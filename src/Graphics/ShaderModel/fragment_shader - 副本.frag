@@ -29,7 +29,7 @@ uniform int blinn;
 in vec3 Normal;
 in vec3 FragPos; 
 
-uniform bool flatShading; // Æ½Ãæ×ÅÉ«¿ª¹Ø
+uniform bool flatShading; // å¹³é¢ç€è‰²å¼€å…³
 
 vec3 phongModel( vec3 position, vec3 norm )
 {
@@ -60,11 +60,11 @@ vec3 blinnModel(vec3 position,vec3 norm)
 }
 void main()
 {
-    //¹âÕÕÎ»ÖÃ²»¶Ô£¬µ¼ÖÂÕıÃæºÍ±³ÃæÏà·´
+    //å…‰ç…§ä½ç½®ä¸å¯¹ï¼Œå¯¼è‡´æ­£é¢å’ŒèƒŒé¢ç›¸å
     vec3 n;
     if(flatShading)
     {
-        // Í¨¹ıÆÁÄ»¿Õ¼äµ¼Êı¼ÆËãÕæÊµÃæ·¨Ïß£¬ÊµÏÖÆ½Ãæ×ÅÉ«
+        // é€šè¿‡å±å¹•ç©ºé—´å¯¼æ•°è®¡ç®—çœŸå®é¢æ³•çº¿ï¼Œå®ç°å¹³é¢ç€è‰²
         n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
     }
     else
@@ -75,7 +75,7 @@ void main()
    // vec3 norm = gl_FrontFacing ? -n : n;
     vec3 norm = n;
 
-    // Debug: Æ½Ãæ×ÅÉ«Ä£Ê½ÏÂÖ±½ÓÊä³öÃæ·¨Ïß£¬È·ÈÏÊÇ·ñ°´Èı½ÇĞÎ±ä»¯
+    // Debug: å¹³é¢ç€è‰²æ¨¡å¼ä¸‹ç›´æ¥è¾“å‡ºé¢æ³•çº¿ï¼Œç¡®è®¤æ˜¯å¦æŒ‰ä¸‰è§’å½¢å˜åŒ–
  /*  if (flatShading)
     {
         FragColor = vec4(norm * 0.5 + 0.5, 1.0);

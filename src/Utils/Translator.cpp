@@ -14,74 +14,74 @@ Translator& Translator::getInstance()
 	instance.translator_map_["clear_sky"] = tr("clear_sky");
 	instance.translator_map_["cylinder"] = tr("cylinder");
 	instance.translator_map_["grid"] = tr("grid");
-	instance.translator_map_["Planet"] = tr("Planet"); //ĞĞĞÇ
+	instance.translator_map_["Planet"] = tr("Planet"); //è¡Œæ˜Ÿ
 
-	instance.translator_map_["Move"] = tr("Move");	//ÒÆ¶¯
+	instance.translator_map_["Move"] = tr("Move");	//ç§»åŠ¨
 	instance.translator_map_["Rotate"] = tr("Rotate");
 	instance.translator_map_["Scale"] = tr("Scale");
-	instance.translator_map_["Select"] = tr("Select");//Ñ¡Ôñ
+	instance.translator_map_["Select"] = tr("Select");//é€‰æ‹©
 	instance.translator_map_["OpenGL"] = tr("OpenGL");//OpenGL
 
-	instance.translator_map_["Inversion"] = tr("Inversion");//·´É«
-	instance.translator_map_["Grayscale"] = tr("Grayscale");//»Ò¶È
-	instance.translator_map_["Sharpen"] = tr("Sharpen");//Èñ»¯
-	instance.translator_map_["Blur"] = tr("Blur");	//Ä£ºı
-	instance.translator_map_["Detection"] = tr("Detection");//¼ì²â
-	instance.translator_map_["Blasting"] = tr("Blasting");	//±¬ÆÆ
+	instance.translator_map_["Inversion"] = tr("Inversion");//åè‰²
+	instance.translator_map_["Grayscale"] = tr("Grayscale");//ç°åº¦
+	instance.translator_map_["Sharpen"] = tr("Sharpen");//é”åŒ–
+	instance.translator_map_["Blur"] = tr("Blur");	//æ¨¡ç³Š
+	instance.translator_map_["Detection"] = tr("Detection");//æ£€æµ‹
+	instance.translator_map_["Blasting"] = tr("Blasting");	//çˆ†ç ´
 
-	//ÓÒÉÏ½Ç¼¯ºÏÉèÖÃ
-	instance.translator_map_["SecenCollection"] = tr("SecenCollection");//³¡¾°¼¯ºÏ
-	instance.translator_map_["Collection"] = tr("Collection"); //¼¯ºÏ
-	instance.translator_map_["Camera"] = tr("Camera"); //Ïà»ú
-	instance.translator_map_["Light"] = tr("Light"); //µÆ¹â
-	//ÓÒÏÂ½ÇÊôĞÔÉèÖÃ
-	instance.translator_map_["Tool"] = tr("Tool"); //¹¤¾ß
-	instance.translator_map_["Render"] = tr("Render"); //äÖÈ¾
-	instance.translator_map_["WorldSpace"] = tr("WorldSpace"); //ÊÀ½ç¿Õ¼ä
-	instance.translator_map_["Material"] = tr("Material"); //²ÄÖÊ
-	instance.translator_map_["Object"] = tr("Object"); //ÎïÌå
-	instance.translator_map_["Output"] = tr("Output"); //Êä³ö
+	//å³ä¸Šè§’é›†åˆè®¾ç½®
+	instance.translator_map_["SecenCollection"] = tr("SecenCollection");//åœºæ™¯é›†åˆ
+	instance.translator_map_["Collection"] = tr("Collection"); //é›†åˆ
+	instance.translator_map_["Camera"] = tr("Camera"); //ç›¸æœº
+	instance.translator_map_["Light"] = tr("Light"); //ç¯å…‰
+	//å³ä¸‹è§’å±æ€§è®¾ç½®
+	instance.translator_map_["Tool"] = tr("Tool"); //å·¥å…·
+	instance.translator_map_["Render"] = tr("Render"); //æ¸²æŸ“
+	instance.translator_map_["WorldSpace"] = tr("WorldSpace"); //ä¸–ç•Œç©ºé—´
+	instance.translator_map_["Material"] = tr("Material"); //æè´¨
+	instance.translator_map_["Object"] = tr("Object"); //ç‰©ä½“
+	instance.translator_map_["Output"] = tr("Output"); //è¾“å‡º
 
-	// --- ±¦Ê¯Àà£¨Gemstones£© ---
-	instance.translator_map_["emerald"] = tr("emerald");   // ´ä£¨×æÄ¸ÂÌ£©
-	instance.translator_map_["jade"] = tr("jade");         // Óñ
-	instance.translator_map_["obsidian"] = tr("obsidian"); // ºÚê×Ê¯
-	instance.translator_map_["pearl"] = tr("pearl");       // ÕäÖé
-	instance.translator_map_["ruby"] = tr("ruby");         // ºì±¦Ê¯
-	instance.translator_map_["turquoise"] = tr("turquoise"); // ÂÌËÉÊ¯
+	// --- å®çŸ³ç±»ï¼ˆGemstonesï¼‰ ---
+	instance.translator_map_["emerald"] = tr("emerald");   // ç¿ ï¼ˆç¥–æ¯ç»¿ï¼‰
+	instance.translator_map_["jade"] = tr("jade");         // ç‰
+	instance.translator_map_["obsidian"] = tr("obsidian"); // é»‘æ›œçŸ³
+	instance.translator_map_["pearl"] = tr("pearl");       // çç 
+	instance.translator_map_["ruby"] = tr("ruby");         // çº¢å®çŸ³
+	instance.translator_map_["turquoise"] = tr("turquoise"); // ç»¿æ¾çŸ³
 
-	// --- ½ğÊôÀà£¨Metals£© ---
-	instance.translator_map_["brass"] = tr("brass");   // »ÆÍ­
-	instance.translator_map_["bronze"] = tr("bronze"); // ÇàÍ­
-	instance.translator_map_["chrome"] = tr("chrome"); // ¸õºÏ½ğ
-	instance.translator_map_["copper"] = tr("copper"); // Í­
-	instance.translator_map_["gold"] = tr("gold");     // ½ğ
-	instance.translator_map_["silver"] = tr("silver"); // Òø
+	// --- é‡‘å±ç±»ï¼ˆMetalsï¼‰ ---
+	instance.translator_map_["brass"] = tr("brass");   // é»„é“œ
+	instance.translator_map_["bronze"] = tr("bronze"); // é’é“œ
+	instance.translator_map_["chrome"] = tr("chrome"); // é“¬åˆé‡‘
+	instance.translator_map_["copper"] = tr("copper"); // é“œ
+	instance.translator_map_["gold"] = tr("gold");     // é‡‘
+	instance.translator_map_["silver"] = tr("silver"); // é“¶
 
-	// --- ËÜÁÏÀà£¨Plastics£© ---
-	instance.translator_map_["black_plastic"] = tr("black_plastic");   // ºÚÉ«ËÜÁÏ
-	instance.translator_map_["cyan_plastic"] = tr("cyan_plastic");     // ÇàÉ«ËÜÁÏ
-	instance.translator_map_["green_plastic"] = tr("green_plastic");   // ÂÌÉ«ËÜÁÏ
-	instance.translator_map_["red_plastic"] = tr("red_plastic");       // ºìÉ«ËÜÁÏ
-	instance.translator_map_["white_plastic"] = tr("white_plastic");   // °×É«ËÜÁÏ
-	instance.translator_map_["yellow_plastic"] = tr("yellow_plastic"); // »ÆÉ«ËÜÁÏ
+	// --- å¡‘æ–™ç±»ï¼ˆPlasticsï¼‰ ---
+	instance.translator_map_["black_plastic"] = tr("black_plastic");   // é»‘è‰²å¡‘æ–™
+	instance.translator_map_["cyan_plastic"] = tr("cyan_plastic");     // é’è‰²å¡‘æ–™
+	instance.translator_map_["green_plastic"] = tr("green_plastic");   // ç»¿è‰²å¡‘æ–™
+	instance.translator_map_["red_plastic"] = tr("red_plastic");       // çº¢è‰²å¡‘æ–™
+	instance.translator_map_["white_plastic"] = tr("white_plastic");   // ç™½è‰²å¡‘æ–™
+	instance.translator_map_["yellow_plastic"] = tr("yellow_plastic"); // é»„è‰²å¡‘æ–™
 
-	// --- Ïğ½ºÀà£¨Rubbers£© ---
-	instance.translator_map_["black_rubber"] = tr("black_rubber");   // ºÚÉ«Ïğ½º
-	instance.translator_map_["cyan_rubber"] = tr("cyan_rubber");     // ÇàÉ«Ïğ½º
-	instance.translator_map_["green_rubber"] = tr("green_rubber");   // ÂÌÉ«Ïğ½º
-	instance.translator_map_["red_rubber"] = tr("red_rubber");       // ºìÉ«Ïğ½º
-	instance.translator_map_["white_rubber"] = tr("white_rubber");   // °×É«Ïğ½º
-	instance.translator_map_["yellow_rubber"] = tr("yellow_rubber"); // »ÆÉ«Ïğ½º
+	// --- æ©¡èƒ¶ç±»ï¼ˆRubbersï¼‰ ---
+	instance.translator_map_["black_rubber"] = tr("black_rubber");   // é»‘è‰²æ©¡èƒ¶
+	instance.translator_map_["cyan_rubber"] = tr("cyan_rubber");     // é’è‰²æ©¡èƒ¶
+	instance.translator_map_["green_rubber"] = tr("green_rubber");   // ç»¿è‰²æ©¡èƒ¶
+	instance.translator_map_["red_rubber"] = tr("red_rubber");       // çº¢è‰²æ©¡èƒ¶
+	instance.translator_map_["white_rubber"] = tr("white_rubber");   // ç™½è‰²æ©¡èƒ¶
+	instance.translator_map_["yellow_rubber"] = tr("yellow_rubber"); // é»„è‰²æ©¡èƒ¶
 
-	//¹âÕÕÄ£ĞÍ
-	instance.translator_map_["phone"] = tr("phone"); //  phone Ä£ĞÍ
-	instance.translator_map_["blinn"] = tr("blinn"); // blinn Ä£ĞÍ
-	instance.translator_map_["floor"] = tr("floor"); // µØ°å
+	//å…‰ç…§æ¨¡å‹
+	instance.translator_map_["phone"] = tr("phone"); //  phone æ¨¡å‹
+	instance.translator_map_["blinn"] = tr("blinn"); // blinn æ¨¡å‹
+	instance.translator_map_["floor"] = tr("floor"); // åœ°æ¿
 	
-	//äÖÈ¾ÀàĞÍ
-	instance.translator_map_["single_render"] = tr("single_render"); // µ¥ÃæÕÚ¹â
-	instance.translator_map_["double_render"] = tr("double_render"); // Ë«ÃæÕÚ¹â
+	//æ¸²æŸ“ç±»å‹
+	instance.translator_map_["single_render"] = tr("single_render"); // å•é¢é®å…‰
+	instance.translator_map_["double_render"] = tr("double_render"); // åŒé¢é®å…‰
 
 	return  instance;
 }

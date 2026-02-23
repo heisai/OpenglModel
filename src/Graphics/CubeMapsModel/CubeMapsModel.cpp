@@ -4,7 +4,7 @@
 CubeMapsModel::CubeMapsModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(type,shader)
 {
-	// 使用拾取着色器
+	// 浣跨敤鎷惧彇鐫�鑹插櫒
 
 }
 
@@ -37,12 +37,12 @@ void CubeMapsModel::InitBufferData()
 	
 	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LESS);
-	// 顶点数组对象
+	// 椤剁偣鏁扮粍瀵硅薄
 	glGenVertexArrays(1, &m_VAO);
-	//绑定VAO
+	//缁戝畾VAO
 	glBindVertexArray(m_VAO);
 
-	//把顶点数组复制到缓冲中供OpenGL使用
+	//鎶婇《鐐规暟缁勫鍒跺埌缂撳啿涓緵OpenGL浣跨敤
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, cubeVertices.size() * sizeof(float), cubeVertices.data(), GL_STATIC_DRAW);

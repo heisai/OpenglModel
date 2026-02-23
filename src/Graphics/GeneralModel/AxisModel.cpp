@@ -23,7 +23,7 @@ void AxisModel::Draw()
 		{
 
 			glBindVertexArray(mesh_data_->vao_);
-			glDrawArrays(GL_POINTS, 0, 1); // 绘制一个点作为坐标轴的起点
+			glDrawArrays(GL_POINTS, 0, 1); // 缁樺埗涓�涓偣浣滀负鍧愭爣杞寸殑璧风偣
 		}
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 0, 0xFF);
@@ -42,12 +42,12 @@ void AxisModel::InitBufferData()
 	{
 		default_shader_->CreatProgram();
 	}
-	// 顶点数组对象
+	// 椤剁偣鏁扮粍瀵硅薄
 	glGenVertexArrays(1, &mesh_data_->vao_);
-	//绑定VAO
+	//缁戝畾VAO
 	glBindVertexArray(mesh_data_->vao_);
 
-	//把顶点数组复制到缓冲中供OpenGL使用
+	//鎶婇《鐐规暟缁勫鍒跺埌缂撳啿涓緵OpenGL浣跨敤
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
 	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);

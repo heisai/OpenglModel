@@ -37,9 +37,9 @@ void HoverToolWidget::initializeWidget()
 	setLayout(m_layout);
 	setFixedSize(QSize(70, 170));
 	move(5, 5);
-	setWindowFlags(Qt::FramelessWindowHint);  // ÎŞ±ß¿ò
-	setAttribute(Qt::WA_OpaquePaintEvent, true);  // È·±£±³¾°Í¸Ã÷
-	setAttribute(Qt::WA_TranslucentBackground);  // ÆôÓÃÍ¸Ã÷±³¾°
+	setWindowFlags(Qt::FramelessWindowHint);  // æ— è¾¹æ¡†
+	setAttribute(Qt::WA_OpaquePaintEvent, true);  // ç¡®ä¿èƒŒæ™¯é€æ˜
+	setAttribute(Qt::WA_TranslucentBackground);  // å¯ç”¨é€æ˜èƒŒæ™¯
 }
 
 HoverToolWidget::ModelState HoverToolWidget::getModelState() const
@@ -86,9 +86,9 @@ void HoverToolWidget::clieckButton(bool clieck)
 void HoverToolWidget::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
-	painter.setRenderHint(QPainter::Antialiasing);  // ¿ªÆô¿¹¾â³İ
-	painter.setPen(Qt::NoPen);  // ²»»æÖÆ±ß¿ò
-	painter.setBrush(QColor(169, 169, 169, 10));  // ÉèÖÃ°ëÍ¸Ã÷°×É«±³¾°
-	painter.drawRoundedRect(this->rect(), 6, 6);  // »æÖÆÔ²½Ç¾ØĞÎ±³¾°
+	painter.setRenderHint(QPainter::Antialiasing);  // å¼€å¯æŠ—é”¯é½¿
+	painter.setPen(Qt::NoPen);  // ä¸ç»˜åˆ¶è¾¹æ¡†
+	painter.setBrush(QColor(169, 169, 169, 10));  // è®¾ç½®åŠé€æ˜ç™½è‰²èƒŒæ™¯
+	painter.drawRoundedRect(this->rect(), 6, 6);  // ç»˜åˆ¶åœ†è§’çŸ©å½¢èƒŒæ™¯
 	QWidget::paintEvent(event);
 }

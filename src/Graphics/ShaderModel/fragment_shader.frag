@@ -1,7 +1,7 @@
 
 #version 430 core
 layout( location = 0 ) out vec4 FragColor;
-//ÒıÈë×ÓÀı³ÌÄ£¿é
+//å¼•å…¥å­ä¾‹ç¨‹æ¨¡å—
 subroutine vec3 shadeModelType(vec3 position, vec3 normal);
 subroutine uniform shadeModelType shadeModel;
 
@@ -31,7 +31,7 @@ uniform vec3 viewPos;
 in vec3 Normal;
 in vec3 FragPos; 
 
-uniform bool flatShading; // Æ½Ãæ×ÅÉ«¿ª¹Ø
+uniform bool flatShading; // å¹³é¢ç€è‰²å¼€å…³
 subroutine (shadeModelType)
 vec3 phongModel( vec3 position, vec3 norm )
 {
@@ -63,11 +63,11 @@ vec3 blinnModel(vec3 position,vec3 norm)
 }
 void main()
 {
-    //¹âÕÕÎ»ÖÃ²»¶Ô£¬µ¼ÖÂÕıÃæºÍ±³ÃæÏà·´
+    //å…‰ç…§ä½ç½®ä¸å¯¹ï¼Œå¯¼è‡´æ­£é¢å’ŒèƒŒé¢ç›¸å
     vec3 n;
     if(flatShading)
     {
-        // Í¨¹ıÆÁÄ»¿Õ¼äµ¼Êı¼ÆËãÕæÊµÃæ·¨Ïß£¬ÊµÏÖÆ½Ãæ×ÅÉ«
+        // é€šè¿‡å±å¹•ç©ºé—´å¯¼æ•°è®¡ç®—çœŸå®é¢æ³•çº¿ï¼Œå®ç°å¹³é¢ç€è‰²
         n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
     }
     else

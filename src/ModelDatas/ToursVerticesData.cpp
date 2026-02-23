@@ -3,8 +3,8 @@
 ModelDataInfo ToursVerticesData::GetModelDatas()
 {
     ModelDataInfo info;
-    // µÍÃæÊıÔ²»·£º·½±ã¹Û²ìÆ½Ãæ×ÅÉ«µÄ¡°Àâ½Ç·ÖÃ÷¡±Ğ§¹û
-    // Èç¹ûĞèÒª¸üÆ½»¬µÄÍâ¹Û£¬°Ñ·Ö¶ÎÊıµ÷´ó¼´¿É
+    // ä½é¢æ•°åœ†ç¯ï¼šæ–¹ä¾¿è§‚å¯Ÿå¹³é¢ç€è‰²çš„â€œæ£±è§’åˆ†æ˜â€æ•ˆæœ
+    // å¦‚æœéœ€è¦æ›´å¹³æ»‘çš„å¤–è§‚ï¼ŒæŠŠåˆ†æ®µæ•°è°ƒå¤§å³å¯
     constexpr unsigned int kMajorSegments = 64;
     constexpr unsigned int kMinorSegments = 16;
 
@@ -15,7 +15,7 @@ ModelDataInfo ToursVerticesData::GetModelDatas()
     return info;
 }
 
-// ¼ò»¯µÄ¶¥µãÊı¾İÉú³É£¨Î»ÖÃºÍ·¨Ïß½»´í´æ´¢£©
+// ç®€åŒ–çš„é¡¶ç‚¹æ•°æ®ç”Ÿæˆï¼ˆä½ç½®å’Œæ³•çº¿äº¤é”™å­˜å‚¨ï¼‰
 std::vector<float> ToursVerticesData::GenerateTorusVertices(float majorRadius ,
 	float minorRadius ,
 	unsigned int majorSegments ,
@@ -33,12 +33,12 @@ std::vector<float> ToursVerticesData::GenerateTorusVertices(float majorRadius ,
 			float cosMinor = cos(minorAngle);
 			float sinMinor = sin(minorAngle);
 
-			// ¶¥µãÎ»ÖÃ
+			// é¡¶ç‚¹ä½ç½®
 			vertices.push_back((majorRadius + minorRadius * cosMinor) * cosMajor);
 			vertices.push_back(minorRadius * sinMinor);
 			vertices.push_back((majorRadius + minorRadius * cosMinor) * sinMajor);
 
-			// ·¨Ïß
+			// æ³•çº¿
 			vertices.push_back(cosMinor * cosMajor);
 			vertices.push_back(sinMinor);
 			vertices.push_back(cosMinor * sinMajor);
@@ -48,7 +48,7 @@ std::vector<float> ToursVerticesData::GenerateTorusVertices(float majorRadius ,
 	return vertices;
 }
 
-// Éú³ÉË÷ÒıÊı¾İ
+// ç”Ÿæˆç´¢å¼•æ•°æ®
 std::vector<unsigned int> ToursVerticesData::GenerateTorusIndices(unsigned int majorSegments ,
 	unsigned int minorSegments ) 
 {

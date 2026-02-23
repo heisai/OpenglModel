@@ -14,14 +14,14 @@ std::vector<float> CylinderVerticesData::GenerateCylinderVertices(float radius, 
 	const float PI = 3.14159265358979323846f;
 	float sectorStep = 2 * PI / sectors;
 
-	// 生成侧面顶点
+	// 鐢熸垚渚ч潰椤剁偣
 	for (int i = 0; i <= sectors; ++i)
 	{
 		float sectorAngle = i * sectorStep;
 		float cosAngle = cos(sectorAngle);
 		float sinAngle = sin(sectorAngle);
 
-		// 底部顶点
+		// 搴曢儴椤剁偣
 		vertices.push_back(radius * cosAngle);      // x
 		vertices.push_back(-height / 2.0f);         // y
 		vertices.push_back(radius * sinAngle);      // z
@@ -29,7 +29,7 @@ std::vector<float> CylinderVerticesData::GenerateCylinderVertices(float radius, 
 		vertices.push_back(0.0f);                   // ny
 		vertices.push_back(sinAngle);               // nz
 
-		// 顶部顶点
+		// 椤堕儴椤剁偣
 		vertices.push_back(radius * cosAngle);      // x
 		vertices.push_back(height / 2.0f);          // y
 		vertices.push_back(radius * sinAngle);      // z
@@ -38,7 +38,7 @@ std::vector<float> CylinderVerticesData::GenerateCylinderVertices(float radius, 
 		vertices.push_back(sinAngle);               // nz
 	}
 
-	// 生成顶部圆面
+	// 鐢熸垚椤堕儴鍦嗛潰
 	vertices.push_back(0.0f);                       // x
 	vertices.push_back(height / 2.0f);              // y
 	vertices.push_back(0.0f);                       // z
@@ -60,7 +60,7 @@ std::vector<float> CylinderVerticesData::GenerateCylinderVertices(float radius, 
 		vertices.push_back(0.0f);                   // nz
 	}
 
-	// 生成底部圆面
+	// 鐢熸垚搴曢儴鍦嗛潰
 	vertices.push_back(0.0f);                       // x
 	vertices.push_back(-height / 2.0f);             // y
 	vertices.push_back(0.0f);                       // z
@@ -89,7 +89,7 @@ std::vector<unsigned int> CylinderVerticesData::GenerateCylinderIndices(int sect
 {
 	std::vector<unsigned int> indices;
 
-	// 生成侧面索引
+	// 鐢熸垚渚ч潰绱㈠紩
 	for (int i = 0; i < sectors; ++i) 
 	{
 		int base = i * 2;
@@ -102,8 +102,8 @@ std::vector<unsigned int> CylinderVerticesData::GenerateCylinderIndices(int sect
 		indices.push_back(base + 2);
 	}
 
-	// 生成顶部圆面索引
-	int topCenter = (sectors + 1) * 2; // 侧面顶点数量
+	// 鐢熸垚椤堕儴鍦嗛潰绱㈠紩
+	int topCenter = (sectors + 1) * 2; // 渚ч潰椤剁偣鏁伴噺
 	for (int i = 0; i < sectors; ++i) 
 	{
 		indices.push_back(topCenter);
@@ -111,8 +111,8 @@ std::vector<unsigned int> CylinderVerticesData::GenerateCylinderIndices(int sect
 		indices.push_back(topCenter + i + 2);
 	}
 
-	// 生成底部圆面索引
-	int bottomCenter = topCenter + sectors + 2; // 侧面 + 顶部顶点数量
+	// 鐢熸垚搴曢儴鍦嗛潰绱㈠紩
+	int bottomCenter = topCenter + sectors + 2; // 渚ч潰 + 椤堕儴椤剁偣鏁伴噺
 	for (int i = 0; i < sectors; ++i) 
 	{
 		indices.push_back(bottomCenter);

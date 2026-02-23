@@ -18,7 +18,7 @@ void ShaderModel::Draw()
 	
 	default_shader_->bind();
 
-	// mat3 => ÓÃ setMat3
+	// mat3 => ç”¨ setMat3
 	glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(mvp_data_->model_)));
 	default_shader_->setMat3("NormalMatrix", normalMatrix);
 
@@ -26,7 +26,7 @@ void ShaderModel::Draw()
 	default_shader_->setMat4("ProjectionMatrix", mvp_data_->projection_);
 	default_shader_->setMat4("ModelMatrix", mvp_data_->model_);
 
-	// viewPos ±ØÐëÊÇÏà»úÊÀ½ç×ø±ê£¨´Ó view ¾ØÕóÇóÄæµÃµ½£©
+	// viewPos å¿…é¡»æ˜¯ç›¸æœºä¸–ç•Œåæ ‡ï¼ˆä»Ž view çŸ©é˜µæ±‚é€†å¾—åˆ°ï¼‰
 	glm::mat4 invView = glm::inverse(mvp_data_->view_);
 	glm::vec3 camPosWorld = glm::vec3(invView[3]);
 	default_shader_->setVec3("viewPos", camPosWorld);
@@ -98,12 +98,12 @@ void ShaderModel::InitBufferData()
 	//glHint(GL_LINE_SMOOTH, GL_NICEST);
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
-	// ¶¥µãÊý×é¶ÔÏó
+	// é¡¶ç‚¹æ•°ç»„å¯¹è±¡
 	glGenVertexArrays(1, &mesh_data_->vao_);
-	//°ó¶¨VAO
+	//ç»‘å®šVAO
 	glBindVertexArray(mesh_data_->vao_);
 
-	//°Ñ¶¥µãÊý×é¸´ÖÆµ½»º³åÖÐ¹©OpenGLÊ¹ÓÃ
+	//æŠŠé¡¶ç‚¹æ•°ç»„å¤åˆ¶åˆ°ç¼“å†²ä¸­ä¾›OpenGLä½¿ç”¨
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
 	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
@@ -118,7 +118,7 @@ void ShaderModel::InitBufferData()
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	//ÉèÖÃµ¥Ãæ×ÅÉ«
+	//è®¾ç½®å•é¢ç€è‰²
 	//glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 	//stencil_shader_->CreatProgram();	
 }
