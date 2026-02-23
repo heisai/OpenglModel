@@ -1,7 +1,9 @@
 
 #version 430 core
 layout( location = 0 ) out vec4 FragColor;
-
+//引入子例程模块
+subroutine vec3 shadeModelType(vec3 position, vec3 normal);
+subroutine uniform shadeModelType shadeModel;
 
 struct LightInfo {
     vec3 Position; // Light position in eye coords.
@@ -25,12 +27,12 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ModelMatrix;
 uniform vec3 viewPos;
-uniform int blinn;
+
 in vec3 Normal;
 in vec3 FragPos; 
 
 uniform bool flatShading; // 平面着色开关
-
+subroutine (shadeModelType)
 vec3 phongModel( vec3 position, vec3 norm )
 {
     vec3 s = normalize(vec3(Light.Position - position));
@@ -44,6 +46,7 @@ vec3 phongModel( vec3 position, vec3 norm )
 
     return ambient + diffuse + spec;
 }
+subroutine (shadeModelType)
 vec3 blinnModel(vec3 position,vec3 norm)
 {
     vec3 s = normalize(vec3(Light.Position - position));
@@ -73,22 +76,8 @@ void main()
     }
 
    // vec3 norm = gl_FrontFacing ? -n : n;
-    vec3 norm = n;
-
-    // Debug: 平面着色模式下直接输出面法线，确认是否按三角形变化
- /*  if (flatShading)
-    {
-        FragColor = vec4(norm * 0.5 + 0.5, 1.0);
-        return;
-    }*/
-    vec3  LightIntensity = vec3(0.0);
-    switch(blinn)
-    {
-        case 0:   LightIntensity = phongModel( FragPos, norm );   break;
-        case 1:  LightIntensity = blinnModel(FragPos, norm ); break;
-        default:
-         LightIntensity = phongModel( FragPos, norm ); 
-    }
+  vec3 norm = n;
+  vec3  LightIntensity = shadeModel(FragPos, norm);
   FragColor = vec4(LightIntensity, 1.0);
 
 }

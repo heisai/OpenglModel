@@ -5,7 +5,7 @@
 #include <QSurfaceFormat>
 #include <QTranslator>
 #include "src/Utils/Translator.h"
-
+#include<QDir>
 
 int main(int argc, char *argv[])
 {
@@ -32,17 +32,21 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     
 	QTranslator appTranslator;
-	QString qmFilename = "E:\\OPenglProduct\\build\\translations\\zh_CN.qm"; // 请根据你的实际文件命名调整
-	if (appTranslator.load(qmFilename)) { // 这里假设QM文件在资源的/translations目录下
-		a.installTranslator(&appTranslator);
-		qDebug() << "Successfully loaded translation file:" << qmFilename;
-	}
-	else {
-		qDebug() << "Failed to load translation file:" << qmFilename << "Falling back to default language.";
-		// 可以在这里加载一个默认语言（例如英语）的QM文件
-	}
-	qDebug() << TR("Cube");
 
+
+
+	
+	std::cout << "上级目录: " << fs::current_path().parent_path().string() << std::endl;
+	if (appTranslator.load("translations/zh_CN.qm", QString::fromStdString(fs::current_path().parent_path().string())))
+	{ 
+		appTranslator.filePath(); // 获取QM文件的完整路径，调试用
+		a.installTranslator(&appTranslator);
+		LogInfo("Successfully loaded translation file: {}", appTranslator.filePath().toStdString());
+	}
+	else
+	{
+		LogInfo("Failed to load translation file: {}", appTranslator.filePath().toStdString());
+	}
 	QFont font("Microsoft YaHei", 10); // 设置字体为 微软雅黑，字号为 10
 	
 	InitLogging();

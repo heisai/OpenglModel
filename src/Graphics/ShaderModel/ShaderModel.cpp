@@ -44,8 +44,7 @@ void ShaderModel::Draw()
 
 	default_shader_->setMaterial(materal_);
 
-	//设置平面着色
-	default_shader_->setBool("flatShading", false);
+	
 
 	////default_shader_->setBool("geom_flag", true);
 	//default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed()/500));

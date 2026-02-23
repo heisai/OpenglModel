@@ -7,7 +7,6 @@
 #include<QObject>
 #include <QString>
 #include<map>
-
 using TranslatoeMap = std::map <QString, QString>;
 #define TR(x) Translator::getInstance().Tr(x)
 class Translator : public QObject

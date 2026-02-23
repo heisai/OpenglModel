@@ -13,6 +13,4 @@ private:
 	std::unique_ptr<Shader>stencil_shader_;
 	QElapsedTimer elapsed_timer;
 
-
-
 };

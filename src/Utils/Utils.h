@@ -30,7 +30,7 @@ namespace Utils {
         (result /= ... /= fs::path(std::forward<Args>(args)));
 
         // 使用项目根目录的绝对路径，确保着色器文件从源码目录加载
-        std::string project_root = "E:\\OPenglProduct";
+        std::string project_root = fs::current_path().parent_path().string();
         std::string file_path = std::format("{}\\src\\Graphics\\{}", project_root, result.string());
         return file_path;
     }
@@ -57,7 +57,8 @@ namespace Utils {
 		float shininess_{ 0.0f };
         float alpha_{ 1.0f };
         //光照类型
-        int light_model_type_{ 0 };
+        int light_model_type_{ 0 };  // 0 :phong    1：blinn
+		int render_type_{ 0 }; // 0: 双面遮光   1： 单面遮光
 	};
 
     // 材质属性表：根据材质名称（key）返回对应的环境光/漫反射/高光/光泽度

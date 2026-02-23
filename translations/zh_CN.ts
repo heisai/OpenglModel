@@ -50,77 +50,76 @@
         <translation>属性设置</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="46"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="81"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="119"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="147"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="175"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="210"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="238"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="273"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="304"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="96"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="131"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="183"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="214"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="242"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="277"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="319"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="347"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="375"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="93"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="251"/>
+        <source>渲染</source>
+        <translation>渲染</translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="286"/>
         <source>材质</source>
         <translation>材质</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="322"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="329"/>
-        <source>RadioButton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="339"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="155"/>
         <source>PushButton</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="348"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="70"/>
         <source>底座</source>
-        <translation type="unfinished"></translation>
+        <translation>底座</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="55"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="384"/>
         <source>光照</source>
         <translation>光照</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="247"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="105"/>
         <source>位置</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="313"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="140"/>
         <source>旋转</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="184"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="293"/>
         <source>缩放</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="32"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="133"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="259"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="82"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="169"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="361"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="105"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="224"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="290"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="117"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="263"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="333"/>
         <source>y</source>
         <translation>y</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="67"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="161"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="196"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="200"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="228"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="305"/>
         <source>z</source>
         <translation>z</translation>
     </message>
@@ -405,7 +404,17 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="80"/>
         <source>floor</source>
-        <translation type="unfinished"></translation>
+        <translation>地板</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="83"/>
+        <source>single_render</source>
+        <translation>单面遮光</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="84"/>
+        <source>double_render</source>
+        <translation>双面遮光</translation>
     </message>
 </context>
 </TS>
