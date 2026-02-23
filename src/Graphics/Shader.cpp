@@ -44,7 +44,8 @@ void Shader::setMaterial(const Utils::Material& material_info)
 	setVec3("Material.Kd", material_info.diffsue_);
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
-    setBool("blinn", material_info.light_model_type_);
+    SetInt("blinn", material_info.light_model_type_);
+    setBool("flatShading", material_info.render_type_);
     //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
 

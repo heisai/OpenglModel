@@ -50,20 +50,36 @@ void PropertyEditorWidget::initUI()
 		// 设置默认光照模型
 	ui.LightModelCombox->addItem(TR("phone"));	//phone 光照模型
 	ui.LightModelCombox->addItem(TR("blinn"));		//blinn 光照模型
+
+
+	// 设置默认光照模型
+	ui.RenderCombox->addItem(TR("double_render"));	//双面遮光
+	ui.RenderCombox->addItem(TR("single_render"));		//单面遮光
 }
 
 void PropertyEditorWidget::initConnect()
 {
 	//更新材质属性
 	connect(ui.MaterialComBox, &QComboBox::currentTextChanged, this, [this](const QString& text) {
-		const Utils::Material value = material_attrib_->getMaterial(text);
-		emit sigUpdatePropertyInfo(value);
+		Utils::Material material_value = material_attrib_->getMaterial(text);
+		material_value.light_model_type_ = ui.LightModelCombox->currentIndex();
+		material_value.render_type_ = ui.RenderCombox->currentIndex();
+		emit sigUpdatePropertyInfo(material_value);
 	});
 	//更新光照模型属性
 	connect(ui.LightModelCombox, &QComboBox::currentIndexChanged, this, [this](const int &value) {
 		QString text = ui.MaterialComBox->currentText();
 		 Utils::Material material_value = material_attrib_->getMaterial(text);
 		 material_value.light_model_type_ = value;
+		emit sigUpdatePropertyInfo(material_value);
+		});
+
+	//更新光照模型属性
+	connect(ui.RenderCombox, &QComboBox::currentIndexChanged, this, [this](const int& value) {
+		QString text = ui.MaterialComBox->currentText();
+		Utils::Material material_value = material_attrib_->getMaterial(text);
+		material_value.light_model_type_ = ui.LightModelCombox->currentIndex();
+		material_value.render_type_ = value;
 		emit sigUpdatePropertyInfo(material_value);
 		});
 }
