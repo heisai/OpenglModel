@@ -72,6 +72,7 @@ void PropertyEditorWidget::initConnect()
 		 Utils::Material material_value = material_attrib_->getMaterial(text);
 		 material_value.light_model_type_ = value;
 		 material_value.render_type_ = ui.RenderCombox->currentIndex();
+		 material_value.render_type_ = ui.RenderCombox->currentIndex();
 		emit sigUpdatePropertyInfo(material_value);
 		});
 
