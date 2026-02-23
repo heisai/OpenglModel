@@ -6,17 +6,17 @@ in vec3 FragPos;
 
 struct Material
 {
-	vec3 ambient;	//»·¾³¹â
-	vec3 diffuse;	//Âş·´Éä
-	vec3 specular; //¾µÃæ·´Éä
-	float shininess;//¸ß¹âÏµÊı
+	vec3 ambient;	//ç¯å¢ƒå…‰
+	vec3 diffuse;	//æ¼«åå°„
+	vec3 specular; //é•œé¢åå°„
+	float shininess;//é«˜å…‰ç³»æ•°
 };
 struct Light
 {
-	vec3 positiom; //Î»ÖÃ
-	vec3 ambient;	//»·¾³¹â
-	vec3 diffuse;	//Âş·´Éä
-	vec3 specular; //¾µÃæ·´Éä
+	vec3 positiom; //ä½ç½®
+	vec3 ambient;	//ç¯å¢ƒå…‰
+	vec3 diffuse;	//æ¼«åå°„
+	vec3 specular; //é•œé¢åå°„
 };
 
  

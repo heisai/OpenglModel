@@ -17,13 +17,13 @@ inline void InitLogging()
 		spdlog::set_default_logger(logger);
 		spdlog::set_level(spdlog::level::info);
 		spdlog::flush_on(spdlog::level::info);
-		//// ÉèÖÃ¿ØÖÆÌ¨Êä³ö±àÂëÎª UTF-8
+		//// è®¾ç½®æ§åˆ¶å°è¾“å‡ºç¼–ç ä¸º UTF-8
 		//SetConsoleOutputCP(CP_UTF8);
-		//// ¿ÉÑ¡£ºÍ¬Ê±ÉèÖÃÊäÈë±àÂë£¬±£Ö¤Ò»ÖÂĞÔ
+		//// å¯é€‰ï¼šåŒæ—¶è®¾ç½®è¾“å…¥ç¼–ç ï¼Œä¿è¯ä¸€è‡´æ€§
 		//SetConsoleCP(CP_UTF8);
 	}
 	catch (...) {
-		// Èç¹û¶à´Î³õÊ¼»¯µ¼ÖÂÒì³££¬ÕâÀï²¶»ñÒÔ·À³ÌĞò±ÀÀ£
+		// å¦‚æœå¤šæ¬¡åˆå§‹åŒ–å¯¼è‡´å¼‚å¸¸ï¼Œè¿™é‡Œæ•è·ä»¥é˜²ç¨‹åºå´©æºƒ
 	}
 }
 template <>
@@ -32,45 +32,45 @@ struct fmt::formatter<glm::vec3> {
 
 	template <typename FormatContext>
 	auto format(const glm::vec3& v, FormatContext& ctx) {
-		// Êä³ö¸ñÊ½Îª (x, y, z)
+		// è¾“å‡ºæ ¼å¼ä¸º (x, y, z)
 		return fmt::format_to(ctx.out(), "({:.3f}, {:.3f}, {:.3f})", v.x, v.y, v.z);
 	}
 };
-// ºê·â×°£¨Ìæ´ú SPDLOG_INFO / SPDLOG_WARN / SPDLOG_ERROR£©
+// å®å°è£…ï¼ˆæ›¿ä»£ SPDLOG_INFO / SPDLOG_WARN / SPDLOG_ERRORï¼‰
 #define LogInfo(...)  SPDLOG_INFO(__VA_ARGS__)
 #define LogWarn(...)  SPDLOG_WARN(__VA_ARGS__)
 #define LogError(...) SPDLOG_ERROR(__VA_ARGS__)
-//Ä£ĞÍÀàĞÍ
+//æ¨¡å‹ç±»å‹
 enum class OperatorAction
 {
-	//ÀëÆÁäÖÈ¾
+	//ç¦»å±æ¸²æŸ“
 	ScreenRender = 0,
-	//Ä£ĞÍ¶¯×÷
+	//æ¨¡å‹åŠ¨ä½œ
 	CreatCyliner ,//	
 	CreatCube,
 	CreatTourse,
-	CreatGrid,	//Íø¸ñ
-	CreatAxis,//	×ø±ê
-	CreatPlanet,//	ĞĞĞÇ
-	//äÖÈ¾¶¯×÷
+	CreatGrid,	//ç½‘æ ¼
+	CreatAxis,//	åæ ‡
+	CreatPlanet,//	è¡Œæ˜Ÿ
+	//æ¸²æŸ“åŠ¨ä½œ
 	RenderInversion,   //
 	RenderGrayscale,   //
 	RenderSharpen,   //
 	RenderBlur,   //
 	RenderDetection,   //
-	RenderSky,	//Ìì¿ÕºĞ
-	RenderBlasting,	//±¬ÆÆ
-	//Çå³ı¶¯×÷
-	ClearSkyBox,//Çå³ıÌì¿ÕºĞ
-	ClearCreatModel,//Çå³ıÄ£ĞÍ
-	ClearBlasting,	//Çå³ı±¬ÆÆ
-	ClearRender	//Çå³ıäÖÈ¾
+	RenderSky,	//å¤©ç©ºç›’
+	RenderBlasting,	//çˆ†ç ´
+	//æ¸…é™¤åŠ¨ä½œ
+	ClearSkyBox,//æ¸…é™¤å¤©ç©ºç›’
+	ClearCreatModel,//æ¸…é™¤æ¨¡å‹
+	ClearBlasting,	//æ¸…é™¤çˆ†ç ´
+	ClearRender	//æ¸…é™¤æ¸²æŸ“
 };
 struct ModelDataInfo
 {
-	std::vector<float> vertices_datas; //¶¥µãÊı¾İ
+	std::vector<float> vertices_datas; //é¡¶ç‚¹æ•°æ®
 	std::vector<unsigned int>indices_datas;
-	QString model_name_; //Ä£ĞÍÃû³Æ
+	QString model_name_; //æ¨¡å‹åç§°
 };
 
 class ModelDataInterFace{

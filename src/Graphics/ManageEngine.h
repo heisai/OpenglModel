@@ -2,12 +2,12 @@
 #include"../Utils/OpengHearder.h"
 #include<qdebug.h>
 #include <QUuid>
-// ÃüÃû¹æ·¶ËµÃ÷£º
-// - ÀàÃûÊ¹ÓÃ PascalCase£¨Ê××ÖÄ¸´óĞ´£©ÒÔÇø·ÖÀàĞÍÓë±äÁ¿¡£
-// - ³ÉÔ±º¯ÊıÊ¹ÓÃ camelCase£¨Ê××ÖÄ¸Ğ¡Ğ´µÄÍÕ·åÊ½£©£¬²ÎÊıÈ«²¿Ğ¡Ğ´£¬±ãÓÚÔÄ¶ÁÓëÒ»ÖÂĞÔ¡£
-// - ³ÉÔ±±äÁ¿ÒÔºó×ºÏÂ»®ÏßÃüÃû£¨ÀıÈç width_£©£¬±ÜÃâÓë²ÎÊıÃû³åÍ»£¬Ìá¸ß¿É¶ÁĞÔ¡£
-// - ³£Á¿ÒÔ K ¿ªÍ·: KExampleValue¡£´ËÎÄ¼şÎ´¶¨Òå³£Á¿£¬½öËµÃ÷¹æÔò¡£
-// ÕâÑù¿ÉÒÔÍ³Ò»¹¤³Ì±àÂë·ç¸ñ£¬¼õÉÙÆçÒå²¢·½±ãÎ¬»¤¡£
+// å‘½åè§„èŒƒè¯´æ˜ï¼š
+// - ç±»åä½¿ç”¨ PascalCaseï¼ˆé¦–å­—æ¯å¤§å†™ï¼‰ä»¥åŒºåˆ†ç±»å‹ä¸å˜é‡ã€‚
+// - æˆå‘˜å‡½æ•°ä½¿ç”¨ camelCaseï¼ˆé¦–å­—æ¯å°å†™çš„é©¼å³°å¼ï¼‰ï¼Œå‚æ•°å…¨éƒ¨å°å†™ï¼Œä¾¿äºé˜…è¯»ä¸ä¸€è‡´æ€§ã€‚
+// - æˆå‘˜å˜é‡ä»¥åç¼€ä¸‹åˆ’çº¿å‘½åï¼ˆä¾‹å¦‚ width_ï¼‰ï¼Œé¿å…ä¸å‚æ•°åå†²çªï¼Œæé«˜å¯è¯»æ€§ã€‚
+// - å¸¸é‡ä»¥ K å¼€å¤´: KExampleValueã€‚æ­¤æ–‡ä»¶æœªå®šä¹‰å¸¸é‡ï¼Œä»…è¯´æ˜è§„åˆ™ã€‚
+// è¿™æ ·å¯ä»¥ç»Ÿä¸€å·¥ç¨‹ç¼–ç é£æ ¼ï¼Œå‡å°‘æ­§ä¹‰å¹¶æ–¹ä¾¿ç»´æŠ¤ã€‚
 
 class ManageEngine : public QObject
 {
@@ -15,62 +15,62 @@ class ManageEngine : public QObject
 public:
     ManageEngine();
 
-    // ´°¿Ú/ÊÓ¿Ú´óĞ¡
+    // çª—å£/è§†å£å¤§å°
     void setViewSize(int width, int height);
-    // ´´½¨Ä£ĞÍ
+    // åˆ›å»ºæ¨¡å‹
     QString createModel(OperatorAction type);
     QString removeModel(OperatorAction type);
-	// äÖÈ¾ / Ê°È¡ / ³õÊ¼»¯
+	// æ¸²æŸ“ / æ‹¾å– / åˆå§‹åŒ–
 	void paintGl();
 	MvpDataPtr pickModel(int xpos, int ypos);
 	void initializeGl();
 	void setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
     void SetEngineScaleAndTranslate(const GraphicsEnginePtr&engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
-	//ÉèÖÃÊôĞÔÅäÖÃĞÅÏ¢
+	//è®¾ç½®å±æ€§é…ç½®ä¿¡æ¯
     void setPropertyData(const Utils::Material& material_);
 private:
 
-    //×¢²áÒıÇæ´´½¨º¯Êı
+    //æ³¨å†Œå¼•æ“åˆ›å»ºå‡½æ•°
 	void registerEngineModel();
-	//´´½¨×ø±êÖá
+	//åˆ›å»ºåæ ‡è½´
     GraphicsEnginePtr createAxisEngine();
-	//´´½¨Íø¸ñ
+	//åˆ›å»ºç½‘æ ¼
     GraphicsEnginePtr createGridEngine();
-    //´´½¨Á¢·½Ìå
+    //åˆ›å»ºç«‹æ–¹ä½“
     GraphicsEnginePtr createCubeEngine();
-    //´´½¨Ô²ÖùÌå
+    //åˆ›å»ºåœ†æŸ±ä½“
     GraphicsEnginePtr createToursEngine();
-    //´´½¨Ô²»·Ìå
+    //åˆ›å»ºåœ†ç¯ä½“
     GraphicsEnginePtr createCylinderEngine();
-    //´´½¨Ìì¿ÕºĞ×Ó
+    //åˆ›å»ºå¤©ç©ºç›’å­
     GraphicsEnginePtr createSkyBoxEngine();
-	//´´½¨ĞĞĞÇ
+	//åˆ›å»ºè¡Œæ˜Ÿ
     GraphicsEnginePtr createPlanteEngine();
 
-    //·´Ïà
+    //åç›¸
     GraphicsEnginePtr createInversionRender();
-    //»Ò¶È
+    //ç°åº¦
     GraphicsEnginePtr createGrayscaleRender();
-    //Èğ»¯
+    //ç‘åŒ–
     GraphicsEnginePtr createSharpenRender();
-    //Ä£ºı
+    //æ¨¡ç³Š
     GraphicsEnginePtr createBlurRender();
-    //¼ì²â
+    //æ£€æµ‹
     GraphicsEnginePtr createDetectionRender();
-    //±¬ÆÆÄ£Ê½
+    //çˆ†ç ´æ¨¡å¼
 	GraphicsEnginePtr createBlastingRender();
     GraphicsEnginePtr clearRender();
     //GraphicsEnginePtr createInversionRender();
 
     void createLoadModelEngine();
     void createMixEngine();
-	//Õ¹Ê¾×ø±êÖáÄ£ĞÍ
+	//å±•ç¤ºåæ ‡è½´æ¨¡å‹
     void showAxisModel(bool flag);
 protected:
     void addEngine( const GraphicsEnginePtr& graphics);
     void  generateUuid(QString &model_name);
 signals:
-    //Ñ¡ÖĞÄ£ĞÍĞÅºÅ
+    //é€‰ä¸­æ¨¡å‹ä¿¡å·
     void selectModelSignals(const QString model_uuid);
 public:
     std::list<GraphicsEnginePtr>list_graphic_;
@@ -78,7 +78,7 @@ public:
     int width_ = 0;
     int height_ = 0;
     std::unique_ptr<ScreenRenderModel>screen_render_model_;
-	//Ó³ÉäÄ£ĞÍIDÓëÒıÇæID¹ØÏµ
+	//æ˜ å°„æ¨¡å‹IDä¸å¼•æ“IDå…³ç³»
 	std::map<QString, unsigned int>map_model_id_;
 };
 

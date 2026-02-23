@@ -14,10 +14,10 @@ class HoverToolWidget : public QWidget
 public:
     enum ModelState
     {
-        MoveState,      //�ƶ�״̬
-        RotateState,    //��ת״̬
-		ScaleState,      //����״̬
-		SelectState,    //ѡ��״̬
+        MoveState,      //移动状态
+        RotateState,    //旋转状态
+		ScaleState,      //缩放状态
+		SelectState,    //选择状态
     };
     explicit HoverToolWidget(QWidget* parent = nullptr);
     ~HoverToolWidget() = default;

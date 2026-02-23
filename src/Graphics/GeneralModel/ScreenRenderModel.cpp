@@ -10,9 +10,9 @@ ScreenRenderModel::ScreenRenderModel(OperatorAction type,std::shared_ptr<Shader>
 void ScreenRenderModel::Draw()
 {
 #if 0
-	// ½«ÀëÆÁÖ¡»º³åÌí¼Óµ½ÎÆÀíÖĞ
+	// å°†ç¦»å±å¸§ç¼“å†²æ·»åŠ åˆ°çº¹ç†ä¸­
 	glDisable(GL_DEPTH_TEST);
-	glViewport(0, 0, 200, 200); // ÉèÖÃÊÓ¿Ú´óĞ¡Îª 200x200
+	glViewport(0, 0, 200, 200); // è®¾ç½®è§†å£å¤§å°ä¸º 200x200
 	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//glClear(GL_COLOR_BUFFER_BIT);
@@ -21,11 +21,11 @@ void ScreenRenderModel::Draw()
 	glBindTexture(GL_TEXTURE_2D, m_PickTexture);	// use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	// ²½Öè¶ş£º´´½¨Ê°È¡ÎÆÀí
-		//// Çå³ı»º³å
+	// æ­¥éª¤äºŒï¼šåˆ›å»ºæ‹¾å–çº¹ç†
+		//// æ¸…é™¤ç¼“å†²
 	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
 	glViewport(0, 0, m_Width, m_Height);
-	// Çå³ı»º³å
+	// æ¸…é™¤ç¼“å†²
 	glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -39,7 +39,7 @@ void ScreenRenderModel::Draw()
 
 
 	default_shader_->bind();
-	//ÉèÖÃ¶¥µãÊôĞÔÖ¸Õë
+	//è®¾ç½®é¡¶ç‚¹å±æ€§æŒ‡é’ˆ
 	glBindVertexArray(default_render_vao_);
 	glDrawElements(GL_TRIANGLES, default_render_indices_.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -106,12 +106,12 @@ void ScreenRenderModel::InitBufferData()
 
 
 	//glBindVertexArray(0);
-	//²½Öè1£º´´½¨»º³å¶ÔÏó
+	//æ­¥éª¤1ï¼šåˆ›å»ºç¼“å†²å¯¹è±¡
 	glGenFramebuffers(1, &m_PickFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_PickFBO);
 
 
-	// ²½Öè¶ş£º´´½¨Ê°È¡ÎÆÀí
+	// æ­¥éª¤äºŒï¼šåˆ›å»ºæ‹¾å–çº¹ç†
 	glGenTextures(1, &m_PickTexture);
 	glBindTexture(GL_TEXTURE_2D, m_PickTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -121,18 +121,18 @@ void ScreenRenderModel::InitBufferData()
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 
-	// ¸½¼ÓÑÕÉ«ÎÆÀíµ½FBO£¨»¹¿ÉÒÔÊÇÉî¶È¡¢Ä£°åÎÆÀí¸½¼ş£©
+	// é™„åŠ é¢œè‰²çº¹ç†åˆ°FBOï¼ˆè¿˜å¯ä»¥æ˜¯æ·±åº¦ã€æ¨¡æ¿çº¹ç†é™„ä»¶ï¼‰
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_PickTexture, 0);
 
 
 
 
-	// ´´½¨äÖÈ¾»º³å¶ÔÏó£¨Éî¶ÈºÍÄ£°å£©
+	// åˆ›å»ºæ¸²æŸ“ç¼“å†²å¯¹è±¡ï¼ˆæ·±åº¦å’Œæ¨¡æ¿ï¼‰
 	glGenRenderbuffers(1, &m_PickRBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_PickRBO);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Width, m_Height);
 	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	//¸½¼ÓäÖÈ¾»º³å¶ÔÏóµ½FBO
+	//é™„åŠ æ¸²æŸ“ç¼“å†²å¯¹è±¡åˆ°FBO
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_PickRBO);
 
 
@@ -141,7 +141,7 @@ void ScreenRenderModel::InitBufferData()
 		LogInfo("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 
 	}
-	//// ½â°óFBO
+	//// è§£ç»‘FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -162,7 +162,7 @@ std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 
 {
 	LogInfo("========================== START PICKING =======================");
 #if 1
-	// ±£´æµ±Ç°×´Ì¬
+	// ä¿å­˜å½“å‰çŠ¶æ€
 	GLint currentFBO;
 	glGetIntegerv(GL_FRAMEBUFFER, &currentFBO);
 	GLint currentReadBuffer;
@@ -175,20 +175,20 @@ std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 
 
 	LogInfo("PickModel: width: {} height: {}", m_Width, m_Height);
 
-	// Çå³ı»º³å
+	// æ¸…é™¤ç¼“å†²
 	//glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	// Ê¹ÓÃÊ°È¡×ÅÉ«Æ÷
+	// ä½¿ç”¨æ‹¾å–ç€è‰²å™¨
 
 	color_pick_shader_->bind();
 	color_pick_shader_->setMat4("projection", projection);
 	color_pick_shader_->setMat4("view", view);
 	color_pick_shader_->setMat4("model", model);
 
-	// ÉèÖÃÊ°È¡ÑÕÉ«
+	// è®¾ç½®æ‹¾å–é¢œè‰²
 	glm::vec3 pickColor = idToColor(objetc_id);
 	LogInfo("Object ID {} \t Pick RGB:{},{},{}", objetc_id, (float)pickColor.r, (float)pickColor.g, (float)pickColor.b);
 	color_pick_shader_->setVec3("pickColor", pickColor);
@@ -201,10 +201,10 @@ std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_PickFBO);
 	//glReadBuffer(GL_COLOR_ATTACHMENT0);
-	// ¶ÁÈ¡ÏñËØ
+	// è¯»å–åƒç´ 
 	unsigned char pixel[3] = { 0, 0, 0 };
 	glReadPixels(readX, readY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-	// ×ª»»»ØID
+	// è½¬æ¢å›ID
 	int pickedID = colorToId(glm::vec3(pixel[0], pixel[1], pixel[2]));
 
 	//glReadBuffer(GL_COLOR_ATTACHMENT1);
@@ -213,7 +213,7 @@ std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 
 	/*GLint srgb;
 	glGetIntegerv(GL_FRAMEBUFFER_SRGB, &srgb);*/
 	LogInfo("Picked ID {} \t Pixel RGB:{},{},{}  Depth:{}", pickedID, (int)pixel[0], (int)pixel[1], (int)pixel[2], depth);
-	// === ¹Ø¼üĞŞÕı7£ºÕıÈ·»Ö¸´×´Ì¬ ===
+	// === å…³é”®ä¿®æ­£7ï¼šæ­£ç¡®æ¢å¤çŠ¶æ€ ===
 	glReadBuffer(currentReadBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, m_Width, m_Height);
@@ -223,7 +223,7 @@ std::tuple<bool, float> ScreenRenderModel::colorPick(glm::mat4 model, glm::mat4 
 
 void ScreenRenderModel::drawTexture()
 {
-	// ½«ÀëÆÁÖ¡»º³åÌí¼Óµ½ÎÆÀíÖĞ
+	// å°†ç¦»å±å¸§ç¼“å†²æ·»åŠ åˆ°çº¹ç†ä¸­
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, m_Width, m_Height);
 	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -243,7 +243,7 @@ void ScreenRenderModel::drawTexture()
 
 
 	glViewport(0, 0, m_Width, m_Height);
-	// Çå³ı»º³å
+	// æ¸…é™¤ç¼“å†²
 	glClearColor(0.5f, 0.3f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);

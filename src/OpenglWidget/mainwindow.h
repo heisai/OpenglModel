@@ -22,23 +22,23 @@ public:
 	void initCollectionEngine();
     ~MainWindow();
 private:
-    //³õÊ¼»¯²Ëµ¥À¸
+    //åˆå§‹åŒ–èœå•æ 
     void initMenuBar();
-    //Ìí¼ÓÒıÇæ²Ëµ¥
+    //æ·»åŠ å¼•æ“èœå•
     void addEngineMenu();
-    //Ìí¼ÓäÖÈ¾²Ëµ¥
+    //æ·»åŠ æ¸²æŸ“èœå•
     void addRenderMenu();
-	//Ìí¼ÓÇå³ı²Ëµ¥
+	//æ·»åŠ æ¸…é™¤èœå•
 	void addClearMenu();
 
-    //³õÊ¼»¯ÖĞĞÄ½çÃæ
+    //åˆå§‹åŒ–ä¸­å¿ƒç•Œé¢
     void initCenterWidget();
 private slots:
-    //²Ù×÷Ä£ĞÍ£¨´´½¨¡¢É¾³ı¡¢äÖÈ¾£©
+    //æ“ä½œæ¨¡å‹ï¼ˆåˆ›å»ºã€åˆ é™¤ã€æ¸²æŸ“ï¼‰
     void operatorModel(bool checked);
-    //´´½¨Ä£ĞÍ
+    //åˆ›å»ºæ¨¡å‹
     void createModel(OperatorAction type);
-    //ÒÆ³ıÄ£ĞÍ
+    //ç§»é™¤æ¨¡å‹
     void removeModel(OperatorAction type);
 
     void ChangeLightColorSlot(QColor color);

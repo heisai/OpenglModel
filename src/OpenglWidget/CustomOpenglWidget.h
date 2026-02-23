@@ -80,8 +80,8 @@ private:
     float m_Anglex = 0.0f;
     float m_TotalAngleX = 0.0f;
 	AABB cubeBoundingBox = {
-		glm::vec3(-0.5f, -0.5f, -0.5f), // ×îĞ¡¶¥µã
-		glm::vec3(0.5f, 0.5f, 0.5f)     // ×î´ó¶¥µã
+		glm::vec3(-0.5f, -0.5f, -0.5f), // æœ€å°é¡¶ç‚¹
+		glm::vec3(0.5f, 0.5f, 0.5f)     // æœ€å¤§é¡¶ç‚¹
 	};
 
 

@@ -31,13 +31,13 @@ signals:
 private  slots:
     void slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
 private:
-    //¼¯ºÏÊ÷½çÃæ
+    //é›†åˆæ ‘ç•Œé¢
     void initCollectionWidget();
     void initTreewidget();
-    //ÊôĞÔÉèÖÃ½çÃæ
+    //å±æ€§è®¾ç½®ç•Œé¢
     void initPropertyConfigWidget();
     QWidget* initToolButtons();
-    //¸üĞÂÊôĞÔ±à¼­½çÃæ
+    //æ›´æ–°å±æ€§ç¼–è¾‘ç•Œé¢
     void updatePropertyEditorWidget();
 private:
     Ui::ParaConfigWidget *ui;

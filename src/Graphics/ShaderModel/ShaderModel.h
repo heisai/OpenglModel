@@ -9,7 +9,7 @@ public:
 	void Draw() override;
 	void InitBufferData() override;
 private:
-	//模板测试  shader(用户物体选中)
+	//妯℃澘娴嬭瘯  shader(鐢ㄦ埛鐗╀綋閫変腑)
 	std::unique_ptr<Shader>stencil_shader_;
 	QElapsedTimer elapsed_timer;
 

@@ -10,7 +10,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-    // Ö»´«µİÔ­Ê¼Î»ÖÃ
+    // åªä¼ é€’åŸå§‹ä½ç½®
     vs_out.position =  vec4(aPos, 1.0).xyz;
     gl_Position =  vec4(aPos, 1.0);
 }

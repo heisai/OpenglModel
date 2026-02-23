@@ -8,95 +8,95 @@ ModelDataInfo CubeVerticesData::GetModelDatas()
 	info.model_name_ = TR("cube");
 	return info;
 }
-// ¼ò»¯µÄ¶¥µãÊı¾İÉú³É£¨Î»ÖÃºÍ·¨Ïß½»´í´æ´¢£©
+// ç®€åŒ–çš„é¡¶ç‚¹æ•°æ®ç”Ÿæˆï¼ˆä½ç½®å’Œæ³•çº¿äº¤é”™å­˜å‚¨ï¼‰
 std::vector<float> CubeVerticesData::GenerateCubeVertices(float size)
 {
 	std::vector<float> vertices;
 	float halfSize = size * 0.75f;
 
-	// ¶¨Òå6¸öÃæµÄ·¨ÏòÁ¿
+	// å®šä¹‰6ä¸ªé¢çš„æ³•å‘é‡
 	const float normals[6][3] = {
-		{ 0.0f,  0.0f,  1.0f}, // Ç°Ãæ (Z+)
-		{ 0.0f,  0.0f, -1.0f}, // ºóÃæ (Z-)
-		{ 1.0f,  0.0f,  0.0f}, // ÓÒÃæ (X+)
-		{-1.0f,  0.0f,  0.0f}, // ×óÃæ (X-)
-		{ 0.0f,  1.0f,  0.0f}, // ÉÏÃæ (Y+)
-		{ 0.0f, -1.0f,  0.0f}  // ÏÂÃæ (Y-)
+		{ 0.0f,  0.0f,  1.0f}, // å‰é¢ (Z+)
+		{ 0.0f,  0.0f, -1.0f}, // åé¢ (Z-)
+		{ 1.0f,  0.0f,  0.0f}, // å³é¢ (X+)
+		{-1.0f,  0.0f,  0.0f}, // å·¦é¢ (X-)
+		{ 0.0f,  1.0f,  0.0f}, // ä¸Šé¢ (Y+)
+		{ 0.0f, -1.0f,  0.0f}  // ä¸‹é¢ (Y-)
 	};
 
-	// Ç°Ãæ (Z+)
+	// å‰é¢ (Z+)
 	const float frontPos[4][3] = {
-		{-halfSize, -halfSize,  halfSize}, // ×óÏÂ
-		{ halfSize, -halfSize,  halfSize}, // ÓÒÏÂ
-		{ halfSize,  halfSize,  halfSize}, // ÓÒÉÏ
-		{-halfSize,  halfSize,  halfSize}  // ×óÉÏ
+		{-halfSize, -halfSize,  halfSize}, // å·¦ä¸‹
+		{ halfSize, -halfSize,  halfSize}, // å³ä¸‹
+		{ halfSize,  halfSize,  halfSize}, // å³ä¸Š
+		{-halfSize,  halfSize,  halfSize}  // å·¦ä¸Š
 	};
 	AddFaceVertices(vertices, frontPos, normals[0]);
 
-	// ºóÃæ (Z-)
+	// åé¢ (Z-)
 	const float backPos[4][3] = {
-		{ halfSize, -halfSize, -halfSize}, // ÓÒÏÂ
-		{-halfSize, -halfSize, -halfSize}, // ×óÏÂ
-		{-halfSize,  halfSize, -halfSize}, // ×óÉÏ
-		{ halfSize,  halfSize, -halfSize}  // ÓÒÉÏ
+		{ halfSize, -halfSize, -halfSize}, // å³ä¸‹
+		{-halfSize, -halfSize, -halfSize}, // å·¦ä¸‹
+		{-halfSize,  halfSize, -halfSize}, // å·¦ä¸Š
+		{ halfSize,  halfSize, -halfSize}  // å³ä¸Š
 	};
 	AddFaceVertices(vertices, backPos, normals[1]);
 
-	// ÓÒÃæ (X+)
+	// å³é¢ (X+)
 	const float rightPos[4][3] = {
-		{ halfSize, -halfSize,  halfSize}, // Ç°ÏÂ
-		{ halfSize, -halfSize, -halfSize}, // ºóÏÂ
-		{ halfSize,  halfSize, -halfSize}, // ºóÉÏ
-		{ halfSize,  halfSize,  halfSize}  // Ç°ÉÏ
+		{ halfSize, -halfSize,  halfSize}, // å‰ä¸‹
+		{ halfSize, -halfSize, -halfSize}, // åä¸‹
+		{ halfSize,  halfSize, -halfSize}, // åä¸Š
+		{ halfSize,  halfSize,  halfSize}  // å‰ä¸Š
 	};
 	AddFaceVertices(vertices, rightPos, normals[2]);
 
-	// ×óÃæ (X-)
+	// å·¦é¢ (X-)
 	const float leftPos[4][3] = {
-		{-halfSize, -halfSize, -halfSize}, // ºóÏÂ
-		{-halfSize, -halfSize,  halfSize}, // Ç°ÏÂ
-		{-halfSize,  halfSize,  halfSize}, // Ç°ÉÏ
-		{-halfSize,  halfSize, -halfSize}  // ºóÉÏ
+		{-halfSize, -halfSize, -halfSize}, // åä¸‹
+		{-halfSize, -halfSize,  halfSize}, // å‰ä¸‹
+		{-halfSize,  halfSize,  halfSize}, // å‰ä¸Š
+		{-halfSize,  halfSize, -halfSize}  // åä¸Š
 	};
 	AddFaceVertices(vertices, leftPos, normals[3]);
 
-	// ÉÏÃæ (Y+)
+	// ä¸Šé¢ (Y+)
 	const float topPos[4][3] = {
-		{-halfSize,  halfSize,  halfSize}, // Ç°×ó
-		{ halfSize,  halfSize,  halfSize}, // Ç°ÓÒ
-		{ halfSize,  halfSize, -halfSize}, // ºóÓÒ
-		{-halfSize,  halfSize, -halfSize}  // ºó×ó
+		{-halfSize,  halfSize,  halfSize}, // å‰å·¦
+		{ halfSize,  halfSize,  halfSize}, // å‰å³
+		{ halfSize,  halfSize, -halfSize}, // åå³
+		{-halfSize,  halfSize, -halfSize}  // åå·¦
 	};
 	AddFaceVertices(vertices, topPos, normals[4]);
 
-	// ÏÂÃæ (Y-)
+	// ä¸‹é¢ (Y-)
 	const float bottomPos[4][3] = {
-		{-halfSize, -halfSize, -halfSize}, // ºó×ó
-		{ halfSize, -halfSize, -halfSize}, // ºóÓÒ
-		{ halfSize, -halfSize,  halfSize}, // Ç°ÓÒ
-		{-halfSize, -halfSize,  halfSize}  // Ç°×ó
+		{-halfSize, -halfSize, -halfSize}, // åå·¦
+		{ halfSize, -halfSize, -halfSize}, // åå³
+		{ halfSize, -halfSize,  halfSize}, // å‰å³
+		{-halfSize, -halfSize,  halfSize}  // å‰å·¦
 	};
 	AddFaceVertices(vertices, bottomPos, normals[5]);
 
 	return vertices;
 }
 
-// Éú³ÉË÷ÒıÊı¾İ
+// ç”Ÿæˆç´¢å¼•æ•°æ®
 std::vector<unsigned int> CubeVerticesData::GenerateCubeIndices()
 {
 	std::vector<unsigned int> indices;
 
-	// Ã¿¸öÃæÓÉ2¸öÈı½ÇĞÎ×é³É£¨6¸öË÷Òı£©
-	// ¶¥µãË³ĞòÎªÄæÊ±Õë£¨ÃæÏòÍâÃæ£©
+	// æ¯ä¸ªé¢ç”±2ä¸ªä¸‰è§’å½¢ç»„æˆï¼ˆ6ä¸ªç´¢å¼•ï¼‰
+	// é¡¶ç‚¹é¡ºåºä¸ºé€†æ—¶é’ˆï¼ˆé¢å‘å¤–é¢ï¼‰
 	for (unsigned int face = 0; face < 6; ++face) {
 		unsigned int baseVertex = face * 4;
 
-		// µÚÒ»¸öÈı½ÇĞÎ
+		// ç¬¬ä¸€ä¸ªä¸‰è§’å½¢
 		indices.push_back(baseVertex);
 		indices.push_back(baseVertex + 1);
 		indices.push_back(baseVertex + 2);
 
-		// µÚ¶ş¸öÈı½ÇĞÎ
+		// ç¬¬äºŒä¸ªä¸‰è§’å½¢
 		indices.push_back(baseVertex);
 		indices.push_back(baseVertex + 2);
 		indices.push_back(baseVertex + 3);
@@ -109,12 +109,12 @@ void CubeVerticesData::AddFaceVertices(std::vector<float>& vertices,
 	const float normal[3])
 {
 	for (int i = 0; i < 4; ++i) {
-		// Ìí¼Ó¶¥µãÎ»ÖÃ (x, y, z)
+		// æ·»åŠ é¡¶ç‚¹ä½ç½® (x, y, z)
 		vertices.push_back(positions[i][0]);
 		vertices.push_back(positions[i][1]);
 		vertices.push_back(positions[i][2]);
 
-		// Ìí¼Ó·¨ÏòÁ¿ (nx, ny, nz)
+		// æ·»åŠ æ³•å‘é‡ (nx, ny, nz)
 		vertices.push_back(normal[0]);
 		vertices.push_back(normal[1]);
 		vertices.push_back(normal[2]);

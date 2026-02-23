@@ -21,13 +21,13 @@ void GeneralModel::Draw()
 	default_shader_->setMat4("model", mvp_data_->model_);
 
 
-	//ÉèÖÃ¹âÔ´ÊôÐÔ
+	//è®¾ç½®å…‰æºå±žæ€§
 	default_shader_->setVec3("viewPos", mvp_data_->view_[3]);
 	default_shader_->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
 	default_shader_->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 	default_shader_->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 	default_shader_->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	//ÉèÖÃ²ÄÖÊÊôÐÔ
+	//è®¾ç½®æè´¨å±žæ€§
 	default_shader_->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
 	default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
 	default_shader_->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
@@ -83,12 +83,12 @@ void GeneralModel::InitBufferData()
 	//glEnable(GL_MULTISAMPLE);
 	//glHint(GL_LINE_SMOOTH, GL_NICEST);
 
-	// ¶¥µãÊý×é¶ÔÏó
+	// é¡¶ç‚¹æ•°ç»„å¯¹è±¡
 	glGenVertexArrays(1, &mesh_data_->vao_);
-	//°ó¶¨VAO
+	//ç»‘å®šVAO
 	glBindVertexArray(mesh_data_->vao_);
 
-	//°Ñ¶¥µãÊý×é¸´ÖÆµ½»º³åÖÐ¹©OpenGLÊ¹ÓÃ
+	//æŠŠé¡¶ç‚¹æ•°ç»„å¤åˆ¶åˆ°ç¼“å†²ä¸­ä¾›OpenGLä½¿ç”¨
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
 	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);

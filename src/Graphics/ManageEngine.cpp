@@ -21,7 +21,7 @@ void ManageEngine::setViewSize(int width, int height)
 QString ManageEngine::createModel(OperatorAction type)
 {
 	QString model_uuid = "";
-    //ÅÐ¶Ï°ü×°Æ÷ÖÐÊÇ·ñ°üº¬¸Ãº¯Êý
+    //åˆ¤æ–­åŒ…è£…å™¨ä¸­æ˜¯å¦åŒ…å«è¯¥å‡½æ•°
    auto iter = map_graphicengine_createfunc_.find(type);
    if (iter != map_graphicengine_createfunc_.end())
    {
@@ -44,7 +44,7 @@ QString ManageEngine::removeModel(OperatorAction type)
 {
 
 	QString model_uuid = "";
-    if (type == OperatorAction::ClearSkyBox)	//É¾³ýÌì¿ÕºÐ
+    if (type == OperatorAction::ClearSkyBox)	//åˆ é™¤å¤©ç©ºç›’
     {
         list_graphic_.remove_if([type, &model_uuid](auto grahic) {  
 			if (grahic->getModeltype() == type)
@@ -55,7 +55,7 @@ QString ManageEngine::removeModel(OperatorAction type)
 			return false;
 			});
     }
-	else if (type == OperatorAction::ClearBlasting)		//É¾³ý±¬ÆÆ¹¦ÄÜ
+	else if (type == OperatorAction::ClearBlasting)		//åˆ é™¤çˆ†ç ´åŠŸèƒ½
 	{
 		auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
 			return (graphic_->getCheck() == true);
@@ -66,7 +66,7 @@ QString ManageEngine::removeModel(OperatorAction type)
 			(*iter)->getMvpData()->blasting_flag_ = false;
 		}
 	}
-    else   //É¾³ýÕý³£Ä£ÐÍ
+    else   //åˆ é™¤æ­£å¸¸æ¨¡åž‹
     {
         list_graphic_.remove_if([&model_uuid](auto grahic) {   
 			if (grahic->getCheck() == true)
@@ -84,35 +84,35 @@ QString ManageEngine::removeModel(OperatorAction type)
 void ManageEngine::registerEngineModel()
 {
 
-	// ×¢²áÒýÇæ´´½¨º¯Êý
-	//Á¢·½Ìå
+	// æ³¨å†Œå¼•æ“Žåˆ›å»ºå‡½æ•°
+	//ç«‹æ–¹ä½“
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });	
-	//Ô²»·Ìå
+	//åœ†çŽ¯ä½“
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
-	//Ô²ÖùÌå
+	//åœ†æŸ±ä½“
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });	
-	//Ìì¿ÕºÐ
+	//å¤©ç©ºç›’
 	map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
-	//Íø¸ñ
+	//ç½‘æ ¼
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });	
-	//ÐÐÐÇ
+	//è¡Œæ˜Ÿ
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this) });	
-	//·´Ïò
+	//åå‘
 	map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   
-	//»Ò¶È
+	//ç°åº¦
 	map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });  
 	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //Èñ»¯
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //é”åŒ–
 	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //Ä£ºý
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //æ¨¡ç³Š
 	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //¼ì²â
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //æ£€æµ‹
 
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //±¬ÆÆ
+	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //çˆ†ç ´
 	
-	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //Çå³ýäÖÈ¾
+	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //æ¸…é™¤æ¸²æŸ“
 
-	//×ø±êÖá
+	//åæ ‡è½´
 	map_graphicengine_createfunc_.insert({ OperatorAction::CreatAxis, std::bind(&ManageEngine::createAxisEngine, this) });  
 }
 
@@ -400,7 +400,7 @@ void ManageEngine::paintGl()
             graphic_->Draw();
         }
     }
-    //Èç¹ûÄ£ÐÍÊÇ¿Õ£¬²»½øÐÐÀëÆÁäÖÈ¾
+    //å¦‚æžœæ¨¡åž‹æ˜¯ç©ºï¼Œä¸è¿›è¡Œç¦»å±æ¸²æŸ“
     if (list_graphic_.empty())
     {
         return;
@@ -426,7 +426,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
 		showAxisModel(false);
         return mvp_data;
     }
-    //Çå¿ÕÎïÌåÑ¡ÖÐ×´Ì¬
+    //æ¸…ç©ºç‰©ä½“é€‰ä¸­çŠ¶æ€
     std::for_each(list_graphic_.begin(), list_graphic_.end(), [](auto graphic_) {graphic_->setChecked(false); });
 
 
@@ -440,7 +440,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
         auto[selected,depth] = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
-            LogInfo("¡¾Selected ¡¿ ColorID: {} \n Depth: {}", object_id, depth);
+            LogInfo("ã€Selected ã€‘ ColorID: {} \n Depth: {}", object_id, depth);
             map_engineptr[depth] = graphic_;
 			selectModelSignals(graphic_->getModelName());
         }
