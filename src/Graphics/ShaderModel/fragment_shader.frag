@@ -21,10 +21,10 @@ struct MaterialInfo {
 };
 uniform MaterialInfo Material;
 uniform vec3 viewPos;
-uniform bool flatShading; // 平面着色开关
+uniform int flatShading; // 平面着色开关
 in vec3 Normal;
 in vec3 FragPos; 
-
+//in vec2 TexCoord;
 
 subroutine (shadeModelType)
 vec3 phongModel( vec3 position, vec3 norm )
@@ -58,15 +58,21 @@ vec3 blinnModel(vec3 position,vec3 norm)
 void main()
 {
     //光照位置不对，导致正面和背面相反
-    vec3 n;
-    if(flatShading)
+     const float scale = 15.0;
+    bvec2 toDiscard = greaterThan( fract(FragPos.xy * scale ), vec2(0.2,0.2) );
+    if(flatShading == 2 && all(toDiscard) )
     {
-        // 通过屏幕空间导数计算真实面法线，实现平面着色
-        n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
+        discard;
+    }
+    vec3 n;
+    if(flatShading == 0)
+    {
+        n = normalize(Normal);
     }
     else
     {
-        n = normalize(Normal);
+        // 通过屏幕空间导数计算真实面法线，实现平面着色
+        n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
     }
 
    // vec3 norm = gl_FrontFacing ? -n : n;
@@ -75,3 +81,5 @@ void main()
   FragColor = vec4(LightIntensity, 1.0);
 
 }
+
+

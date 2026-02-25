@@ -55,6 +55,9 @@ void PropertyEditorWidget::initUI()
 	// 设置默认光照模型
 	ui.RenderCombox->addItem(TR("double_render"));	//双面遮光
 	ui.RenderCombox->addItem(TR("single_render"));		//单面遮光
+	ui.RenderCombox->addItem(TR("discard_render"));		//移除渲染
+
+	
 }
 
 void PropertyEditorWidget::initConnect()
@@ -83,6 +86,15 @@ void PropertyEditorWidget::initConnect()
 		material_value.render_type_ = value;
 		emit sigUpdatePropertyInfo(material_value);
 		});
+}
+
+Utils::Material PropertyEditorWidget::getPropertyInfo()
+{
+	QString text = ui.MaterialComBox->currentText();
+	Utils::Material material_value = material_attrib_->getMaterial(text);
+	material_value.light_model_type_ = ui.LightModelCombox->currentIndex();
+	material_value.render_type_ = ui.RenderCombox->currentIndex();
+	return material_value;
 }
 
 	

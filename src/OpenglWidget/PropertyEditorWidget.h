@@ -16,6 +16,7 @@ public:
 
     void initUI();
     void initConnect();
+    Utils::Material getPropertyInfo();
 signals:
     void sigUpdatePropertyInfo(const Utils::Material& value);
 

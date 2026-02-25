@@ -58,7 +58,7 @@ namespace Utils {
         float alpha_{ 1.0f };
         //光照类型
         int light_model_type_{ 0 };  // 0 :phong    1：blinn
-		int render_type_{ 0 }; // 0: 双面遮光   1： 单面遮光
+		int render_type_{ 0 }; // 0: 双面遮光   1： 单面遮光     2: 移除碎片
 	};
 
     // 材质属性表：根据材质名称（key）返回对应的环境光/漫反射/高光/光泽度
