@@ -45,6 +45,8 @@ void Shader::setMaterial(const Utils::Material& material_info)
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
     SetInt("flatShading", material_info.render_type_);
+    setFloat("selectionScale", material_info.selection_scale_);
+    setFloat("selectionThreshold", material_info.selection_threshold_);
     if (material_info.light_model_type_)
     {
         glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &phong_index_);

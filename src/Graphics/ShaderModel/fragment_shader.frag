@@ -26,6 +26,12 @@ in vec3 Normal;
 in vec3 FragPos; 
 //in vec2 TexCoord;
 
+// Grid pattern uniforms for model selection effect (flatShading == 2)
+// selectionScale: controls the grid frequency (higher = finer grid)
+// selectionThreshold: controls the grid line thickness as fraction of cell size
+uniform float selectionScale;     // Default: 15.0
+uniform float selectionThreshold; // Default: 0.2
+
 subroutine (shadeModelType)
 vec3 phongModel( vec3 position, vec3 norm )
 {
@@ -58,8 +64,7 @@ vec3 blinnModel(vec3 position,vec3 norm)
 void main()
 {
     //光照位置不对，导致正面和背面相反
-     const float scale = 15.0;
-    bvec2 toDiscard = greaterThan( fract(FragPos.xy * scale ), vec2(0.2,0.2) );
+    bvec2 toDiscard = greaterThan( fract(FragPos.xy * selectionScale ), vec2(selectionThreshold) );
     if(flatShading == 2 && all(toDiscard) )
     {
         discard;
