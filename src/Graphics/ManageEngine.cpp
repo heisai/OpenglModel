@@ -442,13 +442,13 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
         {
             LogInfo("¡¾Selected ¡¿ ColorID: {} \n Depth: {}", object_id, depth);
             map_engineptr[depth] = graphic_;
-			selectModelSignals(graphic_->getModelName());
         }
         ++object_id;
     }
     if (!map_engineptr.empty())
     {
         map_engineptr.begin()->second->setChecked(true);
+		selectModelSignals(map_engineptr.begin()->second->getModelName());
 		showAxisModel(true);
         return map_engineptr.begin()->second->getMvpData();
     }

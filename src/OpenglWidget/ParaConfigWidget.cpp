@@ -95,6 +95,9 @@ void ParaConfigWidget::updateTreewidgetItem(const QString& item_text)
 	{
 		items.at(0)->setSelected(true);
 	}
+
+	//更新模型属性信息
+	emit sigUpdatePropertyToEngine(property_editor_widget_->getPropertyInfo());
 }
 void ParaConfigWidget::initPropertyConfigWidget()
 {

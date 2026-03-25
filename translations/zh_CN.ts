@@ -416,5 +416,10 @@
         <source>double_render</source>
         <translation>双面遮光</translation>
     </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="85"/>
+        <source>discard_render</source>
+        <translation>片段丢弃</translation>
+    </message>
 </context>
 </TS>

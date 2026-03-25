@@ -82,6 +82,7 @@ Translator& Translator::getInstance()
 	//渲染类型
 	instance.translator_map_["single_render"] = tr("single_render");	// 单面遮光
 	instance.translator_map_["double_render"] = tr("double_render");	// 双面遮光
+	instance.translator_map_["discard_render"] = tr("discard_render");	// 移除渲染
 
 	return  instance;
 }
