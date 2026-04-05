@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <QtOpenGL/QOpenGLFunctions_4_5_Core>
 #include "../Utils/Utils.h"
+#include"../ModelDatas/ModelDataInterFace.h"
 class Shader: public QOpenGLFunctions_4_5_Core {
 public:
     explicit Shader(const std::string& vs_filename,const std::string &fs_filename,

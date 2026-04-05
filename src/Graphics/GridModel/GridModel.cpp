@@ -11,21 +11,36 @@ GridModel::GridModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nul
 
 void GridModel::Draw()
 {		
+
 	default_shader_->bind();
 
-	mvp_data_->model_ = glm::rotate(glm::mat4(1.0f), glm::radians(15.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	default_shader_->setMat4("view", mvp_data_->view_);
-	default_shader_->setMat4("model", mvp_data_->model_);
-	default_shader_->setMat4("projection", mvp_data_->projection_);
+	default_shader_->setMat4("ViewMatrix", mvp_data_->view_);
+	default_shader_->setMat4("ProjectionMatrix", mvp_data_->projection_);
+	default_shader_->setMat4("ModelMatrix", mvp_data_->model_);
 
-	default_shader_->setMat4("lightPositions", mvp_data_->projection_);
-	default_shader_->setMat4("lightColors", mvp_data_->projection_);
+	// viewPos 必须是相机世界坐标（从 view 矩阵求逆得到）
+	glm::mat4 invView = glm::inverse(mvp_data_->view_);
+	glm::vec3 camPosWorld = glm::vec3(invView[3]);
+	default_shader_->setVec3("viewPos", camPosWorld);
 
+	// Light / Material
+	default_shader_->SetInt("Light.Type", 0);                         // 0=方向光 1=点光源 2=聚光灯
+	default_shader_->setVec3("Light.Position", 0.2f, 5.0f, -2.0f);  // 方向光：此字段作为光线方向使用
+	default_shader_->setVec3("Light.La", 0.2f, 0.2f, 0.2f);
+	default_shader_->setVec3("Light.Ld", 0.5f, 0.5f, 0.5f);
+	default_shader_->setVec3("Light.Ls", 1.0f, 1.0f, 1.0f);
+	gamma_enabled_ = true;
+	default_shader_->setBool("gamma", gamma_enabled_);
 	glBindVertexArray(mesh_data_->vao_);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, gamma_enabled_ ? floor_texture_gamma_corrected_ : floor_texture_);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+
+
+
 
 
 }
@@ -47,16 +62,19 @@ void GridModel::InitBufferData()
 	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
 
 	//设置顶点属性指针
-	glEnableVertexAttribArray(0);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(0);
+	
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(1);
+
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
 
-	unsigned int floorTexture = loadTexture(Utils::joinPaths("GridModel", "wood.png").c_str(), false);
-	unsigned int floorTextureGammaCorrected = loadTexture(Utils::joinPaths("GridModel", "wood.png").c_str(), true);
+	floor_texture_ = loadTexture(Utils::joinPaths("GridModel", "wood.png").c_str(), false);
+	floor_texture_gamma_corrected_ = loadTexture(Utils::joinPaths("GridModel", "wood.png").c_str(), true);
 
 	// shader configuration
 	// --------------------
@@ -73,35 +91,36 @@ unsigned int GridModel::loadTexture(char const* path, bool gammaCorrection)
 
 	int width, height, nrComponents;
 	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum internalFormat;
-		GLenum dataFormat;
-		if (nrComponents == 1)
-		{
-			internalFormat = dataFormat = GL_RED;
-		}
-		else if (nrComponents == 3)
-		{
-			internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
-			dataFormat = GL_RGB;
-		}
-		else if (nrComponents == 4)
-		{
-			internalFormat = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
-			dataFormat = GL_RGBA;
-		}
+
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
+		if (data)
+		{
+			GLenum internalFormat;
+			GLenum dataFormat;
+			if (nrComponents == 1)
+			{
+				internalFormat = dataFormat = GL_RED;
+			}
+			else if (nrComponents == 3)
+			{
+				internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
+				dataFormat = GL_RGB;
+			}
+			else if (nrComponents == 4)
+			{
+				internalFormat = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
+				dataFormat = GL_RGBA;
+			}
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			stbi_image_free(data);
 	}
 	else
 	{

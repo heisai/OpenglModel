@@ -10,11 +10,9 @@ ShaderModel::ShaderModel(OperatorAction type, std::shared_ptr<Shader> shader /*=
 
 void ShaderModel::Draw()
 {
-	//if (selected_)
-	{
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-	}
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilMask(0xFF);
+	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 	
 	default_shader_->bind();
 
@@ -32,12 +30,6 @@ void ShaderModel::Draw()
 	default_shader_->setVec3("Light.La", 0.2f, 0.2f, 0.2f);
 	default_shader_->setVec3("Light.Ld", 0.5f, 0.5f, 0.5f);
 	default_shader_->setVec3("Light.Ls", 1.0f, 1.0f, 1.0f);
-
-	//default_shader_->setVec3("Material.Ka", 1.2f, 1.0f, 2.0f);
-	//default_shader_->setVec3("Material.Kd", 0.2f, 0.2f, 0.2f);
-	//default_shader_->setVec3("Material.Ks", 0.5f, 0.5f, 0.5f);
-	//default_shader_->setFloat("Material.Shininess", 32.0f);
-
 	default_shader_->setMaterial(materal_);
 
 	
@@ -68,6 +60,7 @@ void ShaderModel::Draw()
 	}
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glEnable(GL_DEPTH_TEST);
 
 

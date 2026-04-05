@@ -1,31 +1,32 @@
 ﻿#include"Shader.h"
-
+namespace fs = std::filesystem;
 Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, std::string dirname)
 {
-   
     initializeOpenGLFunctions();
+    std::string graphics_root = fs::current_path().parent_path().string() + "\\src\\Graphics\\";
     std::string vs_path = Utils::joinPaths(dirname, vs_filename);
     std::string fs_path = Utils::joinPaths(dirname, fs_filename);
-    // 调试：打印实际加载的着色器路径
     std::cout << "[Shader] Loading VS: " << vs_path << std::endl;
     std::cout << "[Shader] Loading FS: " << fs_path << std::endl;
-    
-    vs_sourcecode = Utils::ReadFile(vs_path);
-    fs_sourcecode = Utils::ReadFile(fs_path);
+
+    vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(vs_path), graphics_root);
+    fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(fs_path), graphics_root);
     vShaderCode = vs_sourcecode.data();
     fShaderCode = fs_sourcecode.data();
-   
+
+	LogInfo("vShaderCode: {}", vShaderCode);
+	LogInfo("fShaderCode: {}", fShaderCode);
 }
 Shader::Shader(const std::string& vs_filename, const std::string& fs_filename, const std::string& gs_filename, const std::string& dirname)
 {
 	initializeOpenGLFunctions();
-	vs_sourcecode = Utils::ReadFile(Utils::joinPaths(dirname, vs_filename));
-	fs_sourcecode = Utils::ReadFile(Utils::joinPaths(dirname, fs_filename));
-    gs_sourcecode = Utils::ReadFile(Utils::joinPaths(dirname, gs_filename));
+	std::string graphics_root = fs::current_path().parent_path().string() + "\\src\\Graphics\\";
+	vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, vs_filename)), graphics_root);
+	fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, fs_filename)), graphics_root);
+	gs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, gs_filename)), graphics_root);
 	vShaderCode = vs_sourcecode.data();
 	fShaderCode = fs_sourcecode.data();
-    gShaderCode = gs_sourcecode.data();
-    //LogInfo("===========Vert GLSL=========");
+	gShaderCode = gs_sourcecode.data();
 }
 
 void Shader::bind()
@@ -131,42 +132,77 @@ void Shader::CreatProgram()
 
 void Shader::CreatShader()
 {
-    VertecShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(VertecShader,1,&vShaderCode,NULL);
-     glCompileShader(VertecShader);
+	VertecShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(VertecShader, 1, &vShaderCode, NULL);
+	glCompileShader(VertecShader);
+	GLint ok = 0;
+	glGetShaderiv(VertecShader, GL_COMPILE_STATUS, &ok);
+	if (!ok)
+	{
+		GLint n = 0;
+		glGetShaderiv(VertecShader, GL_INFO_LOG_LENGTH, &n);
+		std::string log(n, '\0');
+		glGetShaderInfoLog(VertecShader, n, nullptr, log.data());
+		std::cout << "[GLSL] VertexShader error:\n" << log << std::endl;
+	}
 
-    FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(FragmentShader,1,&fShaderCode,NULL);
-    glCompileShader(FragmentShader);
+	FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(FragmentShader, 1, &fShaderCode, NULL);
+	glCompileShader(FragmentShader);
+	glGetShaderiv(FragmentShader, GL_COMPILE_STATUS, &ok);
+	if (!ok)
+	{
+		GLint n = 0;
+		glGetShaderiv(FragmentShader, GL_INFO_LOG_LENGTH, &n);
+		std::string log(n, '\0');
+		glGetShaderInfoLog(FragmentShader, n, nullptr, log.data());
+		std::cout << "[GLSL] FragmentShader error:\n" << log << std::endl;
+	}
 
-    if (gShaderCode)
-    {
+	if (gShaderCode)
+	{
 		geometry_shader_ = glCreateShader(GL_GEOMETRY_SHADER);
 		glShaderSource(geometry_shader_, 1, &gShaderCode, NULL);
 		glCompileShader(geometry_shader_);
-    }
-
-
+		glGetShaderiv(geometry_shader_, GL_COMPILE_STATUS, &ok);
+		if (!ok)
+		{
+			GLint n = 0;
+			glGetShaderiv(geometry_shader_, GL_INFO_LOG_LENGTH, &n);
+			std::string log(n, '\0');
+			glGetShaderInfoLog(geometry_shader_, n, nullptr, log.data());
+			std::cout << "[GLSL] GeometryShader error:\n" << log << std::endl;
+		}
+	}
 }
+
 void Shader::BindShader()
 {
-    ShaderPromger = glCreateProgram();
-    glAttachShader(ShaderPromger,VertecShader);
-    glAttachShader(ShaderPromger,FragmentShader);
-    if (gShaderCode)
-    {
-        glAttachShader(ShaderPromger, geometry_shader_);
-    }
-  
-    glLinkProgram(ShaderPromger);
+	ShaderPromger = glCreateProgram();
+	glAttachShader(ShaderPromger, VertecShader);
+	glAttachShader(ShaderPromger, FragmentShader);
+	if (gShaderCode)
+	{
+		glAttachShader(ShaderPromger, geometry_shader_);
+	}
 
-    phong_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "phongModel");
-    blinn_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "blinnModel");
-    // glDeleteShader(VertecShader);
-    // glDeleteShader(FragmentShader);
+	glLinkProgram(ShaderPromger);
+	GLint ok = 0;
+	glGetProgramiv(ShaderPromger, GL_LINK_STATUS, &ok);
+	if (!ok)
+	{
+		GLint n = 0;
+		glGetProgramiv(ShaderPromger, GL_INFO_LOG_LENGTH, &n);
+		std::string log(n, '\0');
+		glGetProgramInfoLog(ShaderPromger, n, nullptr, log.data());
+		std::cout << "[GLSL] Program link error:\n" << log << std::endl;
+	}
 
-
-
+	phong_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "phongModel");
+	blinn_index_ = glGetSubroutineIndex(ShaderPromger, GL_FRAGMENT_SHADER, "blinnModel");
+	auto ltrim = [](std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char c){ return !std::isspace(c); }));};
+	ltrim(fs_sourcecode);
 }
 
 

@@ -10,6 +10,7 @@
 #include<map>
 #include<string>
 #include<format>
+#include<unordered_set>
 #include"Translator.h"
 namespace fs = std::filesystem;
 
@@ -17,6 +18,17 @@ namespace Utils {
 
     // 读取文件内容到字符串（用于读取 GLSL 文件等）
     std::string ReadFile(const std::string& file_name);
+
+    // GLSL #include 预处理器
+    // 将 source 中所有 #include "path" 指令展开为对应文件的内容
+    // path 相对于 src/Graphics/ 根目录
+    // 内部使用 included_files 防止重复包含（类似 #pragma once）
+    std::string resolveIncludes(const std::string& source,
+                                const std::string& graphics_root,
+                                std::unordered_set<std::string>& included_files,
+                                int depth = 0);
+    std::string resolveIncludes(const std::string& source,
+                                const std::string& graphics_root);
 
     // 读取顶点/片元着色器内容（当前仅做读取动作，便于后续扩展）
     void CreatShaderProgram(const std::string& vs, const std::string& fs);

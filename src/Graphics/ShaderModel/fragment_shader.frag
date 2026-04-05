@@ -1,85 +1,41 @@
+#version 450 core
 
-#version 430 core
-layout( location = 0 ) out vec4 FragColor;
-//引入子例程模块
-subroutine vec3 shadeModelType(vec3 position, vec3 normal);
-subroutine uniform shadeModelType shadeModel;
+// ── 公共库：光照结构体 + Phong/Blinn subroutine 实现 ──────────
+#include "common/phong_subroutines.glsl"
+#include "common/surface_inputs.glsl"
 
-struct LightInfo {
-    vec3 Position; // Light position in eye coords.
-    vec3 La;       // Ambient light intensity
-    vec3 Ld;       // Diffuse light intensity
-    vec3 Ls;       // Specular light intensity
-};
-uniform LightInfo Light;
+layout(location = 0) out vec4 FragColor;
 
-struct MaterialInfo {
-    vec3 Ka;            // Ambient reflectivity
-    vec3 Kd;            // Diffuse reflectivity
-    vec3 Ks;            // Specular reflectivity
-    float Shininess;    // Specular shininess factor
-};
-uniform MaterialInfo Material;
-uniform vec3 viewPos;
-uniform int flatShading; // 平面着色开关
+uniform int flatShading;  // 0=平滑 1=平面 2=网格线
+
 in vec3 Normal;
-in vec3 FragPos; 
-//in vec2 TexCoord;
+in vec3 FragPos;
 
-subroutine (shadeModelType)
-vec3 phongModel( vec3 position, vec3 norm )
+// ── 表面描述：此模型只需填写几何信息，颜色由材质 uniform 决定 ──
+void getSurface(out SurfaceInputs surface)
 {
-    vec3 s = normalize(vec3(Light.Position - position));
-    vec3 v = normalize(viewPos - position.xyz);
-    vec3 r = reflect( -s, norm );
-    vec3 ambient = Light.La * Material.Ka;
-    float sDotN = max( dot(norm,s), 0.0 );
-    vec3 diffuse = Light.Ld * Material.Kd * sDotN;
-    vec3 spec = vec3(0.0);
-    spec = Light.Ls * Material.Ks *pow( max( dot(v,r), 0.0 ), Material.Shininess );
+    // 网格线模式：丢弃网格内部片元
+    const float scale = 15.0;
+    bvec2 toDiscard = greaterThan(fract(FragPos.xy * scale), vec2(0.2));
+    if (flatShading == 2 && all(toDiscard))
+        discard;
 
-    return ambient + diffuse + spec;
-}
-subroutine (shadeModelType)
-vec3 blinnModel(vec3 position,vec3 norm)
-{
-    vec3 s = normalize(vec3(Light.Position - position));
-    vec3 v = normalize(viewPos - position.xyz);
-    vec3 r = reflect( -s, norm );
-    vec3 ambient = Light.La * Material.Ka;
-    float sDotN = max( dot(norm,s), 0.0 );
-    vec3 diffuse = Light.Ld * Material.Kd * sDotN;
-    vec3 spec = vec3(0.0);
-    vec3 halfwayDir = normalize(s+v);
-    spec = Light.Ls * Material.Ks *pow( max( dot(norm,halfwayDir), 0.0 ), Material.Shininess );
+    surface.fragPos   = FragPos;
+    surface.alpha     = 1.0;
+    surface.baseColor = vec3(1.0);  // 颜色由 Material.Kd 决定，此处不参与
 
-    return ambient + diffuse + spec;
+    if (flatShading == 0)
+        surface.normal = normalize(Normal);
+    else
+        // 屏幕空间导数计算真实面法线，实现平面着色
+        surface.normal = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
 }
+
 void main()
 {
-    //光照位置不对，导致正面和背面相反
-     const float scale = 15.0;
-    bvec2 toDiscard = greaterThan( fract(FragPos.xy * scale ), vec2(0.2,0.2) );
-    if(flatShading == 2 && all(toDiscard) )
-    {
-        discard;
-    }
-    vec3 n;
-    if(flatShading == 0)
-    {
-        n = normalize(Normal);
-    }
-    else
-    {
-        // 通过屏幕空间导数计算真实面法线，实现平面着色
-        n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
-    }
-
-   // vec3 norm = gl_FrontFacing ? -n : n;
-  vec3 norm = n;
-  vec3  LightIntensity = shadeModel(FragPos, norm);
-  FragColor = vec4(LightIntensity, 1.0);
-
+    SurfaceInputs surface;
+    getSurface(surface);
+    FragColor = vec4(shadeModel(surface.fragPos, surface.normal), 1.0);
 }
 
 
