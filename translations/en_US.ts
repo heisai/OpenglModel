@@ -419,7 +419,7 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="85"/>
         <source>discard_render</source>
-        <translation type="unfinished"></translation>
+        <translation>Discard Rendering</translation>
     </message>
 </context>
 </TS>
