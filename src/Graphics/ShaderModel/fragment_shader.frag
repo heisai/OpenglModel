@@ -1,20 +1,21 @@
 #version 450 core
 
-// ©¤©¤ ¹«¹²¿â£º¹âÕÕ½á¹¹Ìå + Phong/Blinn subroutine ÊµÏÖ ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
+// â”€â”€ å…¬å…±åº“ï¼šå…‰ç…§ç»“æ„ä½“ + Phong/Blinn subroutine å®ç° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 #include "common/phong_subroutines.glsl"
 #include "common/surface_inputs.glsl"
 
 layout(location = 0) out vec4 FragColor;
 
-uniform int flatShading;  // 0=Æ½»¬ 1=Æ½Ãæ 2=Íø¸ñÏß
+uniform int flatShading;  // 0=å¹³æ»‘ 1=å¹³é¢ 2=ç½‘æ ¼çº¿
 
 in vec3 Normal;
 in vec3 FragPos;
 
-// ©¤©¤ ±íÃæÃèÊö£º´ËÄ£ĞÍÖ»ĞèÌîĞ´¼¸ºÎĞÅÏ¢£¬ÑÕÉ«ÓÉ²ÄÖÊ uniform ¾ö¶¨ ©¤©¤
+// â”€â”€ è¡¨é¢æè¿°ï¼šæ­¤æ¨¡å‹åªéœ€å¡«å†™å‡ ä½•ä¿¡æ¯ï¼Œé¢œè‰²ç”±æè´¨ uniform å†³å®š â”€â”€
 void getSurface(out SurfaceInputs surface)
+
 {
-    // Íø¸ñÏßÄ£Ê½£º¶ªÆúÍø¸ñÄÚ²¿Æ¬Ôª
+    // ç½‘æ ¼çº¿æ¨¡å¼ï¼šä¸¢å¼ƒç½‘æ ¼å†…éƒ¨ç‰‡å…ƒ
     const float scale = 15.0;
     bvec2 toDiscard = greaterThan(fract(FragPos.xy * scale), vec2(0.2));
     if (flatShading == 2 && all(toDiscard))
@@ -22,12 +23,12 @@ void getSurface(out SurfaceInputs surface)
 
     surface.fragPos   = FragPos;
     surface.alpha     = 1.0;
-    surface.baseColor = vec3(1.0);  // ÑÕÉ«ÓÉ Material.Kd ¾ö¶¨£¬´Ë´¦²»²ÎÓë
+    surface.baseColor = vec3(1.0);  // é¢œè‰²ç”± Material.Kd å†³å®šï¼Œæ­¤å¤„ä¸å‚ä¸
 
     if (flatShading == 0)
         surface.normal = normalize(Normal);
     else
-        // ÆÁÄ»¿Õ¼äµ¼Êı¼ÆËãÕæÊµÃæ·¨Ïß£¬ÊµÏÖÆ½Ãæ×ÅÉ«
+        // å±å¹•ç©ºé—´å¯¼æ•°è®¡ç®—çœŸå®é¢æ³•çº¿ï¼Œå®ç°å¹³é¢ç€è‰²
         surface.normal = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
 }
 
@@ -36,6 +37,7 @@ void main()
     SurfaceInputs surface;
     getSurface(surface);
     FragColor = vec4(shadeModel(surface.fragPos, surface.normal), 1.0);
+
 }
 
 
