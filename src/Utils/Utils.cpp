@@ -29,6 +29,69 @@ void Utils::CreatShaderProgram(const std::string& vs, const std::string& fs)
     std::string fs_text = ReadFile(fs);
 }
 
+std::string Utils::resolveIncludes(const std::string& source,
+                                    const std::string& graphics_root,
+                                    std::unordered_set<std::string>& included_files,
+                                    int depth)
+{
+    constexpr int kMaxDepth = 16;
+    if (depth > kMaxDepth)
+    {
+        std::cout << "[Shader] ERROR: #include depth exceeded " << kMaxDepth << std::endl;
+        return source;
+    }
+
+    std::istringstream stream(source);
+    std::ostringstream output;
+    std::string        line;
+
+    while (std::getline(stream, line))
+    {
+        auto pos = line.find("#include");
+        if (pos != std::string::npos)
+        {
+            auto q1 = line.find('"', pos + 8);
+            auto q2 = (q1 != std::string::npos) ? line.find('"', q1 + 1) : std::string::npos;
+
+            if (q1 != std::string::npos && q2 != std::string::npos)
+            {
+                std::string include_path = line.substr(q1 + 1, q2 - q1 - 1);
+                // 将 / 换成系统路径分隔符
+                std::string full_path = graphics_root + include_path;
+                std::replace(full_path.begin(), full_path.end(), '/', '\\');
+
+                if (included_files.count(full_path))
+                {
+                    // 已包含过，跳过（防重复）
+                    continue;
+                }
+                included_files.insert(full_path);
+
+                std::string included_source = ReadFile(full_path);
+                if (included_source.empty())
+                {
+                    std::cout << "[Shader] ERROR: cannot find include: " << full_path << std::endl;
+                    output << line << "\n";
+                    continue;
+                }
+                std::cout << "[Shader] #include resolved: " << include_path << std::endl;
+                output << resolveIncludes(included_source, graphics_root, included_files, depth + 1);
+                continue;
+            }
+        }
+        output << line << "\n";
+    }
+    std::cout << output.str() << std::endl;
+    return output.str();
+}
+
+std::string Utils::resolveIncludes(const std::string& source,
+                                    const std::string& graphics_root)
+{
+    std::unordered_set<std::string> included_files;
+    return resolveIncludes(source, graphics_root, included_files, 0);
+}
+
 Utils::MaterialAttrib::MaterialAttrib()
 {
 

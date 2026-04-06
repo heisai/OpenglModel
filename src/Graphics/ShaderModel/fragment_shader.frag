@@ -1,89 +1,42 @@
+#version 450 core
 
-#version 430 core
-layout( location = 0 ) out vec4 FragColor;
-//ÒıÈë×ÓÀı³ÌÄ£¿é
-subroutine vec3 shadeModelType(vec3 position, vec3 normal);
-subroutine uniform shadeModelType shadeModel;
+// â”€â”€ å…¬å…±åº“ï¼šå…‰ç…§ç»“æ„ä½“ + Phong/Blinn subroutine å®ç° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+#include "common/phong_subroutines.glsl"
+#include "common/surface_inputs.glsl"
 
-struct LightInfo {
-    vec3 Position; // Light position in eye coords.
-    vec3 La;       // Ambient light intensity
-    vec3 Ld;       // Diffuse light intensity
-    vec3 Ls;       // Specular light intensity
-};
-uniform LightInfo Light;
+layout(location = 0) out vec4 FragColor;
 
-struct MaterialInfo {
-    vec3 Ka;            // Ambient reflectivity
-    vec3 Kd;            // Diffuse reflectivity
-    vec3 Ks;            // Specular reflectivity
-    float Shininess;    // Specular shininess factor
-};
-uniform MaterialInfo Material;
-uniform vec3 viewPos;
-uniform int flatShading; // Æ½Ãæ×ÅÉ«¿ª¹Ø
+uniform int flatShading;  // 0=å¹³æ»‘ 1=å¹³é¢ 2=ç½‘æ ¼çº¿
+
 in vec3 Normal;
-in vec3 FragPos; 
-//in vec2 TexCoord;
+in vec3 FragPos;
 
-// Grid pattern uniforms for model selection effect (flatShading == 2)
-// selectionScale: controls the grid frequency (higher = finer grid)
-// selectionThreshold: controls the grid line thickness as fraction of cell size
-uniform float selectionScale;     // Default: 15.0
-uniform float selectionThreshold; // Default: 0.2
+// â”€â”€ è¡¨é¢æè¿°ï¼šæ­¤æ¨¡å‹åªéœ€å¡«å†™å‡ ä½•ä¿¡æ¯ï¼Œé¢œè‰²ç”±æè´¨ uniform å†³å®š â”€â”€
+void getSurface(out SurfaceInputs surface)
 
-subroutine (shadeModelType)
-vec3 phongModel( vec3 position, vec3 norm )
 {
-    vec3 s = normalize(vec3(Light.Position - position));
-    vec3 v = normalize(viewPos - position.xyz);
-    vec3 r = reflect( -s, norm );
-    vec3 ambient = Light.La * Material.Ka;
-    float sDotN = max( dot(norm,s), 0.0 );
-    vec3 diffuse = Light.Ld * Material.Kd * sDotN;
-    vec3 spec = vec3(0.0);
-    spec = Light.Ls * Material.Ks *pow( max( dot(v,r), 0.0 ), Material.Shininess );
+    // ç½‘æ ¼çº¿æ¨¡å¼ï¼šä¸¢å¼ƒç½‘æ ¼å†…éƒ¨ç‰‡å…ƒ
+    const float scale = 15.0;
+    bvec2 toDiscard = greaterThan(fract(FragPos.xy * scale), vec2(0.2));
+    if (flatShading == 2 && all(toDiscard))
+        discard;
 
-    return ambient + diffuse + spec;
-}
-subroutine (shadeModelType)
-vec3 blinnModel(vec3 position,vec3 norm)
-{
-    vec3 s = normalize(vec3(Light.Position - position));
-    vec3 v = normalize(viewPos - position.xyz);
-    vec3 r = reflect( -s, norm );
-    vec3 ambient = Light.La * Material.Ka;
-    float sDotN = max( dot(norm,s), 0.0 );
-    vec3 diffuse = Light.Ld * Material.Kd * sDotN;
-    vec3 spec = vec3(0.0);
-    vec3 halfwayDir = normalize(s+v);
-    spec = Light.Ls * Material.Ks *pow( max( dot(norm,halfwayDir), 0.0 ), Material.Shininess );
+    surface.fragPos   = FragPos;
+    surface.alpha     = 1.0;
+    surface.baseColor = vec3(1.0);  // é¢œè‰²ç”± Material.Kd å†³å®šï¼Œæ­¤å¤„ä¸å‚ä¸
 
-    return ambient + diffuse + spec;
+    if (flatShading == 0)
+        surface.normal = normalize(Normal);
+    else
+        // å±å¹•ç©ºé—´å¯¼æ•°è®¡ç®—çœŸå®é¢æ³•çº¿ï¼Œå®ç°å¹³é¢ç€è‰²
+        surface.normal = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
 }
+
 void main()
 {
-    //¹âÕÕÎ»ÖÃ²»¶Ô£¬µ¼ÖÂÕıÃæºÍ±³ÃæÏà·´
-    bvec2 toDiscard = greaterThan( fract(FragPos.xy * selectionScale ), vec2(selectionThreshold) );
-    if(flatShading == 2 && all(toDiscard) )
-    {
-        discard;
-    }
-    vec3 n;
-    if(flatShading == 0)
-    {
-        n = normalize(Normal);
-    }
-    else
-    {
-        // Í¨¹ıÆÁÄ»¿Õ¼äµ¼Êı¼ÆËãÕæÊµÃæ·¨Ïß£¬ÊµÏÖÆ½Ãæ×ÅÉ«
-        n = normalize(cross(dFdx(FragPos), dFdy(FragPos)));
-    }
-
-   // vec3 norm = gl_FrontFacing ? -n : n;
-  vec3 norm = n;
-  vec3  LightIntensity = shadeModel(FragPos, norm);
-  FragColor = vec4(LightIntensity, 1.0);
+    SurfaceInputs surface;
+    getSurface(surface);
+    FragColor = vec4(shadeModel(surface.fragPos, surface.normal), 1.0);
 
 }
 

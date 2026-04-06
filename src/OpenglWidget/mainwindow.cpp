@@ -44,7 +44,7 @@ void MainWindow::InitConnect()
 void MainWindow::initCollectionEngine()
 {
 	//创建网格
-	//manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
+	manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
 	//创建坐标轴
 	manage_engine_moudle_->createModel(OperatorAction::CreatAxis);
 
