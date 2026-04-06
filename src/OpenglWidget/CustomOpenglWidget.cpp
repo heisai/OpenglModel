@@ -35,7 +35,7 @@ void CustomOpenglWidget::initializeGL()
 
 
 
-    if (manage_engine_moudle_)
+   if (manage_engine_moudle_)
     {
         manage_engine_moudle_->setViewSize(this->width(), this->height());
         manage_engine_moudle_->initializeGl();

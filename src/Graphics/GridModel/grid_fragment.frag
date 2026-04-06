@@ -1,4 +1,8 @@
-#version 330 core
+#version 450 core
+
+// ── 公共库：单光源结构体（与 ShaderModel 保持一致）────────────
+#include "common/light_structs.glsl"
+
 out vec4 FragColor;
 
 in VS_OUT {
@@ -8,44 +12,26 @@ in VS_OUT {
 } fs_in;
 
 uniform sampler2D floorTexture;
-
-uniform vec3 lightPositions[4];
-uniform vec3 lightColors[4];
-uniform vec3 viewPos;
 uniform bool gamma;
 
-vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
-{
-    // diffuse
-    vec3 lightDir = normalize(lightPos - fragPos);
-    float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * lightColor;
-    // specular
-    vec3 viewDir = normalize(viewPos - fragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = 0.0;
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
-    vec3 specular = spec * lightColor;    
-    // simple attenuation
-    float max_distance = 1.5;
-    float distance = length(lightPos - fragPos);
-    float attenuation = 1.0 / (gamma ? distance * distance : distance);
-    
-    diffuse *= attenuation;
-    specular *= attenuation;
-    
-    return diffuse + specular;
-}
-
 void main()
-{           
-    vec3 color = texture(floorTexture, fs_in.TexCoords).rgb;
-    vec3 lighting = vec3(0.0);
-    for(int i = 0; i < 4; ++i)
-        lighting += BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPositions[i], lightColors[i]);
-    color *= lighting;
-    if(gamma)
-        color = pow(color, vec3(1.0/2.2));
+{
+    vec3 baseColor = texture(floorTexture, fs_in.TexCoords).rgb;
+    vec3 normal = normalize(fs_in.Normal);
+    vec3 s      = normalize(Light.Position - fs_in.FragPos);  // 光源方向（点光源）
+    vec3 v      = normalize(viewPos - fs_in.FragPos);
+    vec3 h      = normalize(s + v);
+
+    vec3  ambient  = Light.La * baseColor;
+    float sDotN    = max(dot(normal, s), 0.0);
+    vec3  diffuse  = Light.Ld * sDotN * baseColor;
+    float spec     = pow(max(dot(normal, h), 0.0), 64.0);
+    vec3  specular = Light.Ls * spec;
+
+    vec3 color = ambient + diffuse + specular;
+
+    if (gamma)
+        color = pow(color, vec3(1.0 / 2.2));        // 线性空间 → sRGB 输出
+
     FragColor = vec4(color, 1.0);
 }
