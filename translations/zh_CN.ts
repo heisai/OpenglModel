@@ -2,6 +2,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="zh_CN">
 <context>
+    <name>LightEditWidget</name>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="14"/>
+        <source>Light settings</source>
+        <translation>灯光设置</translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="22"/>
+        <source>Light type</source>
+        <translation>投光类型</translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="29"/>
+        <source>Light mode</source>
+        <translation>光源模式</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="../src/OpenglWidget/mainwindow.ui" line="20"/>
@@ -240,6 +258,46 @@
         <location filename="../src/Utils/Translator.cpp" line="36"/>
         <source>Light</source>
         <translation>灯光</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="88"/>
+        <source>DirectionalLight</source>
+        <translation>平行光</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="89"/>
+        <source>PointLight</source>
+        <translation>点光源</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="90"/>
+        <source>SpotLight</source>
+        <translation>聚光</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="91"/>
+        <source>SingleLight</source>
+        <translation>单光源</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="92"/>
+        <source>MultipleLights</source>
+        <translation>多光源</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="93"/>
+        <source>Light settings</source>
+        <translation>灯光设置</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="94"/>
+        <source>Light type</source>
+        <translation>投光类型</translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="95"/>
+        <source>Light mode</source>
+        <translation>光源模式</translation>
     </message>
     <message>
         <location filename="../src/Utils/Translator.cpp" line="38"/>

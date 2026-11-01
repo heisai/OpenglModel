@@ -2,6 +2,7 @@
 #include"../Utils/OpengHearder.h"
 #include<qdebug.h>
 #include <QUuid>
+#include "LightConfig.h"
 // 命名规范说明：
 // - 类名使用 PascalCase（首字母大写）以区分类型与变量。
 // - 成员函数使用 camelCase（首字母小写的驼峰式），参数全部小写，便于阅读与一致性。
@@ -28,7 +29,9 @@ public:
     void SetEngineScaleAndTranslate(const GraphicsEnginePtr&engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old);
 	//设置属性配置信息
     void setPropertyData(const Utils::Material& material_);
+    void setLightSettings(Lighting::LightType type, Lighting::LightMode mode);
 private:
+    Lighting::LightConfig light_config_;
 
     //注册引擎创建函数
 	void registerEngineModel();

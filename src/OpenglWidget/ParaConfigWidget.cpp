@@ -6,7 +6,8 @@ ParaConfigWidget::ParaConfigWidget(QWidget *parent)
 	collection_treewidget_(nullptr),
 	treewidgetitem_(nullptr),
 	stackwidget_(nullptr),
-	property_editor_widget_(nullptr)
+	property_editor_widget_(nullptr),
+	light_edit_widget_(nullptr)
 {
     ui->setupUi(this);
     InitUI();
@@ -28,13 +29,20 @@ void ParaConfigWidget::InitUI()
 
 void ParaConfigWidget::InitConnect()
 {
-	connect(collection_treewidget_, &QTreeWidget::itemClicked, [this](QTreeWidgetItem* item, int column) {
-		LogInfo("Select Item: {}", item->text(column).toStdString());
-		});
+	connect(collection_treewidget_, &QTreeWidget::itemClicked, this, &ParaConfigWidget::slotsTreeWidgetItemClicked);
 }
 
 void ParaConfigWidget::slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
 {
+	LogInfo("Select Item: {}", item->text(column).toStdString());
+	if (item->text(column) == TR("Light"))
+	{
+		stackwidget_->setCurrentWidget(light_edit_widget_);
+	}
+	else
+	{
+		stackwidget_->setCurrentWidget(property_editor_widget_);
+	}
 }
 
 void ParaConfigWidget::initCollectionWidget()
@@ -104,6 +112,8 @@ void ParaConfigWidget::initPropertyConfigWidget()
 	stackwidget_ = new QStackedWidget;
 	property_editor_widget_ = new PropertyEditorWidget(this);
 	stackwidget_->insertWidget(0, property_editor_widget_);
+	light_edit_widget_ = new LightEditWidget(this);
+	stackwidget_->addWidget(light_edit_widget_);
 
 
 
@@ -117,6 +127,8 @@ void ParaConfigWidget::initPropertyConfigWidget()
 		{
 			emit sigUpdatePropertyToEngine(value);
 		});
+	connect(light_edit_widget_, &LightEditWidget::sigUpdateLightInfo,
+		this, &ParaConfigWidget::sigUpdateLightToEngine);
 }
 
 QWidget*ParaConfigWidget::initToolButtons()

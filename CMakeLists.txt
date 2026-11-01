@@ -17,15 +17,15 @@ if (MSVC)
     add_compile_options(/utf-8)
 endif()
 
-# Ìí¼ÓÒÀÀµ¿â
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 set(LibDir   ./DependLib/assimp/lib   ./DependLib/spdlog/lib )
-# Ìí¼ÓÒÀÀµÍ·ÎÄ¼þ
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½
 set(IncludeDir  ./DependLib/glm 
 ./DependLib/assimp/include ./DependLib/spdlog/include )
 
-# ¼ÓÔØ¿âÂ·¾¶
+# ï¿½ï¿½ï¿½Ø¿ï¿½Â·ï¿½ï¿½
 link_directories(${LibDir})
-# ¼ÓÔØÍ·ÎÄ¼þÂ·¾¶
+# ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½Â·ï¿½ï¿½
 include_directories(${IncludeDir})
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets OpenGL OpenGLWidgets  LinguistTools )
@@ -33,20 +33,30 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGL OpenGLWidg
 
 
 
-# # Ìí¼Ó .cpp
- file(GLOB_RECURSE SOURCE_FILES  src/*.cpp)
- file(GLOB_RECURSE HEADER_FILES  src/*.h)
- file(GLOB_RECURSE UI_FILES   src/*.ui)
+# # ï¿½ï¿½ï¿½ï¿½ .cpp
+ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
+ file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS src/*.h)
+ file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS src/*.ui)
+ file(GLOB_RECURSE SHADER_FILES src/*.glsl src/*.frag src/*.vert src/*.geom src/*.vs src/*.fs)
+ set_source_files_properties(${SHADER_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
  qt_wrap_ui(OpenglEngine UI_HEADERS  ${UI_FILES} )
+
+if (MSVC AND CMAKE_GENERATOR MATCHES "^Ninja")
+    # Localized /showIncludes output may not be parsed by Ninja. Conservatively
+    # rebuild project sources when project headers or UI definitions change.
+    set_property(SOURCE ${SOURCE_FILES} main.cpp APPEND PROPERTY
+        OBJECT_DEPENDS ${HEADER_FILES} ${UI_FILES})
+endif()
 
 set(PROJECT_SOURCES  
         main.cpp
-        ${HEADER_FILES} ${SOURCE_FILES} ${UI_FILES}
+        ${HEADER_FILES} ${SOURCE_FILES} ${UI_FILES} ${SHADER_FILES}
 )
 
 
 set(LIBS    assimp-vc142-mt)
-qt_add_executable(OpenglEngine ${PROJECT_SOURCES})
+qt_add_executable(OpenglEngine ${PROJECT_SOURCES}
+    src/OpenglWidget/LightEditWidget.h src/OpenglWidget/LightEditWidget.cpp src/OpenglWidget/LightEditWidget.ui)
 
 
 
@@ -61,7 +71,7 @@ set(TS_FILES
     translations/zh_CN.ts
     translations/en_US.ts
 )
-# Éú³É ÒÔ¼°¸üÐÂts qm ÎÄ¼þ
+# ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ts qm ï¿½Ä¼ï¿½
 set(QM_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/translations")
 qt_add_translations(OpenglEngine
     TS_FILES 
@@ -69,5 +79,5 @@ qt_add_translations(OpenglEngine
         translations/en_US.ts
      QM_OUTPUT_DIRECTORY ${QM_OUTPUT_PATH}
 )
-# ¹Ø¼ü£ºÌí¼ÓÒÀÀµ£¬È·±£¹¹½¨Ö÷Ä¿±êÇ°¸üÐÂ·­Òë
+# ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½
 add_dependencies(OpenglEngine update_translations)

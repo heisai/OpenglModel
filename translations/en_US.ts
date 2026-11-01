@@ -2,6 +2,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="US">
 <context>
+    <name>LightEditWidget</name>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui"/>
+        <source>Light settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui"/>
+        <source>Light type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/LightEditWidget.ui"/>
+        <source>Light mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="../src/OpenglWidget/mainwindow.ui" line="20"/>
@@ -239,6 +257,46 @@
     <message>
         <location filename="../src/Utils/Translator.cpp" line="36"/>
         <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp"/>
+        <source>DirectionalLight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp"/>
+        <source>PointLight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp"/>
+        <source>SpotLight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp"/>
+        <source>SingleLight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp"/>
+        <source>MultipleLights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="93"/>
+        <source>Light settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="94"/>
+        <source>Light type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Utils/Translator.cpp" line="95"/>
+        <source>Light mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
