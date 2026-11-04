@@ -1,22 +1,30 @@
-﻿#include"GridVerticeData.h"
-ModelDataInfo GridVerticeData::GetModelDatas()
+﻿#include "GridVerticeData.h"
+
+MeshData GridVerticeData::GetModelDatas()
 {
-	ModelDataInfo info;
-	info.vertices_datas = GenerateGridVertices();
-	return info;
+	MeshData data;
+	data.vertices = GenerateGridVertices();
+	return data;
 }
 
-std::vector<float> GridVerticeData::GenerateGridVertices()
+std::vector<Vertex> GridVerticeData::GenerateGridVertices()
 {
-    std::vector<float>vertices = {
-        // positions            // normals         // texcoords
-         10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
-        -10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-        -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+	const glm::vec3 normal(0.0f, 1.0f, 0.0f);
+	const auto makeVertex = [&normal](const glm::vec3& position, const glm::vec2& texCoord)
+	{
+		Vertex vertex{};
+		vertex.position = position;
+		vertex.normal = normal;
+		vertex.texCoord = texCoord;
+		return vertex;
+	};
 
-         10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
-        -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
-         10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,  10.0f, 10.0f
-    };
-	return vertices;
+	return {
+		makeVertex(glm::vec3(10.0f, -0.5f, 10.0f), glm::vec2(10.0f, 0.0f)),
+		makeVertex(glm::vec3(-10.0f, -0.5f, 10.0f), glm::vec2(0.0f, 0.0f)),
+		makeVertex(glm::vec3(-10.0f, -0.5f, -10.0f), glm::vec2(0.0f, 10.0f)),
+		makeVertex(glm::vec3(10.0f, -0.5f, 10.0f), glm::vec2(10.0f, 0.0f)),
+		makeVertex(glm::vec3(-10.0f, -0.5f, -10.0f), glm::vec2(0.0f, 10.0f)),
+		makeVertex(glm::vec3(10.0f, -0.5f, -10.0f), glm::vec2(10.0f, 10.0f))
+	};
 }

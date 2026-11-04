@@ -5,9 +5,9 @@ class GridVerticeData : public ModelDataInterFace
 public:
     GridVerticeData() = default;
 	~GridVerticeData() = default;    
-    ModelDataInfo GetModelDatas() override;
+    MeshData GetModelDatas() override;
 private:
-    std::vector<float>  GenerateGridVertices();
+    std::vector<Vertex> GenerateGridVertices();
     int gridSize = 50;
     int gridSize1 = 100;
     float gridSpacing = 0.25f;

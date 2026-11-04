@@ -61,6 +61,47 @@
     </message>
 </context>
 <context>
+    <name>PropertyEditorWidget</name>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="65"/>
+        <source>漫反射贴图</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="68"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="80"/>
+        <source>选择...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="69"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="81"/>
+        <source>清除</source>
+        <translation type="unfinished">清除</translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="77"/>
+        <source>镜面贴图</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="122"/>
+        <source>Select diffuse texture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="123"/>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="137"/>
+        <source>Image files (*.png *.jpg *.jpeg *.bmp *.tga *.gif);;All files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="136"/>
+        <source>Select specular texture</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PropertyEditorWidgetClass</name>
     <message>
         <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="14"/>

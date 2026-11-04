@@ -1,4 +1,7 @@
 #include"ShaderModel.h"
+#include <QDebug>
+#include <QString>
+
 ShaderModel::ShaderModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/):
     GraphicsEngine(type,shader)
 {
@@ -7,9 +10,36 @@ ShaderModel::ShaderModel(OperatorAction type, std::shared_ptr<Shader> shader /*=
 
 }
 
+void ShaderModel::syncTexture(Texture2D& texture, const std::optional<std::filesystem::path>& path, bool srgb)
+{
+	if (!path)
+	{
+		texture.release();
+		return;
+	}
+
+	if (texture.sourcePath() == path
+		&& (texture.isLoadedForCurrentContext() || texture.loadFailedForCurrentContext()))
+	{
+		return;
+	}
+	if (!texture.release())
+	{
+		return;
+	}
+
+	std::string error;
+	if (!texture.loadFromFile(*path, srgb, error))
+	{
+		qWarning().noquote() << QString::fromStdString(error);
+	}
+}
 
 void ShaderModel::Draw()
 {
+	syncTexture(diffuse_texture_, materal_.diffuse_texture_path_, true);
+	syncTexture(specular_texture_, materal_.specular_texture_path_, false);
+
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glStencilMask(0xFF);
 	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -26,7 +56,20 @@ void ShaderModel::Draw()
 	default_shader_->setVec3("viewPos", camPosWorld);
 
 	// Material is per model; lights are provided by the scene.
-	default_shader_->setMaterial(materal_);
+	default_shader_->setMaterial(materal_,
+		diffuse_texture_.isLoadedForCurrentContext(),
+		specular_texture_.isLoadedForCurrentContext());
+	if (!diffuse_texture_.bind(GL_TEXTURE0))
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	if (!specular_texture_.bind(GL_TEXTURE1))
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	glActiveTexture(GL_TEXTURE0);
 
 	
 
@@ -35,8 +78,12 @@ void ShaderModel::Draw()
 	//default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
 	
 	glBindVertexArray(mesh_data_->vao_);
-
-	glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
 
 
 	if (selected_)
@@ -51,8 +98,7 @@ void ShaderModel::Draw()
 		stencil_shader_->setMat4("projection", mvp_data_->projection_);
 		stencil_shader_->setMat4("model", model_);
 		glBindVertexArray(mesh_data_->vao_);
-		glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
-
+		glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
 	}
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
@@ -91,18 +137,20 @@ void ShaderModel::InitBufferData()
 	//把顶点数组复制到缓冲中供OpenGL使用
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
-	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data_->data_.vertices.size() * sizeof(Vertex), mesh_data_->data_.vertices.data(), GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, &mesh_data_->ebo_);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->indices_datas.size() * sizeof(unsigned int), mesh_data_->indices_datas.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->data_.indices.size() * sizeof(uint32_t), mesh_data_->data_.indices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, position)));
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, normal)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, texCoord)));
+	glEnableVertexAttribArray(2);
 	//设置单面着色
 	//glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 	//stencil_shader_->CreatProgram();	

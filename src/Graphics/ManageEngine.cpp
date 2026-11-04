@@ -135,11 +135,10 @@ GraphicsEnginePtr ManageEngine::createGridEngine()
 
 GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "geometry_shader.geom", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCube, light_shader);
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
+	GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatCube, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
-
 }
 
 GraphicsEnginePtr ManageEngine::createToursEngine()
@@ -289,7 +288,7 @@ void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 	graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f)));
 	graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
 	graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-	if (graphics->getMesh()->model_type_ == OperatorAction::ClearSkyBox)
+	if (graphics->getModeltype() == OperatorAction::ClearSkyBox)
 	{
 		list_graphic_.push_front(graphics);
 	}
@@ -301,7 +300,7 @@ void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
 
 	for (const auto& graphic : list_graphic_)
 	{
-		LogInfo("OperatorAction:{} ", int(graphic->getMesh()->model_type_));
+		LogInfo("OperatorAction:{} ", int(graphic->getModeltype()));
 	}
 
 	QString model_name = graphics->getModelName();
@@ -442,7 +441,7 @@ void ManageEngine::paintGl()
 		for (const auto& graphic_ : list_graphic_)
 		{
 				MeshPtr mesh = graphic_->getMesh();
-				screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas, graphic_->getDefaultShader());
+				screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices, graphic_->getDefaultShader());
 				screen_render_model_->Draw();
 		}
 	}
@@ -466,7 +465,7 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     {
         MvpDataPtr mvp = graphic_->getMvpData();
         MeshPtr mesh = graphic_->getMesh();
-        screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->indices_datas);
+        screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices);
         auto[selected,depth] = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {

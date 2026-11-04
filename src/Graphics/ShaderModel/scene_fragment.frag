@@ -1,6 +1,6 @@
 #version 450 core
 // 项目的着色器加载器会在编译前展开此 include。
-#include "common/scene_lighting.glsl"
+#include "../common/scene_lighting.glsl"
 
 // 圆环的材质由 Shader::setMaterial 上传；Ka/Kd/Ks 分别对应三种反射系数。
 struct MaterialInfo {
@@ -8,11 +8,16 @@ struct MaterialInfo {
 	vec3 Kd;
 	vec3 Ks;
 	float Shininess;
+	sampler2D diffuseMap;
+	sampler2D specularMap;
+	bool hasDiffuseMap;
+	bool hasSpecularMap;
 };
 uniform MaterialInfo Material;
 uniform int flatShading; // 0：插值法线；1：面法线；2：面法线并丢弃部分片元
 in vec3 Normal;
 in vec3 FragPos;
+in vec2 TexCoords;
 layout(location = 0) out vec4 FragColor;
 
 // C++ 通过 GLSL subroutine 在 Phong 和 Blinn-Phong 之间选择。
@@ -21,11 +26,19 @@ subroutine uniform shadeModelType shadeModel;
 
 vec3 shadeScene(vec3 position, vec3 normal, bool blinn)
 {
+	vec3 diffuseTexel = Material.hasDiffuseMap
+		? texture(Material.diffuseMap, TexCoords).rgb : vec3(1.0);
+	vec3 specularTexel = Material.hasSpecularMap
+		? texture(Material.specularMap, TexCoords).rgb : vec3(1.0);
+	vec3 ambientColor = Material.Ka * diffuseTexel;
+	vec3 diffuseColor = Material.Kd * diffuseTexel;
+	vec3 specularColor = Material.Ks * specularTexel;
+
 	// 对每盏活动灯传入同一材质，逐灯计算并累加光照。
 	vec3 result = vec3(0.0);
 	for (int i = 0; i < lightCount; ++i)
-		result += evaluateLight(lights[i], position, normal, Material.Ka, Material.Kd,
-								Material.Ks, Material.Shininess, blinn);
+		result += evaluateLight(lights[i], position, normal, ambientColor, diffuseColor,
+								specularColor, Material.Shininess, blinn);
 	return result;
 }
 subroutine(shadeModelType)

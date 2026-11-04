@@ -5,6 +5,6 @@ class CreatModelDataImpl;
 class CreatModelData
 {
 public:
-    ModelDataInfo GetModelDatas(OperatorAction type);
+    MeshData GetModelDatas(OperatorAction type);
 };
 #endif // CREATMODELDATA_H

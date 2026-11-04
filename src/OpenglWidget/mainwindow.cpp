@@ -62,6 +62,10 @@ void MainWindow::initCollectionEngine()
 
 MainWindow::~MainWindow()
 {
+	ui->openGLWidget->makeCurrent();
+	ui->openGLWidget->BindManageEngine(std::shared_ptr<ManageEngine>{});
+	manage_engine_moudle_.reset();
+	ui->openGLWidget->doneCurrent();
     delete ui;
 }
 
@@ -188,7 +192,9 @@ void MainWindow::createModel(OperatorAction type)
 
 void MainWindow::removeModel(OperatorAction type)
 {
+	ui->openGLWidget->makeCurrent();
 	QString model_uuid  = manage_engine_moudle_->removeModel(type);
+	ui->openGLWidget->doneCurrent();
 	ui->widget->removeCollectionFromTreewidget(model_uuid);
 }
 

@@ -1,13 +1,16 @@
-﻿#include"AxisVerticeData.h"
-ModelDataInfo AxisVerticeData::GetModelDatas()
+﻿#include "AxisVerticeData.h"
+
+MeshData AxisVerticeData::GetModelDatas()
 {
-	ModelDataInfo info;
-	info.vertices_datas = GenerateAxisVertices();
-	return info;
+	MeshData data;
+	data.topology = PrimitiveTopology::Points;
+	data.vertices = GenerateAxisVertices();
+	return data;
 }
 
-std::vector<float> AxisVerticeData::GenerateAxisVertices()
+std::vector<Vertex> AxisVerticeData::GenerateAxisVertices()
 {
-	std::vector<float> vertices = { 0.0f, 0.0f, 0.0f };// 原点;
-	return vertices;
+	Vertex origin{};
+	origin.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	return { origin };
 }

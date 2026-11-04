@@ -1,4 +1,26 @@
 ﻿#include"Utils.h"
+#include <stdexcept>
+
+std::filesystem::path Utils::GetProjectRootPath()
+{
+    std::filesystem::path candidate = std::filesystem::current_path();
+    while (!candidate.empty())
+    {
+        if (std::filesystem::is_directory(candidate / "src" / "Graphics"))
+        {
+            return candidate;
+        }
+
+        const std::filesystem::path parent = candidate.parent_path();
+        if (parent == candidate)
+        {
+            break;
+        }
+        candidate = parent;
+    }
+
+    throw std::runtime_error("Unable to locate the project root containing src/Graphics");
+}
 
 std::string Utils::ReadFile(const std::string& file_name)
 {
@@ -30,7 +52,8 @@ void Utils::CreatShaderProgram(const std::string& vs, const std::string& fs)
 }
 
 std::string Utils::resolveIncludes(const std::string& source,
-                                    const std::string& graphics_root,
+                                    const std::filesystem::path& source_directory,
+                                    const std::filesystem::path& graphics_root,
                                     std::unordered_set<std::string>& included_files,
                                     int depth)
 {
@@ -55,27 +78,33 @@ std::string Utils::resolveIncludes(const std::string& source,
 
             if (q1 != std::string::npos && q2 != std::string::npos)
             {
-                std::string include_path = line.substr(q1 + 1, q2 - q1 - 1);
-                // 将 / 换成系统路径分隔符
-                std::string full_path = graphics_root + include_path;
-                std::replace(full_path.begin(), full_path.end(), '/', '\\');
+                const std::filesystem::path include_path(line.substr(q1 + 1, q2 - q1 - 1));
+                std::filesystem::path full_path = include_path.is_absolute()
+                    ? include_path
+                    : source_directory / include_path;
+                if (!std::filesystem::exists(full_path) && !include_path.is_absolute())
+                {
+                    full_path = graphics_root / include_path;
+                }
+                full_path = full_path.lexically_normal();
+                const std::string include_key = full_path.string();
 
-                if (included_files.count(full_path))
+                if (included_files.count(include_key))
                 {
                     // 已包含过，跳过（防重复）
                     continue;
                 }
-                included_files.insert(full_path);
+                included_files.insert(include_key);
 
-                std::string included_source = ReadFile(full_path);
-                if (included_source.empty())
+                if (!std::filesystem::exists(full_path))
                 {
-                    std::cout << "[Shader] ERROR: cannot find include: " << full_path << std::endl;
+                    std::cout << "[Shader] ERROR: cannot find include: " << full_path.string() << std::endl;
                     output << line << "\n";
                     continue;
                 }
-                std::cout << "[Shader] #include resolved: " << include_path << std::endl;
-                output << resolveIncludes(included_source, graphics_root, included_files, depth + 1);
+                std::string included_source = ReadFile(full_path.string());
+                std::cout << "[Shader] #include resolved: " << include_path.string() << std::endl;
+                output << resolveIncludes(included_source, full_path.parent_path(), graphics_root, included_files, depth + 1);
                 continue;
             }
         }
@@ -86,10 +115,11 @@ std::string Utils::resolveIncludes(const std::string& source,
 }
 
 std::string Utils::resolveIncludes(const std::string& source,
-                                    const std::string& graphics_root)
+                                    const std::filesystem::path& source_directory,
+                                    const std::filesystem::path& graphics_root)
 {
     std::unordered_set<std::string> included_files;
-    return resolveIncludes(source, graphics_root, included_files, 0);
+    return resolveIncludes(source, source_directory, graphics_root, included_files, 0);
 }
 
 Utils::MaterialAttrib::MaterialAttrib()

@@ -9,7 +9,7 @@ class CreatModelDataImpl
 {
 public:
     CreatModelDataImpl();
-    ModelDataInfo GetModelDatas(OperatorAction type);
+    MeshData GetModelDatas(OperatorAction type);
 
 };
 

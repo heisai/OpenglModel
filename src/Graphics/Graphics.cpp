@@ -21,14 +21,9 @@ GraphicsEngine::GraphicsEngine(OperatorAction type,std::shared_ptr<Shader> shade
 /// 
 /// </summary>
 /// <param name="model_datas"></param>
-void GraphicsEngine::setModelInfo(const ModelDataInfo& model_datas)
+void GraphicsEngine::setModelInfo(const MeshData& model_datas)
 {
-	//解释下下面的代码的意思
-
-	mesh_data_->vertices_datas = model_datas.vertices_datas;
-	mesh_data_->indices_datas = model_datas.indices_datas;
-	mesh_data_->model_name_ = model_datas.model_name_;
-	mesh_data_->model_type_ = model_type_;
+	mesh_data_->data_ = model_datas;
 }
 
 
@@ -77,14 +72,14 @@ QString GraphicsEngine::getModelName()
 {
 	if (mesh_data_)
 	{
-		return mesh_data_->model_name_;
+		return QString::fromStdString(mesh_data_->data_.model_name_);
 	}
 	return "";
 }
 
 void GraphicsEngine::setModelName(const QString& model_name)
 {
-	mesh_data_->model_name_ = model_name;
+	mesh_data_->data_.model_name_ = model_name.toStdString();
 }
 
 

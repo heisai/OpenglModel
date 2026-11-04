@@ -10,6 +10,7 @@ uniform int flatShading;  // 0=平滑 1=平面 2=网格线
 
 in vec3 Normal;
 in vec3 FragPos;
+in vec2 TexCoords;
 
 // ── 表面描述：此模型只需填写几何信息，颜色由材质 uniform 决定 ──
 void getSurface(out SurfaceInputs surface)

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <cstddef>
+#include <cstdint>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <glm/glm.hpp>
@@ -66,17 +68,32 @@ enum class OperatorAction
 	ClearBlasting,	//清除爆破
 	ClearRender	//清除渲染
 };
-struct ModelDataInfo
-{
-	std::vector<float> vertices_datas; //顶点数据
-	std::vector<unsigned int>indices_datas;
-	QString model_name_; //模型名称
+enum class PrimitiveTopology {
+	Triangles,
+	Lines,
+	Points
 };
+struct Vertex
+{
+	glm::vec3 position{};
+	glm::vec3 normal{};
+	glm::vec2 texCoord{};
+	glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
+};
+
+struct MeshData
+{
+	PrimitiveTopology topology = PrimitiveTopology::Triangles;
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+	std::string model_name_; //模型名称
+};
+
 
 class ModelDataInterFace{
 public:
     virtual ~ModelDataInterFace() = default;
-    virtual ModelDataInfo GetModelDatas() = 0;
+    virtual MeshData GetModelDatas() = 0;
 };
 
 #endif // MODELDATAINTERFACE_H

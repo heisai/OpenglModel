@@ -2,7 +2,7 @@
 
 CreatModelDataImpl::CreatModelDataImpl() {}
 
-ModelDataInfo CreatModelDataImpl::GetModelDatas(OperatorAction type)
+MeshData CreatModelDataImpl::GetModelDatas(OperatorAction type)
 {
 
     std::unique_ptr<ModelDataInterFace> model_data = nullptr;
@@ -31,7 +31,7 @@ ModelDataInfo CreatModelDataImpl::GetModelDatas(OperatorAction type)
     }
     else
     {
-        return ModelDataInfo();
+        return MeshData();
     }
 
 }

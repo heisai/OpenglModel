@@ -64,8 +64,8 @@ void PlanetModel::Draw()
 		default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed() / 500));
 		default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
 		glBindVertexArray(mesh_data_->vao_);
-		//glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
-		glDrawElementsInstanced(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0, model_matrices_.size());
+		//glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElementsInstanced(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0, model_matrices_.size());
 
 
 
@@ -82,7 +82,7 @@ void PlanetModel::Draw()
 			stencil_shader_->setMat4("projection", mvp_data_->projection_);
 			stencil_shader_->setMat4("model", model_);
 			glBindVertexArray(mesh_data_->vao_);
-			glDrawElements(GL_TRIANGLES, mesh_data_->indices_datas.size(), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
 
 		}
 		glStencilMask(0xFF);
@@ -118,18 +118,21 @@ void PlanetModel::InitBufferData()
 	//把顶点数组复制到缓冲中供OpenGL使用
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
-	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh_data_->data_.vertices.size() * sizeof(Vertex)), mesh_data_->data_.vertices.data(), GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, &mesh_data_->ebo_);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->indices_datas.size() * sizeof(unsigned int), mesh_data_->indices_datas.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->data_.indices.size() * sizeof(uint32_t), mesh_data_->data_.indices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, position)));
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, normal)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, texCoord)));
+	glEnableVertexAttribArray(2);
 
 	//stencil_shader_->CreatProgram();	
 
@@ -142,10 +145,15 @@ void PlanetModel::InitBufferData()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	for (GLuint column = 0; column < 4; ++column)
+	{
+		const GLuint attributeLocation = 3 + column;
+		const std::size_t columnOffset = static_cast<std::size_t>(column) * sizeof(glm::vec4);
+		glEnableVertexAttribArray(attributeLocation);
+		glVertexAttribPointer(attributeLocation, 4, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(glm::mat4)), reinterpret_cast<const void*>(columnOffset));
+		glVertexAttribDivisor(attributeLocation, 1);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glVertexAttribDivisor(2, 1);
 }
 
