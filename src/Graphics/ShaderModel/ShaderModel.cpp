@@ -25,11 +25,7 @@ void ShaderModel::Draw()
 	glm::vec3 camPosWorld = glm::vec3(invView[3]);
 	default_shader_->setVec3("viewPos", camPosWorld);
 
-	// Light / Material
-	default_shader_->setVec3("Light.Position", 1.2f, 1.0f, 2.0f);
-	default_shader_->setVec3("Light.La", 0.2f, 0.2f, 0.2f);
-	default_shader_->setVec3("Light.Ld", 0.5f, 0.5f, 0.5f);
-	default_shader_->setVec3("Light.Ls", 1.0f, 1.0f, 1.0f);
+	// Material is per model; lights are provided by the scene.
 	default_shader_->setMaterial(materal_);
 
 	
@@ -111,4 +107,5 @@ void ShaderModel::InitBufferData()
 	//glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 	//stencil_shader_->CreatProgram();	
 }
+
 

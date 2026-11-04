@@ -23,12 +23,6 @@ void GridModel::Draw()
 	glm::vec3 camPosWorld = glm::vec3(invView[3]);
 	default_shader_->setVec3("viewPos", camPosWorld);
 
-	// Light / Material
-	default_shader_->SetInt("Light.Type", 0);                         // 0=方向光 1=点光源 2=聚光灯
-	default_shader_->setVec3("Light.Position", 0.2f, 5.0f, -2.0f);  // 方向光：此字段作为光线方向使用
-	default_shader_->setVec3("Light.La", 0.2f, 0.2f, 0.2f);
-	default_shader_->setVec3("Light.Ld", 0.5f, 0.5f, 0.5f);
-	default_shader_->setVec3("Light.Ls", 1.0f, 1.0f, 1.0f);
 	gamma_enabled_ = true;
 	default_shader_->setBool("gamma", gamma_enabled_);
 	glBindVertexArray(mesh_data_->vao_);

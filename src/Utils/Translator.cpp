@@ -84,6 +84,16 @@ Translator& Translator::getInstance()
 	instance.translator_map_["double_render"] = tr("double_render");	// 双面遮光
 	instance.translator_map_["discard_render"] = tr("discard_render");	// 移除渲染
 
+	//光源设置
+	instance.translator_map_["DirectionalLight"] = tr("DirectionalLight"); //平行光
+	instance.translator_map_["PointLight"] = tr("PointLight"); //点光源
+	instance.translator_map_["SpotLight"] = tr("SpotLight"); //聚光
+	instance.translator_map_["SingleLight"] = tr("SingleLight"); //单光源
+	instance.translator_map_["MultipleLights"] = tr("MultipleLights"); //多光源
+	instance.translator_map_["Light settings"] = tr("Light settings"); //灯光设置
+	instance.translator_map_["Light type"] = tr("Light type"); //投光类型
+	instance.translator_map_["Light mode"] = tr("Light mode"); //光源模式
+
 	return  instance;
 }
 QString Translator::Tr(const QString& value)

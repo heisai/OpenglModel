@@ -38,6 +38,12 @@ void MainWindow::InitConnect()
 	connect(ui->widget, &ParaConfigWidget::sigUpdatePropertyToEngine, [this](const Utils::Material& material) {
 		manage_engine_moudle_->setPropertyData(material);
 		});
+	// 界面只发送选择；引擎保存场景配置，再请求重绘。
+	connect(ui->widget, &ParaConfigWidget::sigUpdateLightToEngine, this,
+		[this](Lighting::LightType type, Lighting::LightMode mode) {
+			manage_engine_moudle_->setLightSettings(type, mode);
+			ui->openGLWidget->update();
+		});
 
 }
 

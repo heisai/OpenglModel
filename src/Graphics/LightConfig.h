@@ -1,0 +1,56 @@
+#pragma once
+
+#include <glm/glm.hpp>
+#include <variant>
+#include <vector>
+
+namespace Lighting {
+
+// 光源类型属于单盏灯；光照模式决定场景中哪些灯参与渲染。
+enum class LightType { Directional, Point, Spot };
+enum class LightMode { Single, Multiple };
+
+// 点光和聚光的距离衰减分母：constant + linear*d + quadratic*d²。
+struct Attenuation {
+	float constant = 1.0f;
+	float linear = 0.09f;
+	float quadratic = 0.032f;
+};
+
+// 位置和方向使用世界坐标；方向表示光线传播方向。
+struct DirectionalLight { glm::vec3 direction{ -1.2f, -1.0f, -2.0f }; };
+struct PointLight {
+	glm::vec3 position{ 1.2f, 1.0f, 2.0f };
+	Attenuation attenuation;
+};
+struct SpotLight {
+	glm::vec3 position{ 1.2f, 2.0f, 2.0f };
+	glm::vec3 direction{ -1.2f, -2.0f, -2.0f };
+	Attenuation attenuation;
+	// 角度以度为单位保存，上传 shader 时转换为余弦值。
+	float innerAngleDegrees = 20.0f;
+	float outerAngleDegrees = 30.0f;
+};
+
+struct Light {
+	bool enabled = true;
+	glm::vec3 ambient{ 0.2f };
+	glm::vec3 diffuse{ 0.5f };
+	glm::vec3 specular{ 1.0f };
+	// variant 当前保存的参数类型就是这盏灯的类型，避免类型与参数不一致。
+	std::variant<DirectionalLight, PointLight, SpotLight> parameters = DirectionalLight{};
+};
+
+struct LightConfig {
+	static constexpr int MaxLights = 8; // 与 GLSL 的 MAX_LIGHTS 保持一致
+	LightMode mode = LightMode::Single;
+	// 界面只编辑第一盏灯；单灯模式只使用第一盏，多灯模式使用所有已启用灯。
+	// 后两盏是多灯模式预设，切换模式不会删除它们。
+	std::vector<Light> lights = {
+		Light{},
+		Light{ true, glm::vec3(0.05f), glm::vec3(0.35f), glm::vec3(0.5f), PointLight{ glm::vec3(-2.0f, 2.0f, 1.0f) } },
+		Light{ true, glm::vec3(0.02f), glm::vec3(0.3f), glm::vec3(0.4f), SpotLight{} }
+	};
+};
+
+} // namespace Lighting

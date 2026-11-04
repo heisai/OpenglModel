@@ -26,6 +26,7 @@ QString ManageEngine::createModel(OperatorAction type)
    if (iter != map_graphicengine_createfunc_.end())
    {
        GraphicsEnginePtr ptr = iter->second();
+	   if (!ptr) return model_uuid; // 渲染类型不创建模型
 	   addEngine(ptr);
 	   model_uuid =  ptr->getModelName();
 	
@@ -126,7 +127,7 @@ GraphicsEnginePtr ManageEngine::createAxisEngine()
 
 GraphicsEnginePtr ManageEngine::createGridEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "grid_fragment.frag", "GridModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "scene_fragment.frag", "GridModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GridModel>(OperatorAction::CreatGrid, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -134,7 +135,7 @@ GraphicsEnginePtr ManageEngine::createGridEngine()
 
 GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "geometry_shader.geom", "GeneralModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCube, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -149,7 +150,7 @@ GraphicsEnginePtr ManageEngine::createToursEngine()
  //   basic_light_engine->SetViewSize(width_, height_);
  //   return basic_light_engine;
 
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "ShaderModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatTourse, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -157,7 +158,7 @@ GraphicsEnginePtr ManageEngine::createToursEngine()
 
 GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "geometry_shader.geom", "GeneralModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -173,7 +174,7 @@ GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
 
 GraphicsEnginePtr ManageEngine::createPlanteEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "PlanteModel");
+	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "PlanteModel");
 	GraphicsEnginePtr basic_light_engine = std::make_shared<PlanetModel>(OperatorAction::CreatTourse, light_shader);
 	basic_light_engine->SetViewSize(width_, height_);
 	return basic_light_engine;
@@ -385,6 +386,33 @@ void ManageEngine::setPropertyData(const Utils::Material& material_)
 	}
 }
 
+void ManageEngine::setLightSettings(Lighting::LightType type, Lighting::LightMode mode)
+{
+	if (mode != Lighting::LightMode::Single && mode != Lighting::LightMode::Multiple)
+	{
+		qWarning() << "Invalid light mode";
+		return;
+	}
+	// 当前界面只编辑第一盏灯；类型变化时重置其类型专属参数，保留公共光强。
+	auto& parameters = light_config_.lights.front().parameters;
+	switch (type)
+	{
+	case Lighting::LightType::Directional:
+		if (!std::holds_alternative<Lighting::DirectionalLight>(parameters)) parameters = Lighting::DirectionalLight{};
+		break;
+	case Lighting::LightType::Point:
+		if (!std::holds_alternative<Lighting::PointLight>(parameters)) parameters = Lighting::PointLight{};
+		break;
+	case Lighting::LightType::Spot:
+		if (!std::holds_alternative<Lighting::SpotLight>(parameters)) parameters = Lighting::SpotLight{};
+		break;
+	default:
+		qWarning() << "Invalid light type";
+		return;
+	}
+	light_config_.mode = mode;
+}
+
 void ManageEngine::paintGl()
 {
 
@@ -397,6 +425,8 @@ void ManageEngine::paintGl()
         if (graphic_->getDefaultShader())
         {
             graphic_->getDefaultShader()->bind();
+			// 在绘制每个对象前，将同一份场景光照上传到其 shader。
+			graphic_->getDefaultShader()->setLights(light_config_);
             graphic_->Draw();
         }
     }

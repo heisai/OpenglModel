@@ -6,7 +6,8 @@ ParaConfigWidget::ParaConfigWidget(QWidget *parent)
 	collection_treewidget_(nullptr),
 	treewidgetitem_(nullptr),
 	stackwidget_(nullptr),
-	property_editor_widget_(nullptr)
+	property_editor_widget_(nullptr),
+	light_edit_widget_(nullptr)
 {
     ui->setupUi(this);
     InitUI();
@@ -20,21 +21,32 @@ ParaConfigWidget::~ParaConfigWidget()
 
 void ParaConfigWidget::InitUI()
 {
-	//¼¯ºÏ½çÃæ
+	//é›†åˆç•Œé¢
 	initCollectionWidget();
-	//ÊôĞÔ½çÃæ
+	//å±æ€§ç•Œé¢
 	initPropertyConfigWidget();
 }
 
 void ParaConfigWidget::InitConnect()
 {
-	connect(collection_treewidget_, &QTreeWidget::itemClicked, [this](QTreeWidgetItem* item, int column) {
-		LogInfo("Select Item: {}", item->text(column).toStdString());
-		});
+	connect(collection_treewidget_, &QTreeWidget::itemSelectionChanged, this, [this]() {
+		const auto items = collection_treewidget_->selectedItems();
+		if (!items.isEmpty())
+			slotsTreeWidgetItemClicked(items.first(), 0);
+	});
 }
 
 void ParaConfigWidget::slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
 {
+	LogInfo("Select Item: {}", item->text(column).toStdString());
+	if (item->text(column) == TR("Light"))
+	{
+		stackwidget_->setCurrentWidget(light_edit_widget_);
+	}
+	else
+	{
+		stackwidget_->setCurrentWidget(property_editor_widget_);
+	}
 }
 
 void ParaConfigWidget::initCollectionWidget()
@@ -61,7 +73,7 @@ void ParaConfigWidget::initTreewidget()
 	collection_treewidget_->addTopLevelItem(treewidgetitem_);
 
 	collection_treewidget_->setFrameShape(QFrame::NoFrame);
-	//collection_treewidget_->setIndentation(0);  // ÉèÖÃÎª0ÍêÈ«ÒÆ³ıËõ½ø
+	//collection_treewidget_->setIndentation(0);  // è®¾ç½®ä¸º0å®Œå…¨ç§»é™¤ç¼©è¿›
 	collection_treewidget_->expandAll();
 }
 
@@ -82,21 +94,21 @@ void ParaConfigWidget::removeCollectionFromTreewidget(const QString& item_text)
 
 void ParaConfigWidget::updateTreewidgetItem(const QString& item_text)
 {
-	//Çå¿Õµ±Ç°½ÚµãµÄÑ¡ÖĞ×´Ì¬
+	//æ¸…ç©ºå½“å‰èŠ‚ç‚¹çš„é€‰ä¸­çŠ¶æ€
 	int count = treewidgetitem_->childCount();
 	for (int index = 0; index < count; index++)
 	{
 		treewidgetitem_->child(index)->setSelected(false);
 	}
 
-	//ÉèÖÃÑ¡ÖĞ×´Ì¬
+	//è®¾ç½®é€‰ä¸­çŠ¶æ€
 	QList<QTreeWidgetItem*>items = collection_treewidget_->findItems(item_text, Qt::MatchExactly | Qt::MatchRecursive);
 	if (!items.isEmpty())
 	{
 		items.at(0)->setSelected(true);
 	}
 
-	//¸üĞÂÄ£ĞÍÊôĞÔĞÅÏ¢
+	//æ›´æ–°æ¨¡å‹å±æ€§ä¿¡æ¯
 	//emit sigUpdatePropertyToEngine(property_editor_widget_->getPropertyInfo());
 }
 void ParaConfigWidget::initPropertyConfigWidget()
@@ -104,6 +116,8 @@ void ParaConfigWidget::initPropertyConfigWidget()
 	stackwidget_ = new QStackedWidget;
 	property_editor_widget_ = new PropertyEditorWidget(this);
 	stackwidget_->insertWidget(0, property_editor_widget_);
+	light_edit_widget_ = new LightEditWidget(this);
+	stackwidget_->addWidget(light_edit_widget_);
 
 
 
@@ -117,6 +131,8 @@ void ParaConfigWidget::initPropertyConfigWidget()
 		{
 			emit sigUpdatePropertyToEngine(value);
 		});
+	connect(light_edit_widget_, &LightEditWidget::sigUpdateLightInfo,
+		this, &ParaConfigWidget::sigUpdateLightToEngine);
 }
 
 QWidget*ParaConfigWidget::initToolButtons()

@@ -52,11 +52,7 @@ void GeneralModel::Draw()
 	default_shader_->setMat4("model", mvp_data_->model_);
 
 	//设置光源属性
-	default_shader_->setVec3("viewPos", mvp_data_->view_[3]);
-	default_shader_->setVec3("light.positiom", 1.2f, 1.0f, 2.0f);
-	default_shader_->setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	default_shader_->setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	default_shader_->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	default_shader_->setVec3("viewPos", glm::vec3(glm::inverse(mvp_data_->view_)[3]));
 	//设置材质属性
 	default_shader_->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
 	default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);

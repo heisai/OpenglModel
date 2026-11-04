@@ -59,6 +59,50 @@ void Shader::setMaterial(const Utils::Material& material_info)
     //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
 
+void Shader::setLights(const Lighting::LightConfig& config)
+{
+	// 将启用的场景灯紧凑地写入 shader 数组；单灯模式仅考虑第一盏灯。
+	int count = 0;
+	for (const auto& light : config.lights)
+	{
+		if (config.mode == Lighting::LightMode::Single && &light != &config.lights.front()) break;
+		if (!light.enabled) continue;
+		if (count == Lighting::LightConfig::MaxLights)
+		{
+			qWarning("Light count exceeds shader limit");
+			break;
+		}
+		// 先上传所有类型共有的光强，再按 variant 类型上传专属参数。
+		const std::string prefix = "lights[" + std::to_string(count++) + "].";
+		setVec3(prefix + "La", light.ambient);
+		setVec3(prefix + "Ld", light.diffuse);
+		setVec3(prefix + "Ls", light.specular);
+		if (const auto* directional = std::get_if<Lighting::DirectionalLight>(&light.parameters))
+		{
+			SetInt(prefix + "Type", 0);
+			setVec3(prefix + "Direction", directional->direction);
+		}
+		else if (const auto* point = std::get_if<Lighting::PointLight>(&light.parameters))
+		{
+			SetInt(prefix + "Type", 1);
+			setVec3(prefix + "Position", point->position);
+			setVec3(prefix + "Attenuation", point->attenuation.constant, point->attenuation.linear, point->attenuation.quadratic);
+		}
+		else if (const auto* spot = std::get_if<Lighting::SpotLight>(&light.parameters))
+		{
+			SetInt(prefix + "Type", 2);
+			setVec3(prefix + "Position", spot->position);
+			setVec3(prefix + "Direction", spot->direction);
+			setVec3(prefix + "Attenuation", spot->attenuation.constant, spot->attenuation.linear, spot->attenuation.quadratic);
+			// shader 使用角度余弦计算聚光锥，避免在片元中反复转换角度。
+			setFloat(prefix + "CutOff", glm::cos(glm::radians(spot->innerAngleDegrees)));
+			setFloat(prefix + "OuterCutOff", glm::cos(glm::radians(spot->outerAngleDegrees)));
+		}
+	}
+	// 着色器只遍历本次上传的灯，不读取数组中剩余的旧值。
+	SetInt("lightCount", count);
+}
+
 void Shader::setBool(const std::string &name, bool value)
 {
     glUniform1i(glGetUniformLocation(ShaderPromger, name.c_str()), (int)value);

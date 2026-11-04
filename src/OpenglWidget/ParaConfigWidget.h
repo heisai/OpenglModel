@@ -10,6 +10,7 @@
 #include<QHBoxLayout>
 #include<QSpacerItem>
 #include"PropertyEditorWidget.h"
+#include"LightEditWidget.h"
 namespace Ui {
 class ParaConfigWidget;
 }
@@ -28,8 +29,9 @@ public:
     void updateTreewidgetItem(const QString& item_text);
 signals:
 	void sigUpdatePropertyToEngine(const Utils::Material& value);
+    void sigUpdateLightToEngine(Lighting::LightType lightType, Lighting::LightMode lightMode);
 private  slots:
-    void slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+	void slotsTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
 private:
     //集合树界面
     void initCollectionWidget();
@@ -47,6 +49,7 @@ private:
 
     QStackedWidget* stackwidget_;
 	PropertyEditorWidget* property_editor_widget_;
+    LightEditWidget* light_edit_widget_;
 };
 
 #endif // PARACONFIGWIDGET_H
