@@ -10,25 +10,31 @@
 #include<map>
 #include<string>
 #include<format>
+#include<optional>
+#include<cstdint>
 #include<unordered_set>
 #include"Translator.h"
 namespace fs = std::filesystem;
 
 namespace Utils {
 
+    std::filesystem::path GetProjectRootPath();
+
     // 读取文件内容到字符串（用于读取 GLSL 文件等）
     std::string ReadFile(const std::string& file_name);
 
     // GLSL #include 预处理器
     // 将 source 中所有 #include "path" 指令展开为对应文件的内容
-    // path 相对于 src/Graphics/ 根目录
+    // Include paths are resolved relative to the source file first, then src/Graphics/.
     // 内部使用 included_files 防止重复包含（类似 #pragma once）
     std::string resolveIncludes(const std::string& source,
-                                const std::string& graphics_root,
+                                const std::filesystem::path& source_directory,
+                                const std::filesystem::path& graphics_root,
                                 std::unordered_set<std::string>& included_files,
                                 int depth = 0);
     std::string resolveIncludes(const std::string& source,
-                                const std::string& graphics_root);
+                                const std::filesystem::path& source_directory,
+                                const std::filesystem::path& graphics_root);
 
     // 读取顶点/片元着色器内容（当前仅做读取动作，便于后续扩展）
     void CreatShaderProgram(const std::string& vs, const std::string& fs);
@@ -41,10 +47,7 @@ namespace Utils {
         fs::path result;
         (result /= ... /= fs::path(std::forward<Args>(args)));
 
-        // 使用项目根目录的绝对路径，确保着色器文件从源码目录加载
-        std::string project_root = fs::current_path().parent_path().string();
-        std::string file_path = std::format("{}\\src\\Graphics\\{}", project_root, result.string());
-        return file_path;
+        return (GetProjectRootPath() / "src" / "Graphics" / result).string();
     }
 
 	// 单个材质条目（Phong/Blinn-Phong 常用四元组）
@@ -74,6 +77,9 @@ namespace Utils {
         // Grid pattern parameters for model selection effect (render_type_ == 2)
         float selection_scale_{ 15.0f };     // Grid frequency: higher = finer grid
         float selection_threshold_{ 0.2f };  // Grid line thickness as fraction of cell size
+
+        std::optional<std::filesystem::path> diffuse_texture_path_;
+        std::optional<std::filesystem::path> specular_texture_path_;
 	};
 
     // 材质属性表：根据材质名称（key）返回对应的环境光/漫反射/高光/光泽度

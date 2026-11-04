@@ -4,8 +4,8 @@
 namespace {
 	constexpr float    kOutlineScale  = 1.025f;
 	constexpr float    kTimeScale     = 500.0f;
-	constexpr GLsizei  kVertexStride  = 6 * static_cast<GLsizei>(sizeof(float));
-	constexpr GLintptr kNormalOffset  = 3 * static_cast<GLintptr>(sizeof(float));
+	constexpr GLsizei  kVertexStride  = static_cast<GLsizei>(sizeof(Vertex));
+	const GLintptr     kNormalOffset  = static_cast<GLintptr>(offsetof(Vertex, normal));
 }
 /// <summary>
 /// 构造一个 GeneralModel 对象，初始化图形引擎和模板着色器。
@@ -64,7 +64,7 @@ void GeneralModel::Draw()
 	default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
 	glBindVertexArray(mesh_data_->vao_);
 	// ② 显式窄化转换：size_t → GLsizei
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh_data_->indices_datas.size()), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh_data_->data_.indices.size()), GL_UNSIGNED_INT, nullptr);
 
 	// ③ [[unlikely]]：选中是小概率分支
 	if (selected_) [[unlikely]]
@@ -78,7 +78,7 @@ void GeneralModel::Draw()
 		stencil_shader_->setMat4("projection", mvp_data_->projection_);
 		stencil_shader_->setMat4("model", scaledModel);
 		glBindVertexArray(mesh_data_->vao_);
-		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh_data_->indices_datas.size()), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh_data_->data_.indices.size()), GL_UNSIGNED_INT, nullptr);
 	}
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
@@ -106,14 +106,14 @@ void GeneralModel::InitBufferData()
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
 	{
-		const std::span vertSpan{ mesh_data_->vertices_datas };
+		const std::span vertSpan{ mesh_data_->data_.vertices };
 		glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertSpan.size_bytes()), vertSpan.data(), GL_STATIC_DRAW);
 	}
 
 	glGenBuffers(1, &mesh_data_->ebo_);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
 	{
-		const std::span idxSpan{ mesh_data_->indices_datas };
+		const std::span idxSpan{ mesh_data_->data_.indices };
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(idxSpan.size_bytes()), idxSpan.data(), GL_STATIC_DRAW);
 	}
 
@@ -123,6 +123,9 @@ void GeneralModel::InitBufferData()
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, kVertexStride, reinterpret_cast<const void*>(kNormalOffset));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, kVertexStride, reinterpret_cast<const void*>(offsetof(Vertex, texCoord)));
+	glEnableVertexAttribArray(2);
 }
 
 

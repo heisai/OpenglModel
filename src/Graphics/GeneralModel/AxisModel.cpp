@@ -50,8 +50,8 @@ void AxisModel::InitBufferData()
 	//把顶点数组复制到缓冲中供OpenGL使用
 	glGenBuffers(1, &mesh_data_->vbo_);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
-	glBufferData(GL_ARRAY_BUFFER, mesh_data_->vertices_datas.size() * sizeof(float), mesh_data_->vertices_datas.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh_data_->data_.vertices.size() * sizeof(Vertex)), mesh_data_->data_.vertices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3* sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, position)));
 	glEnableVertexAttribArray(0);
 }

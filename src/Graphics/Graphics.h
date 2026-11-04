@@ -49,10 +49,7 @@ struct Mesh
     unsigned int vao_;
     unsigned int vbo_;
     unsigned int ebo_;
-	std::vector<float> vertices_datas; //顶点数据
-	std::vector<unsigned int>indices_datas;
-    OperatorAction model_type_;   //模型类型
-    QString model_name_; //模型名称
+    MeshData data_; //网格数据（CPU端，顶点/索引/拓扑/名称）
 };
 using MeshPtr = std::shared_ptr<Mesh>;
 
@@ -88,7 +85,7 @@ public:
     //获取默认Shader
     std::shared_ptr<Shader> getDefaultShader();
 private:
-    void setModelInfo(const ModelDataInfo& model_datas);
+    void setModelInfo(const MeshData& model_datas);
 public:
     //默认shader(用于基础模型绘制)
      std::shared_ptr<Shader>default_shader_;

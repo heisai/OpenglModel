@@ -1,16 +1,24 @@
 ﻿#include"Shader.h"
 namespace fs = std::filesystem;
+
+namespace {
+	fs::path GetGraphicsRootPath()
+	{
+		return Utils::GetProjectRootPath() / "src" / "Graphics";
+	}
+}
+
 Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, std::string dirname)
 {
     initializeOpenGLFunctions();
-    std::string graphics_root = fs::current_path().parent_path().string() + "\\src\\Graphics\\";
+	const fs::path graphics_root = GetGraphicsRootPath();
     std::string vs_path = Utils::joinPaths(dirname, vs_filename);
     std::string fs_path = Utils::joinPaths(dirname, fs_filename);
     std::cout << "[Shader] Loading VS: " << vs_path << std::endl;
     std::cout << "[Shader] Loading FS: " << fs_path << std::endl;
 
-    vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(vs_path), graphics_root);
-    fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(fs_path), graphics_root);
+	vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(vs_path), fs::path(vs_path).parent_path(), graphics_root);
+	fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(fs_path), fs::path(fs_path).parent_path(), graphics_root);
     vShaderCode = vs_sourcecode.data();
     fShaderCode = fs_sourcecode.data();
 
@@ -20,10 +28,13 @@ Shader::Shader(const std::string &vs_filename, const std::string &fs_filename, s
 Shader::Shader(const std::string& vs_filename, const std::string& fs_filename, const std::string& gs_filename, const std::string& dirname)
 {
 	initializeOpenGLFunctions();
-	std::string graphics_root = fs::current_path().parent_path().string() + "\\src\\Graphics\\";
-	vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, vs_filename)), graphics_root);
-	fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, fs_filename)), graphics_root);
-	gs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(Utils::joinPaths(dirname, gs_filename)), graphics_root);
+	const fs::path graphics_root = GetGraphicsRootPath();
+	const std::string vs_path = Utils::joinPaths(dirname, vs_filename);
+	const std::string fs_path = Utils::joinPaths(dirname, fs_filename);
+	const std::string gs_path = Utils::joinPaths(dirname, gs_filename);
+	vs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(vs_path), fs::path(vs_path).parent_path(), graphics_root);
+	fs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(fs_path), fs::path(fs_path).parent_path(), graphics_root);
+	gs_sourcecode = Utils::resolveIncludes(Utils::ReadFile(gs_path), fs::path(gs_path).parent_path(), graphics_root);
 	vShaderCode = vs_sourcecode.data();
 	fShaderCode = fs_sourcecode.data();
 	gShaderCode = gs_sourcecode.data();
@@ -39,13 +50,17 @@ void Shader::release()
     glUseProgram(0);
 }
 
-void Shader::setMaterial(const Utils::Material& material_info)
+void Shader::setMaterial(const Utils::Material& material_info, bool hasDiffuseMap, bool hasSpecularMap)
 {
 	setVec3("Material.Ka", material_info.ambient_);
 	setVec3("Material.Kd", material_info.diffsue_);
 	setVec3("Material.Ks", material_info.specular_);
 	setFloat("Material.Shininess", material_info.shininess_);
-    SetInt("flatShading", material_info.render_type_);
+	SetInt("Material.diffuseMap", 0);
+	SetInt("Material.specularMap", 1);
+	setBool("Material.hasDiffuseMap", hasDiffuseMap);
+	setBool("Material.hasSpecularMap", hasSpecularMap);
+	SetInt("flatShading", material_info.render_type_);
     setFloat("selectionScale", material_info.selection_scale_);
     setFloat("selectionThreshold", material_info.selection_threshold_);
     if (material_info.light_model_type_)
@@ -56,6 +71,7 @@ void Shader::setMaterial(const Utils::Material& material_info)
     {
         glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &blinn_index_);
     }
+
     //LogInfo("Set Light Model Type: %d", material_info.light_model_type_);
 }
 

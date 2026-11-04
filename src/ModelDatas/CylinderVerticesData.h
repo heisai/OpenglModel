@@ -4,8 +4,8 @@ class CylinderVerticesData : public ModelDataInterFace{
 public:
     CylinderVerticesData() = default;
     ~CylinderVerticesData() = default;
-    ModelDataInfo GetModelDatas() override;
+    MeshData GetModelDatas() override;
 private:
-    std::vector<float> GenerateCylinderVertices(float radius, float height, int sectors);
-    std::vector<unsigned int> GenerateCylinderIndices(int sectors);
+    std::vector<Vertex> GenerateCylinderVertices(float radius, float height, int sectors);
+    std::vector<uint32_t> GenerateCylinderIndices(int sectors);
 };

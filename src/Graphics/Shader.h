@@ -21,9 +21,9 @@ public:
     //绑定着色器
     void bind();
     //解绑着色器
-    void release();
+	void release();
 	//设置材质属性
-    void setMaterial(const Utils::Material& material_info);
+	void setMaterial(const Utils::Material& material_info, bool hasDiffuseMap, bool hasSpecularMap);
 	//设置光照属性
     void setLights(const Lighting::LightConfig& config);
     void setBool(const std::string& name, bool value) ;

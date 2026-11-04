@@ -11,10 +11,12 @@ in VS_OUT {
 	mat4 Projection;
 	mat4 View;
     vec3 aNormal;
+    vec2 TexCoords;
 } gs_in[];
 
 out vec3 Normal;  
 out vec3 FragPos; 
+out vec2 TexCoords;
 
 vec4 explode(vec4 position, vec3 normal)
 {
@@ -30,16 +32,19 @@ void main()
         vec4  position = gs_in[0].Projection * gs_in[0].View * vec4(gs_in[0].FragPos, 1.0);
         FragPos = vec3(explode(vec4(gs_in[0].FragPos, 1.0),Normal));
         gl_Position = explode(position,Normal);
+        TexCoords = gs_in[0].TexCoords;
         EmitVertex();
         Normal =  gs_in[0].Normal;
         position = gs_in[1].Projection * gs_in[1].View * vec4(gs_in[1].FragPos, 1.0);
         FragPos = vec3(explode(vec4(gs_in[1].FragPos, 1.0),Normal));
         gl_Position = explode(position,Normal);
+        TexCoords = gs_in[1].TexCoords;
         EmitVertex();
         Normal =  gs_in[0].Normal;
         position = gs_in[2].Projection * gs_in[2].View * vec4(gs_in[2].FragPos, 1.0);
         FragPos = vec3(explode(vec4(gs_in[2].FragPos, 1.0),Normal));
         gl_Position = explode(position,Normal);
+        TexCoords = gs_in[2].TexCoords;
         EmitVertex();
         EndPrimitive();
     }
@@ -49,16 +54,19 @@ void main()
         vec4  position = gs_in[0].Projection * gs_in[0].View * vec4(gs_in[0].FragPos, 1.0);
         FragPos = gs_in[0].FragPos;
         gl_Position = position;
+        TexCoords = gs_in[0].TexCoords;
         EmitVertex();
         Normal =  gs_in[1].Normal;
         position = gs_in[1].Projection * gs_in[1].View * vec4(gs_in[1].FragPos, 1.0);
         FragPos =gs_in[1].FragPos;
         gl_Position =position;
+        TexCoords = gs_in[1].TexCoords;
         EmitVertex();
         Normal =  gs_in[2].Normal;
         position = gs_in[2].Projection * gs_in[2].View * vec4(gs_in[2].FragPos, 1.0);
         FragPos = gs_in[2].FragPos;
         gl_Position =position;
+        TexCoords = gs_in[2].TexCoords;
         EmitVertex();
         EndPrimitive();
         
