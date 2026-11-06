@@ -1,10 +1,10 @@
 ﻿
-#include "./src/OpenglWidget/mainwindow.h"
+#include "App/mainwindow.h"
 #include <QApplication>
 #include <QFont>
 #include <QSurfaceFormat>
 #include <QTranslator>
-#include "src/Utils/Translator.h"
+#include "Common/Translator.h"
 #include<QDir>
 
 int main(int argc, char *argv[])
@@ -32,20 +32,15 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     
 	QTranslator appTranslator;
-
-
-
-	
-	std::cout << "上级目录: " << fs::current_path().parent_path().string() << std::endl;
-	if (appTranslator.load("translations/zh_CN.qm", QString::fromStdString(fs::current_path().parent_path().string())))
-	{ 
-		appTranslator.filePath(); // 获取QM文件的完整路径，调试用
+	const QString translationPath = QDir(QCoreApplication::applicationDirPath()).filePath("translations/zh_CN.qm");
+	if (appTranslator.load(translationPath))
+	{
 		a.installTranslator(&appTranslator);
-		LogInfo("Successfully loaded translation file: {}", appTranslator.filePath().toStdString());
+		LogInfo("Successfully loaded translation file: {}", translationPath.toStdString());
 	}
 	else
 	{
-		LogInfo("Failed to load translation file: {}", appTranslator.filePath().toStdString());
+		LogInfo("Failed to load translation file: {}", translationPath.toStdString());
 	}
 	QFont font("Microsoft YaHei", 10); // 设置字体为 微软雅黑，字号为 10
 	

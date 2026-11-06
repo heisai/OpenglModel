@@ -55,8 +55,7 @@ set(PROJECT_SOURCES
 
 
 set(LIBS    assimp-vc142-mt)
-qt_add_executable(OpenglEngine ${PROJECT_SOURCES}
-    src/OpenglWidget/LightEditWidget.h src/OpenglWidget/LightEditWidget.cpp src/OpenglWidget/LightEditWidget.ui)
+qt_add_executable(OpenglEngine ${PROJECT_SOURCES})
 
 
 
@@ -65,19 +64,18 @@ set_target_properties(${PROJECT_NAME}
         WIN32_EXECUTABLE false
 )
 target_link_libraries(OpenglEngine PRIVATE  ${LIBS}  Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::OpenGLWidgets )
-target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(OpenglEngine PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(TS_FILES
     translations/zh_CN.ts
     translations/en_US.ts
 )
-# ���� �Լ�����ts qm �ļ�
-set(QM_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/translations")
+# Build translation catalogs alongside the executable, not in the source tree.
+set(QM_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/translations")
 qt_add_translations(OpenglEngine
     TS_FILES 
         translations/zh_CN.ts
         translations/en_US.ts
      QM_OUTPUT_DIRECTORY ${QM_OUTPUT_PATH}
 )
-# �ؼ�������������ȷ��������Ŀ��ǰ���·���
-add_dependencies(OpenglEngine update_translations)
+

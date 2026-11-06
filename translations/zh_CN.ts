@@ -4,17 +4,17 @@
 <context>
     <name>LightEditWidget</name>
     <message>
-        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="14"/>
+        <location filename="../src/App/LightEditWidget.ui" line="14"/>
         <source>Light settings</source>
         <translation>灯光设置</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="22"/>
+        <location filename="../src/App/LightEditWidget.ui" line="22"/>
         <source>Light type</source>
         <translation>投光类型</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/LightEditWidget.ui" line="29"/>
+        <location filename="../src/App/LightEditWidget.ui" line="29"/>
         <source>Light mode</source>
         <translation>光源模式</translation>
     </message>
@@ -22,32 +22,32 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="20"/>
+        <location filename="../src/App/mainwindow.ui" line="20"/>
         <source>MainWindow</source>
         <translation>主窗口</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="66"/>
+        <location filename="../src/App/mainwindow.ui" line="66"/>
         <source>模型</source>
         <translation>模型</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="71"/>
+        <location filename="../src/App/mainwindow.ui" line="71"/>
         <source>渲染</source>
         <translation>渲染</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="76"/>
+        <location filename="../src/App/mainwindow.ui" line="76"/>
         <source>文件</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="81"/>
+        <location filename="../src/App/mainwindow.ui" line="81"/>
         <source>编辑</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/mainwindow.ui" line="86"/>
+        <location filename="../src/App/mainwindow.ui" line="86"/>
         <source>清除</source>
         <translation>清除</translation>
     </message>
@@ -55,48 +55,48 @@
 <context>
     <name>ParaConfigWidget</name>
     <message>
-        <location filename="../src/OpenglWidget/ParaConfigWidget.ui" line="20"/>
+        <location filename="../src/App/ParaConfigWidget.ui" line="20"/>
         <source>Form</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PropertyEditorWidget</name>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="65"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="65"/>
         <source>漫反射贴图</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="68"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="80"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="68"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="80"/>
         <source>选择...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="69"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="81"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="69"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="81"/>
         <source>清除</source>
         <translation type="unfinished">清除</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="77"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="77"/>
         <source>镜面贴图</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="122"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="122"/>
         <source>Select diffuse texture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="123"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="137"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="123"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="137"/>
         <source>Image files (*.png *.jpg *.jpeg *.bmp *.tga *.gif);;All files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.cpp" line="136"/>
+        <location filename="../src/App/PropertyEditorWidget.cpp" line="136"/>
         <source>Select specular texture</source>
         <translation type="unfinished"></translation>
     </message>
@@ -104,81 +104,81 @@
 <context>
     <name>PropertyEditorWidgetClass</name>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="14"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="14"/>
         <source>PropertyEditorWidget</source>
         <translation>属性设置</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="96"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="131"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="183"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="214"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="242"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="277"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="319"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="347"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="375"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="96"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="131"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="183"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="214"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="242"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="277"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="319"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="347"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="375"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="251"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="155"/>
+        <source>PushButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="251"/>
         <source>渲染</source>
         <translation>渲染</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="286"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="286"/>
         <source>材质</source>
         <translation>材质</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="155"/>
-        <source>PushButton</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="70"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="70"/>
         <source>底座</source>
         <translation>底座</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="384"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="384"/>
         <source>光照</source>
         <translation>光照</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="105"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="105"/>
         <source>位置</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="140"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="140"/>
         <source>旋转</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="293"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="293"/>
         <source>缩放</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="82"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="169"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="361"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="82"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="169"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="361"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="117"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="263"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="333"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="117"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="263"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="333"/>
         <source>y</source>
         <translation>y</translation>
     </message>
     <message>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="200"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="228"/>
-        <location filename="../src/OpenglWidget/PropertyEditorWidget.ui" line="305"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="200"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="228"/>
+        <location filename="../src/App/PropertyEditorWidget.ui" line="305"/>
         <source>z</source>
         <translation>z</translation>
     </message>
@@ -186,337 +186,337 @@
 <context>
     <name>Translator</name>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="10"/>
+        <location filename="../src/Common/Translator.cpp" line="10"/>
         <source>cube</source>
         <translation>立方体</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="11"/>
+        <location filename="../src/Common/Translator.cpp" line="11"/>
         <source>ring</source>
         <translation>圆环</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="12"/>
+        <location filename="../src/Common/Translator.cpp" line="12"/>
         <source>sky</source>
         <translation>天空盒</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="13"/>
+        <location filename="../src/Common/Translator.cpp" line="13"/>
         <source>model</source>
         <translation>模型</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="14"/>
+        <location filename="../src/Common/Translator.cpp" line="14"/>
         <source>clear_sky</source>
         <translation>清空天空盒</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="15"/>
+        <location filename="../src/Common/Translator.cpp" line="15"/>
         <source>cylinder</source>
         <translation>圆柱体</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="16"/>
+        <location filename="../src/Common/Translator.cpp" line="16"/>
         <source>grid</source>
         <translation>网格</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="17"/>
+        <location filename="../src/Common/Translator.cpp" line="17"/>
         <source>Planet</source>
         <translation>行星</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="19"/>
+        <location filename="../src/Common/Translator.cpp" line="19"/>
         <source>Move</source>
         <translation>移动</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="20"/>
+        <location filename="../src/Common/Translator.cpp" line="20"/>
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="21"/>
+        <location filename="../src/Common/Translator.cpp" line="21"/>
         <source>Scale</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="22"/>
+        <location filename="../src/Common/Translator.cpp" line="22"/>
         <source>Select</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="23"/>
+        <location filename="../src/Common/Translator.cpp" line="23"/>
         <source>OpenGL</source>
         <translation>Opengl练习</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="25"/>
+        <location filename="../src/Common/Translator.cpp" line="25"/>
         <source>Inversion</source>
         <translation>反相</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="26"/>
+        <location filename="../src/Common/Translator.cpp" line="26"/>
         <source>Grayscale</source>
         <translation>灰度</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="27"/>
+        <location filename="../src/Common/Translator.cpp" line="27"/>
         <source>Sharpen</source>
         <translation>锐化</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="28"/>
+        <location filename="../src/Common/Translator.cpp" line="28"/>
         <source>Blur</source>
         <translation>模糊</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="29"/>
+        <location filename="../src/Common/Translator.cpp" line="29"/>
         <source>Detection</source>
         <translation>检测</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="30"/>
+        <location filename="../src/Common/Translator.cpp" line="30"/>
         <source>Blasting</source>
         <translation>爆破</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="33"/>
+        <location filename="../src/Common/Translator.cpp" line="33"/>
         <source>SecenCollection</source>
         <translation>场景集合</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="34"/>
+        <location filename="../src/Common/Translator.cpp" line="34"/>
         <source>Collection</source>
         <translation>集合</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="35"/>
+        <location filename="../src/Common/Translator.cpp" line="35"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="36"/>
+        <location filename="../src/Common/Translator.cpp" line="36"/>
         <source>Light</source>
         <translation>灯光</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="88"/>
+        <location filename="../src/Common/Translator.cpp" line="88"/>
         <source>DirectionalLight</source>
         <translation>平行光</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="89"/>
+        <location filename="../src/Common/Translator.cpp" line="89"/>
         <source>PointLight</source>
         <translation>点光源</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="90"/>
+        <location filename="../src/Common/Translator.cpp" line="90"/>
         <source>SpotLight</source>
         <translation>聚光</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="91"/>
+        <location filename="../src/Common/Translator.cpp" line="91"/>
         <source>SingleLight</source>
         <translation>单光源</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="92"/>
+        <location filename="../src/Common/Translator.cpp" line="92"/>
         <source>MultipleLights</source>
         <translation>多光源</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="93"/>
+        <location filename="../src/Common/Translator.cpp" line="93"/>
         <source>Light settings</source>
         <translation>灯光设置</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="94"/>
+        <location filename="../src/Common/Translator.cpp" line="94"/>
         <source>Light type</source>
         <translation>投光类型</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="95"/>
+        <location filename="../src/Common/Translator.cpp" line="95"/>
         <source>Light mode</source>
         <translation>光源模式</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="38"/>
+        <location filename="../src/Common/Translator.cpp" line="38"/>
         <source>Tool</source>
         <translation>工具</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="39"/>
+        <location filename="../src/Common/Translator.cpp" line="39"/>
         <source>Render</source>
         <translation>渲染</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="40"/>
+        <location filename="../src/Common/Translator.cpp" line="40"/>
         <source>WorldSpace</source>
         <translation>世界空间</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="41"/>
+        <location filename="../src/Common/Translator.cpp" line="41"/>
         <source>Material</source>
         <translation>材质</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="42"/>
+        <location filename="../src/Common/Translator.cpp" line="42"/>
         <source>Object</source>
         <translation>对象</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="43"/>
+        <location filename="../src/Common/Translator.cpp" line="43"/>
         <source>Output</source>
         <translation>输出</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="46"/>
+        <location filename="../src/Common/Translator.cpp" line="46"/>
         <source>emerald</source>
         <translation>翠</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="47"/>
+        <location filename="../src/Common/Translator.cpp" line="47"/>
         <source>jade</source>
         <translation>玉</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="48"/>
+        <location filename="../src/Common/Translator.cpp" line="48"/>
         <source>obsidian</source>
         <translation>黑曜石</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="49"/>
+        <location filename="../src/Common/Translator.cpp" line="49"/>
         <source>pearl</source>
         <translation>珍珠</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="50"/>
+        <location filename="../src/Common/Translator.cpp" line="50"/>
         <source>ruby</source>
         <translation>红宝石</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="51"/>
+        <location filename="../src/Common/Translator.cpp" line="51"/>
         <source>turquoise</source>
         <translation>绿松石</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="54"/>
+        <location filename="../src/Common/Translator.cpp" line="54"/>
         <source>brass</source>
         <translation>黄铜</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="55"/>
+        <location filename="../src/Common/Translator.cpp" line="55"/>
         <source>bronze</source>
         <translation>青铜</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="56"/>
+        <location filename="../src/Common/Translator.cpp" line="56"/>
         <source>chrome</source>
         <translation>铬合金</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="57"/>
+        <location filename="../src/Common/Translator.cpp" line="57"/>
         <source>copper</source>
         <translation>铜</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="58"/>
+        <location filename="../src/Common/Translator.cpp" line="58"/>
         <source>gold</source>
         <translation>金</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="59"/>
+        <location filename="../src/Common/Translator.cpp" line="59"/>
         <source>silver</source>
         <translation>银</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="62"/>
+        <location filename="../src/Common/Translator.cpp" line="62"/>
         <source>black_plastic</source>
         <translation>黑色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="63"/>
+        <location filename="../src/Common/Translator.cpp" line="63"/>
         <source>cyan_plastic</source>
         <translation>青色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="64"/>
+        <location filename="../src/Common/Translator.cpp" line="64"/>
         <source>green_plastic</source>
         <translation>绿色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="65"/>
+        <location filename="../src/Common/Translator.cpp" line="65"/>
         <source>red_plastic</source>
         <translation>红色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="66"/>
+        <location filename="../src/Common/Translator.cpp" line="66"/>
         <source>white_plastic</source>
         <translation>白色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="67"/>
+        <location filename="../src/Common/Translator.cpp" line="67"/>
         <source>yellow_plastic</source>
         <translation>黄色塑料</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="70"/>
+        <location filename="../src/Common/Translator.cpp" line="70"/>
         <source>black_rubber</source>
         <translation>黑色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="71"/>
+        <location filename="../src/Common/Translator.cpp" line="71"/>
         <source>cyan_rubber</source>
         <translation>青色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="72"/>
+        <location filename="../src/Common/Translator.cpp" line="72"/>
         <source>green_rubber</source>
         <translation>绿色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="73"/>
+        <location filename="../src/Common/Translator.cpp" line="73"/>
         <source>red_rubber</source>
         <translation>红色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="74"/>
+        <location filename="../src/Common/Translator.cpp" line="74"/>
         <source>white_rubber</source>
         <translation>白色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="75"/>
+        <location filename="../src/Common/Translator.cpp" line="75"/>
         <source>yellow_rubber</source>
         <translation>黄色橡胶</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="78"/>
+        <location filename="../src/Common/Translator.cpp" line="78"/>
         <source>phone</source>
         <translation>Phone模型</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="79"/>
+        <location filename="../src/Common/Translator.cpp" line="79"/>
         <source>blinn</source>
         <translation>Blinn模型</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="80"/>
+        <location filename="../src/Common/Translator.cpp" line="80"/>
         <source>floor</source>
         <translation>地板</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="83"/>
+        <location filename="../src/Common/Translator.cpp" line="83"/>
         <source>single_render</source>
         <translation>单面遮光</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="84"/>
+        <location filename="../src/Common/Translator.cpp" line="84"/>
         <source>double_render</source>
         <translation>双面遮光</translation>
     </message>
     <message>
-        <location filename="../src/Utils/Translator.cpp" line="85"/>
+        <location filename="../src/Common/Translator.cpp" line="85"/>
         <source>discard_render</source>
         <translation>片段丢弃</translation>
     </message>
