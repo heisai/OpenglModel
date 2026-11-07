@@ -1,5 +1,66 @@
 #include "ManageEngine.h"
 
+namespace
+{
+bool tryGetLightGizmoTranslate(const std::list<GraphicsEnginePtr>& graphics, glm::vec3& out_translate)
+{
+	auto light_iter = std::find_if(graphics.begin(), graphics.end(), [](const GraphicsEnginePtr& graphic) {
+		return graphic && graphic->getModeltype() == OperatorAction::CreatLight;
+		});
+	if (light_iter == graphics.end() || !(*light_iter))
+	{
+		return false;
+	}
+
+	MvpDataPtr mvp_data = (*light_iter)->getMvpData();
+	if (!mvp_data)
+	{
+		return false;
+	}
+
+	out_translate = glm::vec3(mvp_data->view_[3]);
+	return true;
+}
+
+void applyLightGizmoToPrimaryLight(const glm::vec3& gizmo_translate,
+	const glm::vec3& object_translate,
+	Lighting::LightConfig& config)
+{
+	if (config.lights.empty())
+	{
+		return;
+	}
+
+	const glm::vec3 relative_light_position = gizmo_translate - object_translate;
+	const float length_sq = glm::dot(relative_light_position, relative_light_position);
+	auto& parameters = config.lights.front().parameters;
+
+	if (auto* point = std::get_if<Lighting::PointLight>(&parameters))
+	{
+		point->position = relative_light_position;
+		return;
+	}
+
+	if (auto* spot = std::get_if<Lighting::SpotLight>(&parameters))
+	{
+		spot->position = relative_light_position;
+		if (length_sq > 1e-6f)
+		{
+			spot->direction = -glm::normalize(relative_light_position);
+		}
+		return;
+	}
+
+	if (auto* directional = std::get_if<Lighting::DirectionalLight>(&parameters))
+	{
+		if (length_sq > 1e-6f)
+		{
+			directional->direction = -glm::normalize(relative_light_position);
+		}
+	}
+}
+} // namespace
+
 ManageEngine::ManageEngine():
     screen_render_model_(nullptr)
 {
@@ -350,8 +411,6 @@ void ManageEngine::initializeGl()
 
 void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
 {
-	int index = 0;
-
 	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
 		return (graphic_->getCheck() == true);
 		});
@@ -402,18 +461,83 @@ void ManageEngine::setLightSettings(Lighting::LightType type, Lighting::LightMod
 		qWarning() << "Invalid light mode";
 		return;
 	}
+	if (light_config_.lights.empty())
+	{
+		qWarning() << "No light data available";
+		return;
+	}
+
 	// 当前界面只编辑第一盏灯；类型变化时重置其类型专属参数，保留公共光强。
 	auto& parameters = light_config_.lights.front().parameters;
+	glm::vec3 cached_position{ 0.0f };
+	glm::vec3 cached_direction{ 0.0f, -1.0f, 0.0f };
+	bool has_cached_position = false;
+	bool has_cached_direction = false;
+
+	if (const auto* directional = std::get_if<Lighting::DirectionalLight>(&parameters))
+	{
+		cached_direction = directional->direction;
+		has_cached_direction = true;
+	}
+	else if (const auto* point = std::get_if<Lighting::PointLight>(&parameters))
+	{
+		cached_position = point->position;
+		has_cached_position = true;
+	}
+	else if (const auto* spot = std::get_if<Lighting::SpotLight>(&parameters))
+	{
+		cached_position = spot->position;
+		cached_direction = spot->direction;
+		has_cached_position = true;
+		has_cached_direction = true;
+	}
+
 	switch (type)
 	{
 	case Lighting::LightType::Directional:
-		if (!std::holds_alternative<Lighting::DirectionalLight>(parameters)) parameters = Lighting::DirectionalLight{};
+		if (!std::holds_alternative<Lighting::DirectionalLight>(parameters))
+		{
+			Lighting::DirectionalLight directional{};
+			if (has_cached_direction && glm::dot(cached_direction, cached_direction) > 1e-6f)
+			{
+				directional.direction = glm::normalize(cached_direction);
+			}
+			else if (has_cached_position && glm::dot(cached_position, cached_position) > 1e-6f)
+			{
+				directional.direction = -glm::normalize(cached_position);
+			}
+			parameters = directional;
+		}
 		break;
 	case Lighting::LightType::Point:
-		if (!std::holds_alternative<Lighting::PointLight>(parameters)) parameters = Lighting::PointLight{};
+		if (!std::holds_alternative<Lighting::PointLight>(parameters))
+		{
+			Lighting::PointLight point{};
+			if (has_cached_position)
+			{
+				point.position = cached_position;
+			}
+			parameters = point;
+		}
 		break;
 	case Lighting::LightType::Spot:
-		if (!std::holds_alternative<Lighting::SpotLight>(parameters)) parameters = Lighting::SpotLight{};
+		if (!std::holds_alternative<Lighting::SpotLight>(parameters))
+		{
+			Lighting::SpotLight spot{};
+			if (has_cached_position)
+			{
+				spot.position = cached_position;
+			}
+			if (has_cached_direction && glm::dot(cached_direction, cached_direction) > 1e-6f)
+			{
+				spot.direction = glm::normalize(cached_direction);
+			}
+			else if (has_cached_position && glm::dot(cached_position, cached_position) > 1e-6f)
+			{
+				spot.direction = -glm::normalize(cached_position);
+			}
+			parameters = spot;
+		}
 		break;
 	default:
 		qWarning() << "Invalid light type";
@@ -424,22 +548,32 @@ void ManageEngine::setLightSettings(Lighting::LightType type, Lighting::LightMod
 
 void ManageEngine::paintGl()
 {
+	if (list_graphic_.empty()) return;
 
+	glm::vec3 light_gizmo_translate{ 0.0f };
+	const bool has_light_gizmo = tryGetLightGizmoTranslate(list_graphic_, light_gizmo_translate);
 
-    if (list_graphic_.empty()) return;
-
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    for (const auto& graphic_ : list_graphic_)
-    {
-        if (graphic_->getDefaultShader())
-        {
-            graphic_->getDefaultShader()->bind();
-			// 在绘制每个对象前，将同一份场景光照上传到其 shader。
-			graphic_->getDefaultShader()->setLights(light_config_);
-            graphic_->Draw();
-        }
-    }
-    //如果模型是空，不进行离屏渲染
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	for (const auto& graphic_ : list_graphic_)
+	{
+		if (graphic_->getDefaultShader())
+		{
+			graphic_->getDefaultShader()->bind();
+			// 每个物体都有独立 view 平移，这里把灯光控制器位置换算到当前物体使用的坐标系。
+			Lighting::LightConfig effective_light_config = light_config_;
+			if (has_light_gizmo)
+			{
+				MvpDataPtr mvp_data = graphic_->getMvpData();
+				if (mvp_data)
+				{
+					applyLightGizmoToPrimaryLight(light_gizmo_translate, glm::vec3(mvp_data->view_[3]), effective_light_config);
+				}
+			}
+			graphic_->getDefaultShader()->setLights(effective_light_config);
+			graphic_->Draw();
+		}
+	}
+	//如果模型是空，不进行离屏渲染
     if (list_graphic_.empty())
     {
         return;
@@ -450,9 +584,9 @@ void ManageEngine::paintGl()
 		screen_render_model_->drawTexture();
 		for (const auto& graphic_ : list_graphic_)
 		{
-				MeshPtr mesh = graphic_->getMesh();
-				screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices, graphic_->getDefaultShader());
-				screen_render_model_->Draw();
+			MeshPtr mesh = graphic_->getMesh();
+			screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices, graphic_->getDefaultShader());
+			screen_render_model_->Draw();
 		}
 	}
 }
