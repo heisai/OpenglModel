@@ -145,6 +145,46 @@
 <context>
     <name>Translator</name>
     <message>
+        <source>Light position X</source>
+        <translation>Light position X</translation>
+    </message>
+    <message>
+        <source>Light position Y</source>
+        <translation>Light position Y</translation>
+    </message>
+    <message>
+        <source>Light position Z</source>
+        <translation>Light position Z</translation>
+    </message>
+    <message>
+        <source>Light direction X</source>
+        <translation>Light direction X</translation>
+    </message>
+    <message>
+        <source>Light direction Y</source>
+        <translation>Light direction Y</translation>
+    </message>
+    <message>
+        <source>Light direction Z</source>
+        <translation>Light direction Z</translation>
+    </message>
+    <message>
+        <source>Inner angle</source>
+        <translation>Inner cone angle (degrees)</translation>
+    </message>
+    <message>
+        <source>Outer angle</source>
+        <translation>Outer cone angle (degrees)</translation>
+    </message>
+    <message>
+        <source>Direction must be nonzero and 0 &lt;= inner &lt; outer &lt; 90 degrees</source>
+        <translation>Direction must be nonzero and 0 &lt;= inner &lt; outer &lt; 90 degrees.</translation>
+    </message>
+    <message>
+        <source>light</source>
+        <translation>light</translation>
+    </message>
+    <message>
         <location filename="../src/Utils/Translator.cpp" line="10"/>
         <source>cube</source>
         <translation type="unfinished"></translation>

@@ -1,594 +1,577 @@
 #include "ManageEngine.h"
+#include <cmath>
 
 namespace
 {
-bool tryGetLightGizmoTranslate(const std::list<GraphicsEnginePtr>& graphics, glm::vec3& out_translate)
+// 检查向量各分量是否有限，拒绝 NaN 和无穷值进入场景状态。
+bool finiteVector(const glm::vec3 &value)
 {
-	auto light_iter = std::find_if(graphics.begin(), graphics.end(), [](const GraphicsEnginePtr& graphic) {
-		return graphic && graphic->getModeltype() == OperatorAction::CreatLight;
-		});
-	if (light_iter == graphics.end() || !(*light_iter))
-	{
-		return false;
-	}
-
-	MvpDataPtr mvp_data = (*light_iter)->getMvpData();
-	if (!mvp_data)
-	{
-		return false;
-	}
-
-	out_translate = glm::vec3(mvp_data->view_[3]);
-	return true;
-}
-
-void applyLightGizmoToPrimaryLight(const glm::vec3& gizmo_translate,
-	const glm::vec3& object_translate,
-	Lighting::LightConfig& config)
-{
-	if (config.lights.empty())
-	{
-		return;
-	}
-
-	const glm::vec3 relative_light_position = gizmo_translate - object_translate;
-	const float length_sq = glm::dot(relative_light_position, relative_light_position);
-	auto& parameters = config.lights.front().parameters;
-
-	if (auto* point = std::get_if<Lighting::PointLight>(&parameters))
-	{
-		point->position = relative_light_position;
-		return;
-	}
-
-	if (auto* spot = std::get_if<Lighting::SpotLight>(&parameters))
-	{
-		spot->position = relative_light_position;
-		if (length_sq > 1e-6f)
-		{
-			spot->direction = -glm::normalize(relative_light_position);
-		}
-		return;
-	}
-
-	if (auto* directional = std::get_if<Lighting::DirectionalLight>(&parameters))
-	{
-		if (length_sq > 1e-6f)
-		{
-			directional->direction = -glm::normalize(relative_light_position);
-		}
-	}
+    return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z);
 }
 } // namespace
 
-ManageEngine::ManageEngine():
-    screen_render_model_(nullptr)
+ManageEngine::ManageEngine() : screen_render_model_(nullptr)
 {
-	registerEngineModel();
+    registerEngineModel();
 }
 
 void ManageEngine::setViewSize(int width, int height)
 {
     width_ = width;
     height_ = height;
-    std::for_each(list_graphic_.begin(), list_graphic_.end(), [width, height](auto graphic) {graphic ->SetViewSize(width, height); });
+    if (width > 0 && height > 0)
+    {
+        const auto projection = glm::perspective(glm::radians(45.0f), float(width) / float(height), 0.1f, 100.0f);
+        for (const auto &graphic : list_graphic_)
+        {
+            graphic->SetViewSize(width, height);
+            graphic->setProjectionData(projection);
+        }
+    }
 
-	if (screen_render_model_)
-	{
+    if (screen_render_model_)
+    {
         screen_render_model_->SetViewSize(width, height);
-	}
+    }
 }
 
 QString ManageEngine::createModel(OperatorAction type)
 {
-	QString model_uuid = "";
-    //判断包装器中是否包含该函数
-   auto iter = map_graphicengine_createfunc_.find(type);
-   if (iter != map_graphicengine_createfunc_.end())
-   {
-       GraphicsEnginePtr ptr = iter->second();
-	   if (!ptr) return model_uuid; // 渲染类型不创建模型
-	   addEngine(ptr);
-	   model_uuid =  ptr->getModelName();
-	
-
-	 
-   }
-   if (screen_render_model_ == nullptr)
-   {
-	   screen_render_model_ = std::make_unique<ScreenRenderModel>(OperatorAction::CreatTourse);
-	   screen_render_model_->SetViewSize(width_, height_);
-   }
-   return model_uuid;
+    QString model_uuid = "";
+    // 判断包装器中是否包含该函数
+    auto iter = map_graphicengine_createfunc_.find(type);
+    if (iter != map_graphicengine_createfunc_.end())
+    {
+        GraphicsEnginePtr ptr = iter->second();
+        if (!ptr)
+        {
+            return model_uuid; // 渲染类型不创建模型
+        }
+        addEngine(ptr);
+        model_uuid = ptr->getModelName();
+    }
+    if (screen_render_model_ == nullptr)
+    {
+        screen_render_model_ = std::make_unique<ScreenRenderModel>(OperatorAction::CreatTourse);
+        screen_render_model_->SetViewSize(width_, height_);
+    }
+    return model_uuid;
 }
 
 QString ManageEngine::removeModel(OperatorAction type)
 {
 
-	QString model_uuid = "";
-    if (type == OperatorAction::ClearSkyBox)	//删除天空盒
+    QString model_uuid = "";
+    if (type == OperatorAction::ClearBlasting) // 删除爆破功能
     {
-        list_graphic_.remove_if([type, &model_uuid](auto grahic) {  
-			if (grahic->getModeltype() == type)
-			{
-				model_uuid = grahic->getModelName();
-				return true;
-			}
-			return false;
-			});
-    }
-	else if (type == OperatorAction::ClearBlasting)		//删除爆破功能
-	{
-		auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
-			return (graphic_->getCheck() == true);
-			});
+        auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
+                                 [](GraphicsEnginePtr graphic_) 
+            { 
+                return (graphic_->getCheck() == true);
+            });
 
-		if (iter != list_graphic_.end())
-		{
-			(*iter)->getMvpData()->blasting_flag_ = false;
-		}
-	}
-    else   //删除正常模型
-    {
-        list_graphic_.remove_if([&model_uuid](auto grahic) {   
-			if (grahic->getCheck() == true)
-			{
-				model_uuid = grahic->getModelName();
-				return true;
-			}
-			return false;
-			});
+        if (iter != list_graphic_.end())
+        {
+            (*iter)->getMvpData()->blasting_flag_ = false;
+        }
+        return "";
     }
- 
-	return model_uuid;
+    auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
+        [type](const GraphicsEnginePtr& graphic)
+        {
+            if (type == OperatorAction::ClearSkyBox)
+            {
+                return graphic->getModeltype() == OperatorAction::ClearSkyBox;
+            }
+            return graphic->getCheck();
+        });
+
+    if (iter == list_graphic_.end())
+    {
+        return {};
+    }
+    const QString removedName = (*iter)->getModelName();
+    list_graphic_.erase(iter);
+    return removedName;
+  
 }
 
 void ManageEngine::registerEngineModel()
 {
 
-	// 注册引擎创建函数
-	//立方体
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this) });	
-	//圆环体
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this) });
-	//圆柱体
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this) });	
-	//天空盒
-	map_graphicengine_createfunc_.insert({ OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this) });
-	//网格
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this) });	
-	//行星
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this) });	
-	//反向
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this) });   
-	//灰度
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this) });  
-	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this) });   //锐化
-	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this) });   //模糊
-	
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this) });   //检测
+    // 注册引擎创建函数
+    // 立方体
+    map_graphicengine_createfunc_.insert({OperatorAction::CreatCube, std::bind(&ManageEngine::createCubeEngine, this)});
+    // 圆环体
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::CreatTourse, std::bind(&ManageEngine::createToursEngine, this)});
+    // 圆柱体
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::CreatCyliner, std::bind(&ManageEngine::createCylinderEngine, this)});
+    // 天空盒
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::ClearSkyBox, std::bind(&ManageEngine::createSkyBoxEngine, this)});
+    // 网格
+    map_graphicengine_createfunc_.insert({OperatorAction::CreatGrid, std::bind(&ManageEngine::createGridEngine, this)});
+    // 行星
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::CreatPlanet, std::bind(&ManageEngine::createPlanteEngine, this)});
+    // 反向
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderInversion, std::bind(&ManageEngine::createInversionRender, this)});
+    // 灰度
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderGrayscale, std::bind(&ManageEngine::createGrayscaleRender, this)});
 
-	map_graphicengine_createfunc_.insert({ OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this) });   //爆破
-	
-	map_graphicengine_createfunc_.insert({ OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this) });   //清除渲染
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderSharpen, std::bind(&ManageEngine::createSharpenRender, this)}); // 锐化
 
-	//坐标轴
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatAxis, std::bind(&ManageEngine::createAxisEngine, this) });  
-	//灯光
-	map_graphicengine_createfunc_.insert({ OperatorAction::CreatLight, std::bind(&ManageEngine::createLightEngine, this) });
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderBlur, std::bind(&ManageEngine::createBlurRender, this)}); // 模糊
+
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderDetection, std::bind(&ManageEngine::createDetectionRender, this)}); // 检测
+
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::RenderBlasting, std::bind(&ManageEngine::createBlastingRender, this)}); // 爆破
+
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::ClearRender, std::bind(&ManageEngine::clearRender, this)}); // 清除渲染
+
+    // 坐标轴
+    map_graphicengine_createfunc_.insert({OperatorAction::CreatAxis, std::bind(&ManageEngine::createAxisEngine, this)});
+    // 灯光
+    map_graphicengine_createfunc_.insert(
+        {OperatorAction::CreatLight, std::bind(&ManageEngine::createLightEngine, this)});
 }
 
 GraphicsEnginePtr ManageEngine::createAxisEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag", "axis_geometry.geom", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader =
+        std::make_shared<Shader>("axis_vertex.vert", "axis_fragment.frag", "axis_geometry.geom", "GeneralModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<AxisModel>(OperatorAction::CreatAxis, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createGridEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "scene_fragment.frag", "GridModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<GridModel>(OperatorAction::CreatGrid, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("grid_vertex.vert", "scene_fragment.frag", "GridModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GridModel>(OperatorAction::CreatGrid, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createCubeEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatCube, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatCube, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createLightEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "LightModel");
-	GraphicsEnginePtr light_engine = std::make_shared<LightModel>(OperatorAction::CreatLight, light_shader);
-	light_engine->SetViewSize(width_, height_);
-	return light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "LightModel");
+    GraphicsEnginePtr light_engine = std::make_shared<LightModel>(OperatorAction::CreatLight, light_shader);
+    light_engine->SetViewSize(width_, height_);
+    return light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createToursEngine()
 {
-	////"geometry_shader.geom"
-	//ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag", "geometry_shader.geom", "GeneralModel");
- //   GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
- //   basic_light_engine->SetViewSize(width_, height_);
- //   return basic_light_engine;
+    ////"geometry_shader.geom"
+    // ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "fragment_shader.frag",
+    // "geometry_shader.geom", "GeneralModel");
+    //   GraphicsEnginePtr basic_light_engine =
+    //   std::make_shared<GeneralModel>(OperatorAction::CreatTourse,light_shader);
+    //   basic_light_engine->SetViewSize(width_, height_);
+    //   return basic_light_engine;
 
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatTourse, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "scene_fragment.frag", "ShaderModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<ShaderModel>(OperatorAction::CreatTourse, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createCylinderEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "geometry_shader.geom", "GeneralModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag",
+                                                      "geometry_shader.geom", "GeneralModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<GeneralModel>(OperatorAction::CreatCyliner, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createSkyBoxEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(OperatorAction::ClearSkyBox, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vs", "fragment_shader.fs", "CubeMapsModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<CubeMapsModel>(OperatorAction::ClearSkyBox, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createPlanteEngine()
 {
-	ShaderPtr light_shader = std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "PlanteModel");
-	GraphicsEnginePtr basic_light_engine = std::make_shared<PlanetModel>(OperatorAction::CreatTourse, light_shader);
-	basic_light_engine->SetViewSize(width_, height_);
-	return basic_light_engine;
+    ShaderPtr light_shader =
+        std::make_shared<Shader>("vertex_shader.vert", "..\\common\\scene_fragment.frag", "PlanteModel");
+    GraphicsEnginePtr basic_light_engine = std::make_shared<PlanetModel>(OperatorAction::CreatTourse, light_shader);
+    basic_light_engine->SetViewSize(width_, height_);
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createInversionRender()
 {
     GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(1);
-	}
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(1);
+    }
     return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createGrayscaleRender()
 {
-	GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(2);
-	}
-	return basic_light_engine;
+    GraphicsEnginePtr basic_light_engine = nullptr;
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(2);
+    }
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createSharpenRender()
 {
-	GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(3);
-	}
-	return basic_light_engine;
+    GraphicsEnginePtr basic_light_engine = nullptr;
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(3);
+    }
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createBlurRender()
 {
-	GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(4);
-	}
-	return basic_light_engine;
+    GraphicsEnginePtr basic_light_engine = nullptr;
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(4);
+    }
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createDetectionRender()
 {
-	GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(5);
-	}
-	return basic_light_engine;
+    GraphicsEnginePtr basic_light_engine = nullptr;
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(5);
+    }
+    return basic_light_engine;
 }
 
 GraphicsEnginePtr ManageEngine::createBlastingRender()
 {
-	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
-		return (graphic_->getCheck() == true);
-		});
+    auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
+                             [](GraphicsEnginePtr graphic_) { return (graphic_->getCheck() == true); });
 
-	if (iter != list_graphic_.end())
-	{
-		(*iter)->getMvpData()->blasting_flag_ = true;
-	}
+    if (iter != list_graphic_.end())
+    {
+        (*iter)->getMvpData()->blasting_flag_ = true;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 GraphicsEnginePtr ManageEngine::clearRender()
 {
-	GraphicsEnginePtr basic_light_engine = nullptr;
-	if (screen_render_model_)
-	{
-		screen_render_model_->setRenderType(0);
-	}
-	return basic_light_engine;
+    GraphicsEnginePtr basic_light_engine = nullptr;
+    if (screen_render_model_)
+    {
+        screen_render_model_->setRenderType(0);
+    }
+    return basic_light_engine;
 }
 
 void ManageEngine::createLoadModelEngine()
 {
-    //ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "LoadModel");
-    //GraphicsEnginePtr load_model_engine = std::make_shared<LoadModelEngine>(model_shader);
-    //addEngine(generateUuid(), load_model_engine, model_shader);
+    // ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "LoadModel");
+    // GraphicsEnginePtr load_model_engine = std::make_shared<LoadModelEngine>(model_shader);
+    // addEngine(generateUuid(), load_model_engine, model_shader);
 }
 
 void ManageEngine::createMixEngine()
 {
-    //ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "MixEngine");
-    //GraphicsEnginePtr mix_engine = std::make_shared<MixEngine>(model_shader);
-    //addEngine(generateUuid(), mix_engine, model_shader);
+    // ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "MixEngine");
+    // GraphicsEnginePtr mix_engine = std::make_shared<MixEngine>(model_shader);
+    // addEngine(generateUuid(), mix_engine, model_shader);
 }
 void ManageEngine::showAxisModel(bool flag)
 {
-	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [flag](GraphicsEnginePtr graphic_) {
-		return graphic_->getModeltype() == OperatorAction::CreatAxis;
-	});
-	if (iter != list_graphic_.end())
-	{
-		(*iter)->setShown(flag);
-	}
+    auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [flag](GraphicsEnginePtr graphic_)
+                             { return graphic_->getModeltype() == OperatorAction::CreatAxis; });
+    if (iter != list_graphic_.end())
+    {
+        (*iter)->setShown(flag);
+    }
 }
-void ManageEngine::addEngine(const GraphicsEnginePtr& graphics)
+void ManageEngine::addEngine(const GraphicsEnginePtr &graphics)
 {
-	if (graphics == nullptr)
-	{
-		return;
-	}
-	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::mat4(1.0f);
-	graphics->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f)));
-	graphics->setModelData(glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f)));
-	graphics->setProjectionData(glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-	if (graphics->getModeltype() == OperatorAction::ClearSkyBox)
-	{
-		list_graphic_.push_front(graphics);
-	}
-	else
-	{
-		list_graphic_.push_back(graphics);
-	}
+    if (graphics == nullptr)
+    {
+        return;
+    }
+    auto data = graphics->getMvpData();
+    graphics->setViewData(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)));
+    if (graphics->getModeltype() != OperatorAction::CreatGrid &&
+        graphics->getModeltype() != OperatorAction::CreatAxis && graphics->getModeltype() != OperatorAction::CreatLight)
+    {
+        data->rotation_ =
+            glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::normalize(glm::vec3(1.0f, 1.0f, 0.0f)));
+    }
+    if (graphics->getModeltype() == OperatorAction::CreatLight)
+    {
+        data->position_ = light_position_;
+    }
+    data->rebuildModel();
+    graphics->setProjectionData(glm::perspective(
+        glm::radians(45.0f), height_ > 0 ? float(width_) / float(height_) : 4.0f / 3.0f, 0.1f, 100.0f));
+    if (graphics->getModeltype() == OperatorAction::ClearSkyBox)
+    {
+        list_graphic_.push_front(graphics);
+    }
+    else
+    {
+        list_graphic_.push_back(graphics);
+    }
 
+    for (const auto &graphic : list_graphic_)
+    {
+        LogInfo("OperatorAction:{} ", int(graphic->getModeltype()));
+    }
 
-	for (const auto& graphic : list_graphic_)
-	{
-		LogInfo("OperatorAction:{} ", int(graphic->getModeltype()));
-	}
-
-	QString model_name = graphics->getModelName();
-	generateUuid(model_name);
-	graphics->setModelName(model_name);
+    QString model_name = graphics->getModelName();
+    generateUuid(model_name);
+    graphics->setModelName(model_name);
 }
 
-void ManageEngine::generateUuid(QString& model_name)
+void ManageEngine::generateUuid(QString &model_name)
 {
     auto iter = map_model_id_.find(model_name);
     if (iter != map_model_id_.end())
     {
-		map_model_id_[model_name]++;
-		model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
+        map_model_id_[model_name]++;
+        model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
     }
     else
     {
         map_model_id_[model_name] = 0;
-		model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
+        model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
     }
 }
 void ManageEngine::initializeGl()
 {
 
-    for (const auto& graphic_ : list_graphic_)
-	{
-            graphic_->InitBufferData();
+    for (const auto &graphic_ : list_graphic_)
+    {
+        graphic_->InitBufferData();
     }
-	if (screen_render_model_ )
-	{
+    if (screen_render_model_)
+    {
         screen_render_model_->InitBufferData();
-	}
-
+    }
 }
 
-
-
-void ManageEngine::setEngineScaleAndTranslate(const QString& uuid, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
+void ManageEngine::syncLight()
 {
-	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
-		return (graphic_->getCheck() == true);
-		});
-
-	if (iter != list_graphic_.end())
-	{
-		SetEngineScaleAndTranslate(*iter, scale, translate, model_old);
-		iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
-			return (graphic_->getModeltype() == OperatorAction::CreatAxis);
-			});
-		if (iter != list_graphic_.end())
-		{
-			SetEngineScaleAndTranslate(*iter, scale, translate, model_old);
-		}
-	}
-
+    if (light_config_.lights.empty())
+    {
+        return;
+    }
+    auto &p = light_config_.lights.front().parameters;
+    if (auto *d = std::get_if<Lighting::DirectionalLight>(&p))
+    {
+        d->direction = light_direction_;
+    }
+    if (auto *point = std::get_if<Lighting::PointLight>(&p))
+    {
+        point->position = light_position_;
+        point->attenuation = light_attenuation_;
+    }
+    if (auto *spot = std::get_if<Lighting::SpotLight>(&p))
+    {
+        light_spot_.position = light_position_;
+        light_spot_.direction = light_direction_;
+        light_spot_.attenuation = light_attenuation_;
+        *spot = light_spot_;
+    }
+    for (const auto &graphic : list_graphic_)
+    {
+        if (graphic->getModeltype() == OperatorAction::CreatLight)
+        {
+            auto data = graphic->getMvpData();
+            data->position_ = light_position_;
+            data->rebuildModel();
+            if (graphic->getCheck())
+            {
+                for (const auto &axis : list_graphic_)
+                {
+                    if (axis->getModeltype() == OperatorAction::CreatAxis)
+                    {
+                        axis->setModelData(data->model_);
+                    }
+                }
+            }
+        }
+    }
+    emit lightChanged();
 }
-void ManageEngine::SetEngineScaleAndTranslate(const GraphicsEnginePtr& engine_ptr, const glm::vec3& scale, const glm::vec3& translate, const glm::mat4& model_old)
+
+void ManageEngine::setPrimaryLightValues(const glm::vec3 &position, const glm::vec3 &direction, float inner,
+                                         float outer)
 {
-	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
-	view = glm::translate(view, glm::vec3(translate.x, translate.y, translate.z));
-	model = glm::scale(model, glm::vec3(scale.x, scale.y, scale.z));
-	engine_ptr->setViewData(glm::translate(view, glm::vec3(0.0f, 0.0f, -0.0f)));
-	engine_ptr->setModelData(model * model_old);
-	engine_ptr->setProjectionData(projection);
-	engine_ptr->setTranlstorPosition(QVector2D(translate.x, -translate.y));
+    const float directionLengthSquared = glm::dot(direction, direction);
+    if (!finiteVector(position) || !finiteVector(direction) || !std::isfinite(directionLengthSquared) ||
+        directionLengthSquared < 1e-8f || !std::isfinite(inner) || !std::isfinite(outer) || inner < 0.0f ||
+        outer >= 90.0f || inner >= outer)
+    {
+        qWarning() << "Invalid light position, direction or cone angles";
+        return;
+    }
+    light_position_ = position;
+    light_direction_ = direction;
+    light_spot_.innerAngleDegrees = inner;
+    light_spot_.outerAngleDegrees = outer;
+    syncLight();
 }
 
-void ManageEngine::setPropertyData(const Utils::Material& material_)
+void ManageEngine::updateSelectedTransform(const glm::vec3 &position, const glm::mat4 &rotation, const glm::vec3 &scale)
 {
-	
-	auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](GraphicsEnginePtr graphic_) {
-		return (graphic_->getCheck() == true);
-		});
-	if (iter != list_graphic_.end())
-	{
-		(*iter)->setMaterialData(material_);
-	}
+    bool finiteRotation = true;
+    for (int column = 0; column < 4; ++column)
+    {
+        for (int row = 0; row < 4; ++row)
+        {
+            finiteRotation = finiteRotation && std::isfinite(rotation[column][row]);
+        }
+    }
+    if (!finiteVector(position) || !finiteVector(scale) || !finiteRotation || scale.x <= 0.0f || scale.y <= 0.0f ||
+        scale.z <= 0.0f)
+    {
+        qWarning() << "Invalid object transform";
+        return;
+    }
+    auto it = std::find_if(list_graphic_.begin(), list_graphic_.end(), [](const auto &g) { return g->getCheck(); });
+    if (it == list_graphic_.end())
+    {
+        return;
+    }
+    auto data = (*it)->getMvpData();
+    if ((*it)->getModeltype() == OperatorAction::CreatLight)
+    {
+        // Translation does not steer the light; only the rotation delta changes direction.
+        light_direction_ = glm::vec3(rotation * glm::inverse(data->rotation_) * glm::vec4(light_direction_, 0.0f));
+        light_position_ = position;
+    }
+    data->position_ = position;
+    data->rotation_ = rotation;
+    data->scale_ = scale;
+    data->rebuildModel();
+    for (const auto &graphic : list_graphic_)
+    {
+        if (graphic->getModeltype() == OperatorAction::CreatAxis)
+        {
+            graphic->setModelData(data->model_);
+        }
+    }
+    if ((*it)->getModeltype() == OperatorAction::CreatLight)
+    {
+        syncLight();
+    }
+}
+
+void ManageEngine::setPropertyData(const Utils::Material &material_)
+{
+
+    auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
+                             [](GraphicsEnginePtr graphic_) { return (graphic_->getCheck() == true); });
+    if (iter != list_graphic_.end())
+    {
+        (*iter)->setMaterialData(material_);
+    }
 }
 
 void ManageEngine::setLightSettings(Lighting::LightType type, Lighting::LightMode mode)
 {
-	if (mode != Lighting::LightMode::Single && mode != Lighting::LightMode::Multiple)
-	{
-		qWarning() << "Invalid light mode";
-		return;
-	}
-	if (light_config_.lights.empty())
-	{
-		qWarning() << "No light data available";
-		return;
-	}
+    if (mode != Lighting::LightMode::Single && mode != Lighting::LightMode::Multiple)
+    {
+        qWarning() << "Invalid light mode";
+        return;
+    }
+    if (light_config_.lights.empty())
+    {
+        return;
+    }
+    auto &p = light_config_.lights.front().parameters;
+    switch (type)
+    {
+    case Lighting::LightType::Directional:
+        p = Lighting::DirectionalLight{};
+        break;
+    case Lighting::LightType::Point:
+        p = Lighting::PointLight{};
+        break;
+    case Lighting::LightType::Spot:
+        p = light_spot_;
+        break;
+    default:
+        qWarning() << "Invalid light type";
+        return;
+    }
+    light_config_.mode = mode;
+    syncLight();
 
-	// 当前界面只编辑第一盏灯；类型变化时重置其类型专属参数，保留公共光强。
-	auto& parameters = light_config_.lights.front().parameters;
-	glm::vec3 cached_position{ 0.0f };
-	glm::vec3 cached_direction{ 0.0f, -1.0f, 0.0f };
-	bool has_cached_position = false;
-	bool has_cached_direction = false;
-
-	if (const auto* directional = std::get_if<Lighting::DirectionalLight>(&parameters))
-	{
-		cached_direction = directional->direction;
-		has_cached_direction = true;
-	}
-	else if (const auto* point = std::get_if<Lighting::PointLight>(&parameters))
-	{
-		cached_position = point->position;
-		has_cached_position = true;
-	}
-	else if (const auto* spot = std::get_if<Lighting::SpotLight>(&parameters))
-	{
-		cached_position = spot->position;
-		cached_direction = spot->direction;
-		has_cached_position = true;
-		has_cached_direction = true;
-	}
-
-	switch (type)
-	{
-	case Lighting::LightType::Directional:
-		if (!std::holds_alternative<Lighting::DirectionalLight>(parameters))
-		{
-			Lighting::DirectionalLight directional{};
-			if (has_cached_direction && glm::dot(cached_direction, cached_direction) > 1e-6f)
-			{
-				directional.direction = glm::normalize(cached_direction);
-			}
-			else if (has_cached_position && glm::dot(cached_position, cached_position) > 1e-6f)
-			{
-				directional.direction = -glm::normalize(cached_position);
-			}
-			parameters = directional;
-		}
-		break;
-	case Lighting::LightType::Point:
-		if (!std::holds_alternative<Lighting::PointLight>(parameters))
-		{
-			Lighting::PointLight point{};
-			if (has_cached_position)
-			{
-				point.position = cached_position;
-			}
-			parameters = point;
-		}
-		break;
-	case Lighting::LightType::Spot:
-		if (!std::holds_alternative<Lighting::SpotLight>(parameters))
-		{
-			Lighting::SpotLight spot{};
-			if (has_cached_position)
-			{
-				spot.position = cached_position;
-			}
-			if (has_cached_direction && glm::dot(cached_direction, cached_direction) > 1e-6f)
-			{
-				spot.direction = glm::normalize(cached_direction);
-			}
-			else if (has_cached_position && glm::dot(cached_position, cached_position) > 1e-6f)
-			{
-				spot.direction = -glm::normalize(cached_position);
-			}
-			parameters = spot;
-		}
-		break;
-	default:
-		qWarning() << "Invalid light type";
-		return;
-	}
-	light_config_.mode = mode;
+    // 当前界面只编辑第一盏灯；类型变化时重置其类型专属参数，保留公共光强。
 }
 
 void ManageEngine::paintGl()
 {
-	if (list_graphic_.empty()) return;
-
-	glm::vec3 light_gizmo_translate{ 0.0f };
-	const bool has_light_gizmo = tryGetLightGizmoTranslate(list_graphic_, light_gizmo_translate);
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	for (const auto& graphic_ : list_graphic_)
-	{
-		if (graphic_->getDefaultShader())
-		{
-			graphic_->getDefaultShader()->bind();
-			// 每个物体都有独立 view 平移，这里把灯光控制器位置换算到当前物体使用的坐标系。
-			Lighting::LightConfig effective_light_config = light_config_;
-			if (has_light_gizmo)
-			{
-				MvpDataPtr mvp_data = graphic_->getMvpData();
-				if (mvp_data)
-				{
-					applyLightGizmoToPrimaryLight(light_gizmo_translate, glm::vec3(mvp_data->view_[3]), effective_light_config);
-				}
-			}
-			graphic_->getDefaultShader()->setLights(effective_light_config);
-			graphic_->Draw();
-		}
-	}
-	//如果模型是空，不进行离屏渲染
     if (list_graphic_.empty())
     {
         return;
     }
 
-	if (screen_render_model_ && screen_render_model_->getRenderType() !=0)
-	{
-		screen_render_model_->drawTexture();
-		for (const auto& graphic_ : list_graphic_)
-		{
-			MeshPtr mesh = graphic_->getMesh();
-			screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices, graphic_->getDefaultShader());
-			screen_render_model_->Draw();
-		}
-	}
+    // All objects receive the same world-space light configuration.
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    for (const auto &graphic_ : list_graphic_)
+    {
+        if (graphic_->getDefaultShader())
+        {
+            graphic_->getDefaultShader()->bind();
+            // 每个物体都有独立 view 平移，这里把灯光控制器位置换算到当前物体使用的坐标系。
+            graphic_->getDefaultShader()->setLights(light_config_);
+            graphic_->Draw();
+        }
+    }
+    // 如果模型是空，不进行离屏渲染
+    if (list_graphic_.empty())
+    {
+        return;
+    }
+
+    if (screen_render_model_ && screen_render_model_->getRenderType() != 0)
+    {
+        screen_render_model_->drawTexture();
+        for (const auto &graphic_ : list_graphic_)
+        {
+            MeshPtr mesh = graphic_->getMesh();
+            auto *planet = dynamic_cast<PlanetModel *>(graphic_.get());
+            screen_render_model_->setScreenRenderVertexData(
+                mesh->vao_, mesh->data_.indices, graphic_->getDefaultShader(),
+                static_cast<int>(mesh->data_.vertices.size()), planet ? planet->instanceCount() : 0);
+            screen_render_model_->Draw();
+        }
+    }
 }
 
 MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
@@ -596,21 +579,29 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     MvpDataPtr mvp_data = nullptr;
     if (list_graphic_.empty())
     {
-		showAxisModel(false);
+        showAxisModel(false);
         return mvp_data;
     }
-    //清空物体选中状态
-    std::for_each(list_graphic_.begin(), list_graphic_.end(), [](auto graphic_) {graphic_->setChecked(false); });
-
+    // 清空物体选中状态
+    std::for_each(list_graphic_.begin(), list_graphic_.end(), [](auto graphic_) { graphic_->setChecked(false); });
 
     int object_id = 1;
-    std::map<float, GraphicsEnginePtr>map_engineptr;
-    for (auto& graphic_ : list_graphic_)
+    std::map<float, GraphicsEnginePtr> map_engineptr;
+    for (auto &graphic_ : list_graphic_)
     {
+        if (graphic_->getModeltype() == OperatorAction::CreatAxis ||
+            graphic_->getModeltype() == OperatorAction::ClearSkyBox)
+        {
+            continue;
+        }
         MvpDataPtr mvp = graphic_->getMvpData();
         MeshPtr mesh = graphic_->getMesh();
-        screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices);
-        auto[selected,depth] = screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
+        auto *planet = dynamic_cast<PlanetModel *>(graphic_.get());
+        screen_render_model_->setScreenRenderVertexData(mesh->vao_, mesh->data_.indices, nullptr,
+                                                        static_cast<int>(mesh->data_.vertices.size()),
+                                                        planet ? planet->instanceCount() : 0);
+        auto [selected, depth] =
+            screen_render_model_->colorPick(mvp->model_, mvp->view_, mvp->projection_, xpos, ypos, object_id);
         if (selected)
         {
             LogInfo("【Selected 】 ColorID: {} \n Depth: {}", object_id, depth);
@@ -621,14 +612,21 @@ MvpDataPtr ManageEngine::pickModel(int xpos, int ypos)
     if (!map_engineptr.empty())
     {
         map_engineptr.begin()->second->setChecked(true);
-		selectModelSignals(map_engineptr.begin()->second->getModelName());
-		showAxisModel(true);
+        const auto selectedData = map_engineptr.begin()->second->getMvpData();
+        for (const auto &graphic : list_graphic_)
+        {
+            if (graphic->getModeltype() == OperatorAction::CreatAxis)
+            {
+                graphic->setModelData(selectedData->model_);
+            }
+        }
+        selectModelSignals(map_engineptr.begin()->second->getModelName());
+        showAxisModel(true);
         return map_engineptr.begin()->second->getMvpData();
     }
-	else
-	{
-		showAxisModel(false);
-		return mvp_data;
-	}
-   
+    else
+    {
+        showAxisModel(false);
+        return mvp_data;
+    }
 }

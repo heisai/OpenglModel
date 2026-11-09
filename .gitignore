@@ -45,3 +45,4 @@
 bin/
 obj/
 build/
+/src/Engine/Renderables/Graphics.cpp

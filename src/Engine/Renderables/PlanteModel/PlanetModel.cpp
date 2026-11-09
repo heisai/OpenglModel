@@ -1,159 +1,144 @@
-#include"PlanetModel.h"
-PlanetModel::PlanetModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/) :
-	GraphicsEngine(type, shader)
+#include "PlanetModel.h"
+PlanetModel::PlanetModel(OperatorAction type, std::shared_ptr<Shader> shader /*= nullptr*/)
+    : GraphicsEngine(type, shader)
 {
-	stencil_shader_ = std::make_unique<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
-	elapsed_timer.start();
+    stencil_shader_ = std::make_unique<Shader>("stencil_vertex.vs", "stencil_fragment.fs", "GeneralModel");
+    elapsed_timer.start();
 
+    unsigned int amount = 1000;
 
+    srand(static_cast<unsigned int>(static_cast<float>(elapsed_timer.elapsed() / 20))); // initialize random seed
 
+    float radius = 1.0;
+    float offset = 1.5f;
+    for (unsigned int i = 0; i < amount; i++)
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        // 1. translation: displace along circle with 'radius' in range [-offset, offset]
+        float angle = (float)i / (float)amount * 360.0f;
+        float displacement = (rand() % (int)(2 * offset)) - offset;
+        float x = sin(angle) * radius + displacement;
 
+        float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
 
-	unsigned int amount = 1000;
+        float z = cos(angle) * radius;
+        model = glm::translate(model, glm::vec3(x, y, z));
+        qDebug() << x << y << z;
 
-	srand(static_cast<unsigned int>(static_cast<float>(elapsed_timer.elapsed()/20))); // initialize random seed
-
-	float radius = 1.0;
-	float offset = 1.5f;
-	for (unsigned int i = 0; i < amount; i++)
-	{
-		glm::mat4 model = glm::mat4(1.0f);
-		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
-		float angle = (float)i / (float)amount * 360.0f;
-		float displacement = (rand() % (int)(2 * offset ))  - offset;
-		float x = sin(angle) * radius + displacement;
-
-		float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-
-		float z = cos(angle) * radius;
-		model = glm::translate(model, glm::vec3(x, y, z));
-		qDebug() << x << y << z;
-
-
-		// 4. now add to list of matrices
-		model_matrices_.push_back(model) ;
-	}
-
-
-
+        // 4. now add to list of matrices
+        model_matrices_.push_back(model);
+    }
 }
-
 
 void PlanetModel::Draw()
 {
 
-		//if (selected_)
-		{
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-			glStencilMask(0xFF);
-		}
-		default_shader_->bind();
-		default_shader_->setMat4("view", mvp_data_->view_);
-		default_shader_->setMat4("projection", mvp_data_->projection_);
-		default_shader_->setMat4("model", mvp_data_->model_);
-		//设置光源属性
-		default_shader_->setVec3("viewPos", glm::vec3(glm::inverse(mvp_data_->view_)[3]));
-		//设置材质属性
-		default_shader_->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
-		default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
-		default_shader_->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-		default_shader_->setFloat("material.shininess", 32.0f);
+    // if (selected_)
+    {
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+    }
+    default_shader_->bind();
+    default_shader_->setMat4("view", mvp_data_->view_);
+    default_shader_->setMat4("projection", mvp_data_->projection_);
+    default_shader_->setMat4("model", mvp_data_->model_);
+    // 设置光源属性
+    default_shader_->setVec3("viewPos", glm::vec3(glm::inverse(mvp_data_->view_)[3]));
+    // 设置材质属性
+    default_shader_->setVec3("material.ambient", 1.2f, 1.0f, 2.0f);
+    default_shader_->setVec3("material.diffuse", 0.2f, 0.2f, 0.2f);
+    default_shader_->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    default_shader_->setFloat("material.shininess", 32.0f);
 
+    // default_shader_->setBool("geom_flag", true);
+    default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed() / 500));
+    default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
+    glBindVertexArray(mesh_data_->vao_);
+    // glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0, model_matrices_.size());
 
-		//default_shader_->setBool("geom_flag", true);
-		default_shader_->setFloat("time", static_cast<float>(elapsed_timer.elapsed() / 500));
-		default_shader_->setBool("geom_flag", mvp_data_->blasting_flag_);
-		glBindVertexArray(mesh_data_->vao_);
-		//glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
-		glDrawElementsInstanced(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0, model_matrices_.size());
-
-
-
-
-		if (selected_)
-		{
-			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-			glStencilMask(0x00);
-			glDisable(GL_DEPTH_TEST);
-			stencil_shader_->bind();
-			float scale = 1.025f;
-			glm::mat4 model_ = glm::scale(mvp_data_->model_, glm::vec3(scale, scale, scale));
-			stencil_shader_->setMat4("view", mvp_data_->view_);
-			stencil_shader_->setMat4("projection", mvp_data_->projection_);
-			stencil_shader_->setMat4("model", model_);
-			glBindVertexArray(mesh_data_->vao_);
-			glDrawElements(GL_TRIANGLES, mesh_data_->data_.indices.size(), GL_UNSIGNED_INT, 0);
-
-		}
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
-
+    if (selected_)
+    {
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        stencil_shader_->bind();
+        stencil_shader_->setMat4("view", mvp_data_->view_);
+        stencil_shader_->setMat4("projection", mvp_data_->projection_);
+        stencil_shader_->setMat4("model", mvp_data_->model_);
+        stencil_shader_->setBool("instanced", true);
+        glBindVertexArray(mesh_data_->vao_);
+        glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh_data_->data_.indices.size()), GL_UNSIGNED_INT,
+                                nullptr, static_cast<GLsizei>(model_matrices_.size()));
+    }
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void PlanetModel::InitBufferData()
 {
 
-	if (default_shader_)
-	{
-		default_shader_->CreatProgram();
-	}
-	if (stencil_shader_)
-	{
-		stencil_shader_->CreatProgram();
-	}
+    if (default_shader_)
+    {
+        default_shader_->CreatProgram();
+    }
+    if (stencil_shader_)
+    {
+        stencil_shader_->CreatProgram();
+    }
 
+    // glEnable(GL_DEPTH_TEST);
+    // glDepthFunc(GL_LESS);
+    // glEnable(GL_STENCIL_TEST);
+    // glEnable(GL_MULTISAMPLE);
+    // glHint(GL_LINE_SMOOTH, GL_NICEST);
 
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
-	//glEnable(GL_STENCIL_TEST);
-	//glEnable(GL_MULTISAMPLE);
-	//glHint(GL_LINE_SMOOTH, GL_NICEST);
+    // 顶点数组对象
+    glGenVertexArrays(1, &mesh_data_->vao_);
+    // 绑定VAO
+    glBindVertexArray(mesh_data_->vao_);
 
-	// 顶点数组对象
-	glGenVertexArrays(1, &mesh_data_->vao_);
-	//绑定VAO
-	glBindVertexArray(mesh_data_->vao_);
+    // 把顶点数组复制到缓冲中供OpenGL使用
+    glGenBuffers(1, &mesh_data_->vbo_);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh_data_->data_.vertices.size() * sizeof(Vertex)),
+                 mesh_data_->data_.vertices.data(), GL_STATIC_DRAW);
 
-	//把顶点数组复制到缓冲中供OpenGL使用
-	glGenBuffers(1, &mesh_data_->vbo_);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh_data_->vbo_);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh_data_->data_.vertices.size() * sizeof(Vertex)), mesh_data_->data_.vertices.data(), GL_STATIC_DRAW);
+    glGenBuffers(1, &mesh_data_->ebo_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->data_.indices.size() * sizeof(uint32_t),
+                 mesh_data_->data_.indices.data(), GL_STATIC_DRAW);
 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)),
+                          reinterpret_cast<const void *>(offsetof(Vertex, position)));
+    glEnableVertexAttribArray(0);
 
-	glGenBuffers(1, &mesh_data_->ebo_);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->ebo_);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_data_->data_.indices.size() * sizeof(uint32_t), mesh_data_->data_.indices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)),
+                          reinterpret_cast<const void *>(offsetof(Vertex, normal)));
+    glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, position)));
-	glEnableVertexAttribArray(0);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)),
+                          reinterpret_cast<const void *>(offsetof(Vertex, texCoord)));
+    glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, normal)));
-	glEnableVertexAttribArray(1);
+    // stencil_shader_->CreatProgram();
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(Vertex)), reinterpret_cast<const void*>(offsetof(Vertex, texCoord)));
-	glEnableVertexAttribArray(2);
+    unsigned int instanceVBO;
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_matrices_.size(), model_matrices_.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//stencil_shader_->CreatProgram();	
-
-
-
-	unsigned int instanceVBO;
-	glGenBuffers(1, &instanceVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_matrices_.size(), model_matrices_.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	for (GLuint column = 0; column < 4; ++column)
-	{
-		const GLuint attributeLocation = 3 + column;
-		const std::size_t columnOffset = static_cast<std::size_t>(column) * sizeof(glm::vec4);
-		glEnableVertexAttribArray(attributeLocation);
-		glVertexAttribPointer(attributeLocation, 4, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(glm::mat4)), reinterpret_cast<const void*>(columnOffset));
-		glVertexAttribDivisor(attributeLocation, 1);
-	}
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    for (GLuint column = 0; column < 4; ++column)
+    {
+        const GLuint attributeLocation = 3 + column;
+        const std::size_t columnOffset = static_cast<std::size_t>(column) * sizeof(glm::vec4);
+        glEnableVertexAttribArray(attributeLocation);
+        glVertexAttribPointer(attributeLocation, 4, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(sizeof(glm::mat4)),
+                              reinterpret_cast<const void *>(columnOffset));
+        glVertexAttribDivisor(attributeLocation, 1);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-

@@ -16,8 +16,8 @@ void main()
 {
 	// mat4 offset = offsets[gl_InstanceID];
 	
-	mat4 model_temp = aInstanceMatrix;
-    FragPos = vec3(model_temp * vec4(aPos, 1.0f));
+	mat4 model_temp = model * aInstanceMatrix;
+	FragPos = vec3(model_temp * vec4(aPos, 1.0f));
 	Normal = mat3(transpose(inverse(model_temp))) * aNormal;  
 	TexCoords = aTexCoords;
 	 gl_Position = projection * view  * vec4(FragPos, 1.0);

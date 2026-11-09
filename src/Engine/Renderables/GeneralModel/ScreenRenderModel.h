@@ -1,33 +1,38 @@
 #pragma once
-#include"../Graphics.h"
+#include "../Graphics.h"
 class ScreenRenderModel : public GraphicsEngine
 {
-public:
-	explicit ScreenRenderModel(OperatorAction type, std::shared_ptr<Shader> shader = nullptr);
-	void Draw() override;
-	void InitBufferData() override;
-	void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int>indices, std::shared_ptr<Shader>shader = nullptr);
-	std::tuple<bool,float> colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,int objetc_id);
-	void  drawTexture();
-	//设置渲染类型
-	void setRenderType(int type);	
-	int	getRenderType();
-private:
-	glm::vec3 idToColor(int id);
-	int colorToId(const glm::vec3& color);
-private:
-	std::unique_ptr<Shader>screen_shader_;
-	std::unique_ptr<Shader>color_pick_shader_;
-	unsigned int default_render_vao_;
-	std::vector<unsigned int>default_render_indices_;
-	
+  public:
+    explicit ScreenRenderModel(OperatorAction type, std::shared_ptr<Shader> shader = nullptr);
+    void Draw() override;
+    void InitBufferData() override;
+    void setScreenRenderVertexData(unsigned int vao, std::vector<unsigned int> indices,
+                                   std::shared_ptr<Shader> shader = nullptr, int vertexCount = 0, int instances = 0);
+    std::tuple<bool, float> colorPick(glm::mat4 model, glm::mat4 view, glm::mat4 projection, int readX, int readY,
+                                      int objetc_id);
+    void drawTexture();
+    // 设置渲染类型
+    void setRenderType(int type);
+    int getRenderType();
 
-	unsigned int m_PickFBO;
-	unsigned int m_PickTexture;
-	unsigned int m_PickRBO;
-	unsigned int framebuffe_fbo_;
+  private:
+    glm::vec3 idToColor(int id);
+    int colorToId(const glm::vec3 &color);
 
-	unsigned int quadvao_;
-	unsigned int quadvbo_;
-	int render_type_ = 0;
+  private:
+    std::unique_ptr<Shader> screen_shader_;
+    std::unique_ptr<Shader> color_pick_shader_;
+    unsigned int default_render_vao_;
+    std::vector<unsigned int> default_render_indices_;
+    int vertex_count_ = 0;
+    int instance_count_ = 0;
+
+    unsigned int m_PickFBO;
+    unsigned int m_PickTexture;
+    unsigned int m_PickRBO;
+    unsigned int framebuffe_fbo_;
+
+    unsigned int quadvao_;
+    unsigned int quadvbo_;
+    int render_type_ = 0;
 };

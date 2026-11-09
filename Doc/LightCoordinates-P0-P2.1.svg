@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="330" viewBox="0 0 960 330">
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto-start-reverse"><path d="M0,0 L0,6 L9,3 z" fill="#334155"/></marker></defs>
+  <rect width="960" height="330" fill="#f8fafc"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#0f172a">
+	<g fill="#dbeafe" stroke="#2563eb" stroke-width="2"><rect x="20" y="115" width="210" height="100" rx="12"/><rect x="340" y="95" width="280" height="140" rx="12"/><rect x="730" y="115" width="210" height="100" rx="12"/><rect x="340" y="15" width="280" height="55" rx="12"/></g>
+	<text x="125" y="150" font-size="19">LightEditWidget</text><text x="125" y="180" font-size="15">XYZ / direction / cone angles</text>
+	<text x="480" y="130" font-size="19">ManageEngine</text><text x="480" y="160" font-size="15">Canonical world light state</text><text x="480" y="190" font-size="15">LightConfig + lamp Model (T R S)</text><text x="480" y="217" font-size="15">Type-switch parameter cache</text>
+	<text x="835" y="150" font-size="19">ShaderModel / Grid</text><text x="835" y="180" font-size="15">Shared world-space lights</text>
+	<text x="480" y="48" font-size="17">Lamp drag / rotation</text>
+	<g stroke="#334155" stroke-width="2" marker-end="url(#arrow)" fill="none"><path d="M230,140 H340"/><path d="M340,190 H230"/><path d="M620,165 H730"/><path d="M480,70 V95"/></g>
+	<text x="285" y="127" font-size="13">validated edits</text><text x="285" y="215" font-size="13">blocked feedback</text><text x="675" y="150" font-size="13">setLights</text>
+	<text x="480" y="280" font-size="16">World vertex = Model * local vertex; clip = Projection * View * world vertex</text>
+	<text x="480" y="308" font-size="16">Light movement updates light position, not camera position or mesh vertices.</text>
+  </g>
+</svg>

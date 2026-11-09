@@ -186,6 +186,46 @@
 <context>
     <name>Translator</name>
     <message>
+        <source>Light position X</source>
+        <translation>灯光位置 X</translation>
+    </message>
+    <message>
+        <source>Light position Y</source>
+        <translation>灯光位置 Y</translation>
+    </message>
+    <message>
+        <source>Light position Z</source>
+        <translation>灯光位置 Z</translation>
+    </message>
+    <message>
+        <source>Light direction X</source>
+        <translation>灯光方向 X</translation>
+    </message>
+    <message>
+        <source>Light direction Y</source>
+        <translation>灯光方向 Y</translation>
+    </message>
+    <message>
+        <source>Light direction Z</source>
+        <translation>灯光方向 Z</translation>
+    </message>
+    <message>
+        <source>Inner angle</source>
+        <translation>内锥角（度）</translation>
+    </message>
+    <message>
+        <source>Outer angle</source>
+        <translation>外锥角（度）</translation>
+    </message>
+    <message>
+        <source>Direction must be nonzero and 0 &lt;= inner &lt; outer &lt; 90 degrees</source>
+        <translation>方向向量不能为零，且角度须满足：0 ≤ 内锥角 &lt; 外锥角 &lt; 90°。</translation>
+    </message>
+    <message>
+        <source>light</source>
+        <translation>灯光</translation>
+    </message>
+    <message>
         <location filename="../src/Common/Translator.cpp" line="10"/>
         <source>cube</source>
         <translation>立方体</translation>
