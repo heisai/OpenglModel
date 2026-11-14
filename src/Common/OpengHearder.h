@@ -10,6 +10,7 @@
 #include"../Engine/Renderables/LightModel/LightModel.h"
 #include"../Engine/Geometry/CreatModelData.h"
 #include"../Engine/Geometry/ModelDataInterFace.h"
+#include"../Engine/Renderables/ShadowMapModel/ShadowMapPass.h"
 #include"Translator.h"
 
 

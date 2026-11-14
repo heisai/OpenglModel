@@ -55,8 +55,13 @@ class GraphicsEngine : public QOpenGLFunctions_4_5_Core
     virtual void Draw() = 0;
     virtual void InitBufferData() = 0;
     virtual void SetViewSize(int width, int height);
-    void UseShader();
-    void setChecked(bool flag);
+	// 设置渲染数据
+	virtual void setRenderData(const MeshPtr& render_mesh_data,const MvpDataPtr& render_mvp_data, int instances);
+    // 渲染前的操作
+    virtual void beginRenderPass();
+	// 渲染后的操作
+	virtual void endRenderPass();
+    void setChecked(bool flag);                 
     // 设置模型是否显示（影响渲染时的可见性）
     void setShown(bool flag);
 
@@ -80,11 +85,11 @@ class GraphicsEngine : public QOpenGLFunctions_4_5_Core
   private:
     void setModelInfo(const MeshData &model_datas);
 
-  public:
-    // 默认shader(用于基础模型绘制)
-    std::shared_ptr<Shader> default_shader_;
+ 
 
   protected:
+    // 默认shader(用于基础模型绘制)
+    std::shared_ptr<Shader> default_shader_;
     int m_Width, m_Height;
     MvpDataPtr mvp_data_;       // 世界空间坐标
     MeshPtr mesh_data_;         // 模型数据

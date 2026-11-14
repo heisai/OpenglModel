@@ -55,6 +55,11 @@ QString ManageEngine::createModel(OperatorAction type)
         screen_render_model_ = std::make_unique<ScreenRenderModel>(OperatorAction::CreatTourse);
         screen_render_model_->SetViewSize(width_, height_);
     }
+    if (shadow_map_pass_ == nullptr)
+    {
+		shadow_map_pass_ = std::make_unique<ShadowMapPass>(OperatorAction::RenderShadow);
+		shadow_map_pass_->SetViewSize(width_, height_);
+    }
     return model_uuid;
 }
 
@@ -143,6 +148,9 @@ void ManageEngine::registerEngineModel()
     // µ∆π‚
     map_graphicengine_createfunc_.insert(
         {OperatorAction::CreatLight, std::bind(&ManageEngine::createLightEngine, this)});
+    //…Ó∂»≤‚ ‘
+	map_graphicengine_createfunc_.insert(
+		{ OperatorAction::RenderShadow, std::bind(&ManageEngine::createShadowMapPass, this) });
 }
 
 GraphicsEnginePtr ManageEngine::createAxisEngine()
@@ -293,6 +301,15 @@ GraphicsEnginePtr ManageEngine::clearRender()
     return basic_light_engine;
 }
 
+GraphicsEnginePtr ManageEngine::createShadowMapPass()
+{
+    ShaderPtr depth_shader =
+        std::make_shared<Shader>("shadow_depth.vert", "shadow_depth.frag", "ShadowMapPass");
+    GraphicsEnginePtr engine = std::make_shared<ShadowMapPass>(OperatorAction::RenderShadow, depth_shader);
+    engine->SetViewSize(width_, height_);
+    return engine;
+}
+
 void ManageEngine::createLoadModelEngine()
 {
     // ShaderPtr model_shader = std::make_shared<Shader>("123.vert", "456.frag", "LoadModel");
@@ -379,6 +396,10 @@ void ManageEngine::initializeGl()
     if (screen_render_model_)
     {
         screen_render_model_->InitBufferData();
+    }
+    if (shadow_map_pass_)
+    {
+        shadow_map_pass_->InitBufferData();
     }
 }
 
@@ -571,6 +592,20 @@ void ManageEngine::paintGl()
                 static_cast<int>(mesh->data_.vertices.size()), planet ? planet->instanceCount() : 0);
             screen_render_model_->Draw();
         }
+    }
+    if (shadow_map_pass_)
+    {
+        shadow_map_pass_->beginRenderPass();
+        for (const auto& graphic_ : list_graphic_)
+        {
+            
+            MeshPtr mesh = graphic_->getMesh();
+            auto* planet = dynamic_cast<PlanetModel*>(graphic_.get());
+            shadow_map_pass_->setRenderData(mesh, graphic_->getMvpData(),
+                planet ? planet->instanceCount() : 0);
+            shadow_map_pass_->Draw();
+        }
+        shadow_map_pass_->endRenderPass();
     }
 }
 

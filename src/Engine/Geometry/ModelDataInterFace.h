@@ -42,37 +42,38 @@ struct fmt::formatter<glm::vec3> {
 #define LogInfo(...)  SPDLOG_INFO(__VA_ARGS__)
 #define LogWarn(...)  SPDLOG_WARN(__VA_ARGS__)
 #define LogError(...) SPDLOG_ERROR(__VA_ARGS__)
-//模型类型
+// 模型操作类型（创建、渲染、清理）
 enum class OperatorAction
 {
-	//离屏渲染
+	// 离屏渲染
 	ScreenRender = 0,
-	//模型动作
-	CreatCyliner ,//	
-	CreatCube,
-	CreatTourse,
+	// 模型创建动作
+	CreatCyliner ,// 创建圆柱体
+	CreatCube,// 创建立方体
+	CreatTourse,// 创建圆环体
 	CreatGrid,	//网格
 	CreatAxis,//	坐标
 	CreatPlanet,//	行星
 	CreatLight,//灯光
-	//渲染动作
-	RenderInversion,   //
-	RenderGrayscale,   //
-	RenderSharpen,   //
-	RenderBlur,   //
-	RenderDetection,   //
+	// 渲染动作
+	RenderInversion,   // 颜色反相
+	RenderGrayscale,   // 灰度
+	RenderSharpen,   // 锐化
+	RenderBlur,   // 模糊
+	RenderDetection,   // 边缘检测
 	RenderSky,	//天空盒
 	RenderBlasting,	//爆破
-	//清除动作
+	RenderShadow, // 阴影
+	// 清除动作
 	ClearSkyBox,//清除天空盒
 	ClearCreatModel,//清除模型
 	ClearBlasting,	//清除爆破
 	ClearRender	//清除渲染
 };
 enum class PrimitiveTopology {
-	Triangles,
-	Lines,
-	Points
+	Triangles, // 三角形图元
+	Lines, // 线段图元
+	Points // 点图元
 };
 struct Vertex
 {
@@ -91,9 +92,11 @@ struct MeshData
 };
 
 
+// 模型数据接口：统一获取网格数据
 class ModelDataInterFace{
 public:
     virtual ~ModelDataInterFace() = default;
+	// 获取模型的网格数据
     virtual MeshData GetModelDatas() = 0;
 };
 

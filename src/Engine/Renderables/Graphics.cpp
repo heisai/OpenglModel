@@ -98,12 +98,15 @@ void GraphicsEngine::SetViewSize(int width,int height)
 	m_Width = width;
 	m_Height = height;
 }
-void GraphicsEngine::UseShader()
+void GraphicsEngine::setRenderData(const MeshPtr& render_mesh_data, const MvpDataPtr& render_mvp_data, int instances)
 {
-	glUseProgram(default_shader_->ShaderPromger);
-
 }
-
+void GraphicsEngine::beginRenderPass()
+{
+}
+void GraphicsEngine::endRenderPass()
+{
+}
 void GraphicsEngine::setChecked(bool flag)
 {
 	selected_ = flag;

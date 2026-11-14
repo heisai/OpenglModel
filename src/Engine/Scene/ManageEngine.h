@@ -124,6 +124,8 @@ class ManageEngine : public QObject
     GraphicsEnginePtr createBlastingRender();
     // 关闭后处理；不创建模型，返回空指针。
     GraphicsEnginePtr clearRender();
+	// 创建阴影
+    GraphicsEnginePtr createShadowMapPass();
     // GraphicsEnginePtr createInversionRender();
 
     // 外部模型加载的预留入口，目前未实现。
@@ -152,6 +154,7 @@ class ManageEngine : public QObject
     int width_ = 0;
     int height_ = 0;
     std::unique_ptr<ScreenRenderModel> screen_render_model_;
+    std::unique_ptr<ShadowMapPass> shadow_map_pass_; 
     // 映射模型ID与引擎ID关系
     std::map<QString, unsigned int> map_model_id_;
 };
