@@ -10,6 +10,17 @@ namespace Lighting {
 enum class LightType { Directional, Point, Spot };
 enum class LightMode { Single, Multiple };
 
+namespace Defaults
+{
+inline const glm::vec3 kPrimaryPosition{1.2f, 1.0f, 2.0f};
+inline const glm::vec3 kPrimaryDirection{-1.2f, -1.0f, -2.0f};
+// 多灯模式的聚光预设保持原有构图，不等同于第一盏灯的编辑默认值。
+inline const glm::vec3 kSpotPosition{1.2f, 2.0f, 2.0f};
+inline const glm::vec3 kSpotDirection{-1.2f, -2.0f, -2.0f};
+inline constexpr float kInnerAngleDegrees = 20.0f;
+inline constexpr float kOuterAngleDegrees = 30.0f;
+}
+
 // 点光和聚光的距离衰减分母：constant + linear*d + quadratic*d²。
 struct Attenuation {
 	float constant = 1.0f;
@@ -18,18 +29,34 @@ struct Attenuation {
 };
 
 // 位置和方向使用世界坐标；方向表示光线传播方向。
-struct DirectionalLight { glm::vec3 direction{ -1.2f, -1.0f, -2.0f }; };
-struct PointLight {
-	glm::vec3 position{ 1.2f, 1.0f, 2.0f };
+struct DirectionalLight
+{
+	glm::vec3 direction{Defaults::kPrimaryDirection};
+};
+struct PointLight
+{
+	glm::vec3 position{Defaults::kPrimaryPosition};
 	Attenuation attenuation;
 };
-struct SpotLight {
-	glm::vec3 position{ 1.2f, 2.0f, 2.0f };
-	glm::vec3 direction{ -1.2f, -2.0f, -2.0f };
+struct SpotLight
+{
+	glm::vec3 position{Defaults::kSpotPosition};
+	glm::vec3 direction{Defaults::kSpotDirection};
 	Attenuation attenuation;
 	// 角度以度为单位保存，上传 shader 时转换为余弦值。
-	float innerAngleDegrees = 20.0f;
-	float outerAngleDegrees = 30.0f;
+	float innerAngleDegrees = Defaults::kInnerAngleDegrees;
+	float outerAngleDegrees = Defaults::kOuterAngleDegrees;
+};
+
+// 面板一次收发完整参数；当前类型未使用的字段仍保留，切换类型不丢值。
+struct LightPanelData
+{
+	LightType type = LightType::Directional;
+	LightMode mode = LightMode::Single;
+	glm::vec3 position{Defaults::kPrimaryPosition};
+	glm::vec3 direction{Defaults::kPrimaryDirection};
+	float innerAngleDegrees = Defaults::kInnerAngleDegrees;
+	float outerAngleDegrees = Defaults::kOuterAngleDegrees;
 };
 
 
@@ -10814,6 +10841,14 @@ struct LightConfig {
 		Light{ true, glm::vec3(0.05f), glm::vec3(0.35f), glm::vec3(0.5f), PointLight{ glm::vec3(-2.0f, 2.0f, 1.0f) } },
 		Light{ true, glm::vec3(0.02f), glm::vec3(0.3f), glm::vec3(0.4f), SpotLight{} }
 	};
+};
+
+// panel 是第一盏灯的编辑状态，config 是同步后供渲染读取的配置快照。
+struct LightState
+{
+    LightPanelData panel;
+    Attenuation attenuation;
+    LightConfig config;
 };
 
 } // namespace Lighting

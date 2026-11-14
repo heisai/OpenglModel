@@ -101,6 +101,8 @@ Translator &Translator::getInstance()
     instance.translator_map_["Light direction Z"] = tr("Light direction Z");
     instance.translator_map_["Inner angle"] = tr("Inner angle");
     instance.translator_map_["Outer angle"] = tr("Outer angle");
+    instance.translator_map_["Invalid light type or mode"] = tr("Invalid light type or mode");
+    instance.translator_map_["Light values must be finite"] = tr("Light values must be finite");
     instance.translator_map_["Direction must be nonzero and 0 <= inner < outer < 90 degrees"] =
         tr("Direction must be nonzero and 0 <= inner < outer < 90 degrees");
     instance.translator_map_["light"] = tr("light");

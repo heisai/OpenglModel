@@ -67,12 +67,7 @@ void ParaConfigWidget::initTreewidget()
     treewidgetitem_ = new QTreeWidgetItem(collection_treewidget_);
     treewidgetitem_->setText(0, TR("Collection"));
     treewidgetitem_->addChild(new QTreeWidgetItem({TR("Camera")}));
-    auto *lightItem = new QTreeWidgetItem({TR("Light")});
-    lightItem->setData(0, Qt::UserRole, true);
-    treewidgetitem_->addChild(lightItem);
-    treewidgetitem_->addChild(new QTreeWidgetItem({TR("floor")}));
     collection_treewidget_->addTopLevelItem(treewidgetitem_);
-
     collection_treewidget_->setFrameShape(QFrame::NoFrame);
     // collection_treewidget_->setIndentation(0);  // 设置为0完全移除缩进
     collection_treewidget_->expandAll();
@@ -80,12 +75,19 @@ void ParaConfigWidget::initTreewidget()
 
 void ParaConfigWidget::addCollectionToTreewidget(const QString &item_text)
 {
+    if (item_text.isEmpty())
+    {
+        return;
+    }
     treewidgetitem_->addChild(new QTreeWidgetItem({item_text}));
 }
 
 void ParaConfigWidget::removeCollectionFromTreewidget(const QString &item_text)
 {
-
+    if (item_text.isEmpty())
+    {
+        return;
+    }
     QList<QTreeWidgetItem *> items =
         collection_treewidget_->findItems(item_text, Qt::MatchExactly | Qt::MatchRecursive);
     if (!items.isEmpty())
@@ -141,7 +143,7 @@ void ParaConfigWidget::initPropertyConfigWidget()
 
     connect(property_editor_widget_, &PropertyEditorWidget::sigUpdatePropertyInfo,
             [this](const Utils::Material &value) { emit sigUpdatePropertyToEngine(value); });
-    connect(light_edit_widget_, &LightEditWidget::sigUpdateLightInfo, this, &ParaConfigWidget::sigUpdateLightToEngine);
+    connect(light_edit_widget_, &LightEditWidget::sigUpdateLightPanel, this, &ParaConfigWidget::sigUpdateLightToEngine);
 }
 
 QWidget *ParaConfigWidget::initToolButtons()

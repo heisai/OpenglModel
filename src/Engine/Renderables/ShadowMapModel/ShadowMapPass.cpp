@@ -142,4 +142,3 @@ void ShadowMapPass::endRenderPass()
 
 
 
-

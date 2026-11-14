@@ -14,7 +14,7 @@ struct ShadowDepthGeometry
 
 class ShadowMapPass : public GraphicsEngine
 {
-  public:
+public:
 	// Reuse the existing Shader wrapper and pass in caller-provided depth shaders when available.
 	explicit ShadowMapPass(OperatorAction type);
 	ShadowMapPass(OperatorAction type, std::shared_ptr<Shader> shader);
@@ -30,7 +30,7 @@ class ShadowMapPass : public GraphicsEngine
 	// 渲染后操作
 	void endRenderPass() override;
 
-  private:
+private:
 	GLuint depth_fbo = 0;
 	GLuint depth_texture = 0;
 	glm::mat4 light_view_projection_{1.0f};

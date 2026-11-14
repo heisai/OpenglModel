@@ -7,18 +7,23 @@
 #include <QSignalBlocker>
 #include <QGridLayout>
 
+// 创建面板并用完整默认参数初始化，注册结构体信号所需的元类型。
 LightEditWidget::LightEditWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LightEditWidget)
 {
     ui->setupUi(this);
+    qRegisterMetaType<Lighting::LightPanelData>();
     initUI();
+    setPanelData(panel_data_);
     initConnect();
 }
 
+// 释放生成的 UI 对象。
 LightEditWidget::~LightEditWidget()
 {
     delete ui;
 }
 
+// 创建类型、模式、数值编辑控件及错误提示。
 void LightEditWidget::initUI()
 {
     setWindowTitle(TR("Light settings"));
@@ -50,62 +55,78 @@ void LightEditWidget::initUI()
     ui->gridLayout_2->addWidget(error_, 10, 0, 1, 2);
 }
 
+// 将所有控件变化汇总为同一个完整参数提交入口。
 void LightEditWidget::initConnect()
 {
     connect(ui->lightTypeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-            &LightEditWidget::onLightSettingChanged);
+            &LightEditWidget::onPanelChanged);
     connect(ui->lightModeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-            &LightEditWidget::onLightSettingChanged);
-    for (auto *value : values_)
+            &LightEditWidget::onPanelChanged);
+    for (int i = 0; i < 8; ++i)
     {
-        connect(value, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
-                [this](double) { onValuesChanged(); });
+        connect(values_[i], QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
+                [this, i](double value) { onValueChanged(i, value); });
     }
 }
 
-Lighting::LightType LightEditWidget::getLightType() const
+// 返回含未舍入字段的编辑草稿，而非重新采样控件显示值。
+Lighting::LightPanelData LightEditWidget::panelData() const
 {
-    return static_cast<Lighting::LightType>(ui->lightTypeComboBox->currentData().toInt());
+    return panel_data_;
 }
 
-Lighting::LightMode LightEditWidget::getLightMode() const
+// 更新类型和模式，并提交整份草稿供引擎校验。
+void LightEditWidget::onPanelChanged()
 {
-    return static_cast<Lighting::LightMode>(ui->lightModeComboBox->currentData().toInt());
+    panel_data_.type = static_cast<Lighting::LightType>(ui->lightTypeComboBox->currentData().toInt());
+    panel_data_.mode = static_cast<Lighting::LightMode>(ui->lightModeComboBox->currentData().toInt());
+    emit sigUpdateLightPanel(panel_data_);
 }
 
-void LightEditWidget::onLightSettingChanged()
+// 回显引擎已接受的快照，阻断信号以免产生递归提交。
+void LightEditWidget::setPanelData(const Lighting::LightPanelData &data)
 {
-    emit sigUpdateLightInfo(getLightType(), getLightMode());
-}
-
-void LightEditWidget::setValues(Lighting::LightType type, Lighting::LightMode mode, const glm::vec3 &position,
-                                const glm::vec3 &direction, float inner, float outer)
-{
+    panel_data_ = data;
     const QSignalBlocker typeBlock(ui->lightTypeComboBox), modeBlock(ui->lightModeComboBox);
-    ui->lightTypeComboBox->setCurrentIndex(ui->lightTypeComboBox->findData(static_cast<int>(type)));
-    ui->lightModeComboBox->setCurrentIndex(ui->lightModeComboBox->findData(static_cast<int>(mode)));
-    const float v[] = {position.x, position.y, position.z, direction.x, direction.y, direction.z, inner, outer};
+    ui->lightTypeComboBox->setCurrentIndex(ui->lightTypeComboBox->findData(static_cast<int>(data.type)));
+    ui->lightModeComboBox->setCurrentIndex(ui->lightModeComboBox->findData(static_cast<int>(data.mode)));
+    const float values[] = {data.position.x,  data.position.y,  data.position.z,        data.direction.x,
+                            data.direction.y, data.direction.z, data.innerAngleDegrees, data.outerAngleDegrees};
     for (int i = 0; i < 8; ++i)
     {
         const QSignalBlocker block(values_[i]);
-        values_[i]->setValue(v[i]);
-        values_[i]->setEnabled(i < 3   ? type != Lighting::LightType::Directional
-                               : i < 6 ? type != Lighting::LightType::Point
-                                       : type == Lighting::LightType::Spot);
+        values_[i]->setValue(values[i]);
+        values_[i]->setEnabled(i < 3   ? data.type != Lighting::LightType::Directional
+                               : i < 6 ? data.type != Lighting::LightType::Point
+                                       : data.type == Lighting::LightType::Spot);
     }
     error_->clear();
 }
 
-void LightEditWidget::onValuesChanged()
+// 显示引擎拒绝草稿的原因，保留输入以便修正。
+void LightEditWidget::showValidationError(const QString &message)
 {
-    glm::vec3 position(values_[0]->value(), values_[1]->value(), values_[2]->value());
-    glm::vec3 direction(values_[3]->value(), values_[4]->value(), values_[5]->value());
-    const float inner = float(values_[6]->value()), outer = float(values_[7]->value());
-    if (glm::dot(direction, direction) < 1e-8f || inner >= outer || outer >= 90.0f)
+    error_->setText(message);
+}
+
+// 仅更新用户实际修改的字段，保留其他字段的完整精度。
+void LightEditWidget::onValueChanged(int index, double value)
+{
+    if (index < 3)
     {
-        error_->setText(TR("Direction must be nonzero and 0 <= inner < outer < 90 degrees"));
-        return;
+        panel_data_.position[index] = static_cast<float>(value);
     }
-    error_->clear();
-    emit sigUpdateLightValues(position, direction, inner, outer);
+    else if (index < 6)
+    {
+        panel_data_.direction[index - 3] = static_cast<float>(value);
+    }
+    else if (index == 6)
+    {
+        panel_data_.innerAngleDegrees = static_cast<float>(value);
+    }
+    else
+    {
+        panel_data_.outerAngleDegrees = static_cast<float>(value);
+    }
+    onPanelChanged();
 }

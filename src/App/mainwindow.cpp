@@ -41,40 +41,32 @@ void MainWindow::InitConnect()
             [this](const Utils::Material &material) { manage_engine_moudle_->setPropertyData(material); });
     // 界面只发送选择；引擎保存场景配置，再请求重绘。
     connect(ui->widget, &ParaConfigWidget::sigUpdateLightToEngine, this,
-            [this](Lighting::LightType type, Lighting::LightMode mode)
+            [this](const Lighting::LightPanelData &data)
             {
-                manage_engine_moudle_->setLightSettings(type, mode);
-                ui->openGLWidget->update();
+                if (manage_engine_moudle_->applyLightPanelData(data))
+                {
+                    ui->openGLWidget->update();
+                }
             });
     auto refreshLight = [this]()
-    {
-        const auto &config = manage_engine_moudle_->lightConfig();
-        const auto &p = config.lights.front().parameters;
-        auto type = std::holds_alternative<Lighting::PointLight>(p)  ? Lighting::LightType::Point
-                    : std::holds_alternative<Lighting::SpotLight>(p) ? Lighting::LightType::Spot
-                                                                     : Lighting::LightType::Directional;
-        ui->widget->lightEditor()->setValues(type, config.mode, manage_engine_moudle_->lightPosition(),
-                                             manage_engine_moudle_->lightDirection(),
-                                             manage_engine_moudle_->lightInner(), manage_engine_moudle_->lightOuter());
-    };
+    { ui->widget->lightEditor()->setPanelData(manage_engine_moudle_->currentLightPanelData()); };
     connect(manage_engine_moudle_.get(), &ManageEngine::lightChanged, this, refreshLight);
-    connect(ui->widget->lightEditor(), &LightEditWidget::sigUpdateLightValues, this,
-            [this](const glm::vec3 &position, const glm::vec3 &direction, float inner, float outer)
-            {
-                manage_engine_moudle_->setPrimaryLightValues(position, direction, inner, outer);
-                ui->openGLWidget->update();
-            });
+    connect(manage_engine_moudle_.get(), &ManageEngine::lightEditRejected, ui->widget->lightEditor(),
+            &LightEditWidget::showValidationError);
     refreshLight();
 }
 
 void MainWindow::initCollectionEngine()
 {
     // 创建网格
-    manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
+    QString tree_item_name = manage_engine_moudle_->createModel(OperatorAction::CreatGrid);
+    ui->widget->addCollectionToTreewidget(tree_item_name);
     // 创建坐标轴
-    manage_engine_moudle_->createModel(OperatorAction::CreatAxis);
+    tree_item_name =manage_engine_moudle_->createModel(OperatorAction::CreatAxis);
+    ui->widget->addCollectionToTreewidget(tree_item_name);
     // 创建光源
-    manage_engine_moudle_->createModel(OperatorAction::CreatLight);
+    tree_item_name = manage_engine_moudle_->createModel(OperatorAction::CreatLight);
+    ui->widget->addCollectionToTreewidget(tree_item_name);
 }
 
 MainWindow::~MainWindow()
@@ -200,11 +192,10 @@ void MainWindow::createModel(OperatorAction type)
     ui->openGLWidget->update();
     ui->openGLWidget->doneCurrent();
     LogInfo("create model type:{}", static_cast<int>(type));
-    if(model_uuid.isEmpty())
+    if (!model_uuid.isEmpty())
     {
         ui->widget->addCollectionToTreewidget(model_uuid);
     }
-    
 }
 
 void MainWindow::removeModel(OperatorAction type)
@@ -216,7 +207,6 @@ void MainWindow::removeModel(OperatorAction type)
     {
         ui->widget->removeCollectionFromTreewidget(model_uuid);
     }
-    
 }
 
 void MainWindow::ChangeLightColorSlot(QColor color)

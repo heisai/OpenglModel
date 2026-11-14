@@ -145,6 +145,14 @@
 <context>
     <name>Translator</name>
     <message>
+        <source>Invalid light type or mode</source>
+        <translation>Invalid light type or mode.</translation>
+    </message>
+    <message>
+        <source>Light values must be finite</source>
+        <translation>Light values must be finite and cannot contain NaN or infinity.</translation>
+    </message>
+    <message>
         <source>Light position X</source>
         <translation>Light position X</translation>
     </message>

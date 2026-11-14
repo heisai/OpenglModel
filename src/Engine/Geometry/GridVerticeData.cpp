@@ -4,6 +4,7 @@ MeshData GridVerticeData::GetModelDatas()
 {
 	MeshData data;
 	data.vertices = GenerateGridVertices();
+	data.model_name_ = TR("floor").toStdString();
 	return data;
 }
 

@@ -35,44 +35,23 @@ class ManageEngine : public QObject
     // 设置属性配置信息
     //  更新当前选中模型的材质。
     void setPropertyData(const Utils::Material &material_);
-    // 切换第一盏灯类型和单灯／多灯模式，保留缓存参数。
-    void setLightSettings(Lighting::LightType type, Lighting::LightMode mode);
-    // 更新选中模型的独立变换，并同步坐标轴及选中灯参数。
+    // Validate and atomically apply the full panel; reject invalid input without changing state.
+    bool applyLightPanelData(const Lighting::LightPanelData &data);
+    // Update the selected object's independent transform, axes and light state.
     void updateSelectedTransform(const glm::vec3 &position, const glm::mat4 &rotation, const glm::vec3 &scale);
-    // 校验并更新第一盏灯的世界位置、传播方向和聚光内外角（度）。
-    void setPrimaryLightValues(const glm::vec3 &position, const glm::vec3 &direction, float inner, float outer);
-    // 读取所有灯及当前模式的场景灯光配置。
+    // Return the primary light's complete editing snapshot for UI feedback.
+    Lighting::LightPanelData currentLightPanelData() const
+    {
+        return light_state_.panel;
+    }
+    // Read the synchronized world-space configuration used by all renderables.
     const Lighting::LightConfig &lightConfig() const
     {
-        return light_config_;
-    }
-    // 读取缓存的世界位置；平行光仅将其用于灯体显示。
-    glm::vec3 lightPosition() const
-    {
-        return light_position_;
-    }
-    // 读取缓存的世界传播方向；点光不参与方向计算。
-    glm::vec3 lightDirection() const
-    {
-        return light_direction_;
-    }
-    // 读取缓存的聚光内锥角，单位为度。
-    float lightInner() const
-    {
-        return light_spot_.innerAngleDegrees;
-    }
-    // 读取缓存的聚光外锥角，单位为度。
-    float lightOuter() const
-    {
-        return light_spot_.outerAngleDegrees;
+        return light_state_.config;
     }
 
   private:
-    Lighting::LightConfig light_config_;
-    glm::vec3 light_position_{1.2f, 1.0f, 2.0f};
-    glm::vec3 light_direction_{-1.2f, -1.0f, -2.0f};
-    Lighting::SpotLight light_spot_{};
-    Lighting::Attenuation light_attenuation_{};
+    Lighting::LightState light_state_;
     // 同步缓存参数至第一盏灯、灯体及其坐标轴，并通知界面回显。
     void syncLight();
 
@@ -147,6 +126,8 @@ class ManageEngine : public QObject
     void selectModelSignals(const QString model_uuid);
     // 通知界面灯光参数已更新，可读取状态进行回显。
     void lightChanged();
+    // 通知界面显示未通过校验的原因，失败时不发出 lightChanged。
+    void lightEditRejected(const QString &message);
 
   public:
     std::list<GraphicsEnginePtr> list_graphic_;

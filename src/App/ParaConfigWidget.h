@@ -34,7 +34,8 @@ class ParaConfigWidget : public QWidget
     }
   signals:
     void sigUpdatePropertyToEngine(const Utils::Material &value);
-    void sigUpdateLightToEngine(Lighting::LightType lightType, Lighting::LightMode lightMode);
+    // 将灯面板的完整编辑草稿转发给场景引擎。
+    void sigUpdateLightToEngine(const Lighting::LightPanelData &data);
   private slots:
     void slotsTreeWidgetItemClicked(QTreeWidgetItem *item, int column);
 

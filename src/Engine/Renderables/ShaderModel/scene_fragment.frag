@@ -26,13 +26,12 @@ subroutine uniform shadeModelType shadeModel;
 
 vec3 shadeScene(vec3 position, vec3 normal, bool blinn)
 {
-	vec3 diffuseTexel = Material.hasDiffuseMap
-		? texture(Material.diffuseMap, TexCoords).rgb : vec3(1.0);
-	vec3 specularTexel = Material.hasSpecularMap
-		? texture(Material.specularMap, TexCoords).rgb : vec3(1.0);
-	vec3 ambientColor = Material.Ka * diffuseTexel;
-	vec3 diffuseColor = Material.Kd * diffuseTexel;
-	vec3 specularColor = Material.Ks * specularTexel;
+	vec3 ambientColor = Material.hasDiffuseMap
+		? texture(Material.diffuseMap, TexCoords).rgb : Material.Ka;
+	vec3 diffuseColor = Material.hasDiffuseMap
+		? texture(Material.diffuseMap, TexCoords).rgb : Material.Kd;
+	vec3 specularColor = Material.hasSpecularMap
+		? texture(Material.specularMap, TexCoords).rgb : Material.Ks;
 
 	// 对每盏活动灯传入同一材质，逐灯计算并累加光照。
 	vec3 result = vec3(0.0);

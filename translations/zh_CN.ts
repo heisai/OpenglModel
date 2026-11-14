@@ -186,6 +186,14 @@
 <context>
     <name>Translator</name>
     <message>
+        <source>Invalid light type or mode</source>
+        <translation>灯光类型或光源模式无效。</translation>
+    </message>
+    <message>
+        <source>Light values must be finite</source>
+        <translation>灯光参数必须是有限数值，不能包含 NaN 或无穷值。</translation>
+    </message>
+    <message>
         <source>Light position X</source>
         <translation>灯光位置 X</translation>
     </message>

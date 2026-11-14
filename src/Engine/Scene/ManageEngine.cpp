@@ -1,4 +1,5 @@
 #include "ManageEngine.h"
+#include "../../Common/Translator.h"
 #include <cmath>
 
 namespace
@@ -8,11 +9,36 @@ bool finiteVector(const glm::vec3 &value)
 {
     return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z);
 }
+
+// Validate the full draft before committing any field; UI and gizmo edits share these rules.
+QString validateLightPanelData(const Lighting::LightPanelData &data)
+{
+    const bool validType = data.type == Lighting::LightType::Directional || data.type == Lighting::LightType::Point ||
+                           data.type == Lighting::LightType::Spot;
+    const bool validMode = data.mode == Lighting::LightMode::Single || data.mode == Lighting::LightMode::Multiple;
+    if (!validType || !validMode)
+    {
+        return TR("Invalid light type or mode");
+    }
+    const float directionLengthSquared = glm::dot(data.direction, data.direction);
+    if (!finiteVector(data.position) || !finiteVector(data.direction) || !std::isfinite(directionLengthSquared) ||
+        !std::isfinite(data.innerAngleDegrees) || !std::isfinite(data.outerAngleDegrees))
+    {
+        return TR("Light values must be finite");
+    }
+    if (directionLengthSquared < 1e-8f || data.innerAngleDegrees < 0.0f ||
+        data.innerAngleDegrees >= data.outerAngleDegrees || data.outerAngleDegrees >= 90.0f)
+    {
+        return TR("Direction must be nonzero and 0 <= inner < outer < 90 degrees");
+    }
+    return {};
+}
 } // namespace
 
 ManageEngine::ManageEngine() : screen_render_model_(nullptr)
 {
     registerEngineModel();
+    syncLight();
 }
 
 void ManageEngine::setViewSize(int width, int height)
@@ -70,10 +96,7 @@ QString ManageEngine::removeModel(OperatorAction type)
     if (type == OperatorAction::ClearBlasting) // 删除爆破功能
     {
         auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
-                                 [](GraphicsEnginePtr graphic_) 
-            { 
-                return (graphic_->getCheck() == true);
-            });
+                                 [](GraphicsEnginePtr graphic_) { return (graphic_->getCheck() == true); });
 
         if (iter != list_graphic_.end())
         {
@@ -82,14 +105,14 @@ QString ManageEngine::removeModel(OperatorAction type)
         return "";
     }
     auto iter = std::find_if(list_graphic_.begin(), list_graphic_.end(),
-        [type](const GraphicsEnginePtr& graphic)
-        {
-            if (type == OperatorAction::ClearSkyBox)
-            {
-                return graphic->getModeltype() == OperatorAction::ClearSkyBox;
-            }
-            return graphic->getCheck();
-        });
+                             [type](const GraphicsEnginePtr &graphic)
+                             {
+                                 if (type == OperatorAction::ClearSkyBox)
+                                 {
+                                     return graphic->getModeltype() == OperatorAction::ClearSkyBox;
+                                 }
+                                 return graphic->getCheck();
+                             });
 
     if (iter == list_graphic_.end())
     {
@@ -98,7 +121,6 @@ QString ManageEngine::removeModel(OperatorAction type)
     const QString removedName = (*iter)->getModelName();
     list_graphic_.erase(iter);
     return removedName;
-  
 }
 
 void ManageEngine::registerEngineModel()
@@ -348,7 +370,7 @@ void ManageEngine::addEngine(const GraphicsEnginePtr &graphics)
     }
     if (graphics->getModeltype() == OperatorAction::CreatLight)
     {
-        data->position_ = light_position_;
+        data->position_ = light_state_.panel.position;
     }
     data->rebuildModel();
     graphics->setProjectionData(glm::perspective(
@@ -383,7 +405,6 @@ void ManageEngine::generateUuid(QString &model_name)
     else
     {
         map_model_id_[model_name] = 0;
-        model_name = model_name + "." + QString("%1").arg(map_model_id_[model_name], 3, 10, '0');
     }
 }
 void ManageEngine::initializeGl()
@@ -403,35 +424,38 @@ void ManageEngine::initializeGl()
     }
 }
 
+// Derive the render configuration and lamp transform from the accepted panel state, then notify the UI.
 void ManageEngine::syncLight()
 {
-    if (light_config_.lights.empty())
+    auto &config = light_state_.config;
+    if (config.lights.empty())
     {
+        qWarning() << "Cannot synchronize an empty light configuration";
         return;
     }
-    auto &p = light_config_.lights.front().parameters;
-    if (auto *d = std::get_if<Lighting::DirectionalLight>(&p))
+    const auto &panel = light_state_.panel;
+    config.mode = panel.mode;
+    auto &parameters = config.lights.front().parameters;
+    // Only the primary light's parameters are derived; colors, enabled state and other presets stay intact.
+    switch (panel.type)
     {
-        d->direction = light_direction_;
-    }
-    if (auto *point = std::get_if<Lighting::PointLight>(&p))
-    {
-        point->position = light_position_;
-        point->attenuation = light_attenuation_;
-    }
-    if (auto *spot = std::get_if<Lighting::SpotLight>(&p))
-    {
-        light_spot_.position = light_position_;
-        light_spot_.direction = light_direction_;
-        light_spot_.attenuation = light_attenuation_;
-        *spot = light_spot_;
+    case Lighting::LightType::Directional:
+        parameters = Lighting::DirectionalLight{panel.direction};
+        break;
+    case Lighting::LightType::Point:
+        parameters = Lighting::PointLight{panel.position, light_state_.attenuation};
+        break;
+    case Lighting::LightType::Spot:
+        parameters = Lighting::SpotLight{panel.position, panel.direction, light_state_.attenuation,
+                                         panel.innerAngleDegrees, panel.outerAngleDegrees};
+        break;
     }
     for (const auto &graphic : list_graphic_)
     {
         if (graphic->getModeltype() == OperatorAction::CreatLight)
         {
             auto data = graphic->getMvpData();
-            data->position_ = light_position_;
+            data->position_ = panel.position;
             data->rebuildModel();
             if (graphic->getCheck())
             {
@@ -448,22 +472,19 @@ void ManageEngine::syncLight()
     emit lightChanged();
 }
 
-void ManageEngine::setPrimaryLightValues(const glm::vec3 &position, const glm::vec3 &direction, float inner,
-                                         float outer)
+// Commit all panel fields together only after validation; rejected drafts leave the scene unchanged.
+bool ManageEngine::applyLightPanelData(const Lighting::LightPanelData &data)
 {
-    const float directionLengthSquared = glm::dot(direction, direction);
-    if (!finiteVector(position) || !finiteVector(direction) || !std::isfinite(directionLengthSquared) ||
-        directionLengthSquared < 1e-8f || !std::isfinite(inner) || !std::isfinite(outer) || inner < 0.0f ||
-        outer >= 90.0f || inner >= outer)
+    const QString error = validateLightPanelData(data);
+    if (!error.isEmpty())
     {
-        qWarning() << "Invalid light position, direction or cone angles";
-        return;
+        qWarning() << "Light panel update rejected:" << error;
+        emit lightEditRejected(error);
+        return false;
     }
-    light_position_ = position;
-    light_direction_ = direction;
-    light_spot_.innerAngleDegrees = inner;
-    light_spot_.outerAngleDegrees = outer;
+    light_state_.panel = data;
     syncLight();
+    return true;
 }
 
 void ManageEngine::updateSelectedTransform(const glm::vec3 &position, const glm::mat4 &rotation, const glm::vec3 &scale)
@@ -490,9 +511,18 @@ void ManageEngine::updateSelectedTransform(const glm::vec3 &position, const glm:
     auto data = (*it)->getMvpData();
     if ((*it)->getModeltype() == OperatorAction::CreatLight)
     {
+        auto panel = light_state_.panel;
         // Translation does not steer the light; only the rotation delta changes direction.
-        light_direction_ = glm::vec3(rotation * glm::inverse(data->rotation_) * glm::vec4(light_direction_, 0.0f));
-        light_position_ = position;
+        panel.direction = glm::vec3(rotation * glm::inverse(data->rotation_) * glm::vec4(panel.direction, 0.0f));
+        panel.position = position;
+        const QString error = validateLightPanelData(panel);
+        if (!error.isEmpty())
+        {
+            qWarning() << "Light transform rejected:" << error;
+            emit lightEditRejected(error);
+            return;
+        }
+        light_state_.panel = panel;
     }
     data->position_ = position;
     data->rotation_ = rotation;
@@ -522,39 +552,6 @@ void ManageEngine::setPropertyData(const Utils::Material &material_)
     }
 }
 
-void ManageEngine::setLightSettings(Lighting::LightType type, Lighting::LightMode mode)
-{
-    if (mode != Lighting::LightMode::Single && mode != Lighting::LightMode::Multiple)
-    {
-        qWarning() << "Invalid light mode";
-        return;
-    }
-    if (light_config_.lights.empty())
-    {
-        return;
-    }
-    auto &p = light_config_.lights.front().parameters;
-    switch (type)
-    {
-    case Lighting::LightType::Directional:
-        p = Lighting::DirectionalLight{};
-        break;
-    case Lighting::LightType::Point:
-        p = Lighting::PointLight{};
-        break;
-    case Lighting::LightType::Spot:
-        p = light_spot_;
-        break;
-    default:
-        qWarning() << "Invalid light type";
-        return;
-    }
-    light_config_.mode = mode;
-    syncLight();
-
-    // 当前界面只编辑第一盏灯；类型变化时重置其类型专属参数，保留公共光强。
-}
-
 void ManageEngine::paintGl()
 {
     if (list_graphic_.empty())
@@ -570,7 +567,7 @@ void ManageEngine::paintGl()
         {
             graphic_->getDefaultShader()->bind();
             // 每个物体都有独立 view 平移，这里把灯光控制器位置换算到当前物体使用的坐标系。
-            graphic_->getDefaultShader()->setLights(light_config_);
+            graphic_->getDefaultShader()->setLights(light_state_.config);
             graphic_->Draw();
         }
     }
