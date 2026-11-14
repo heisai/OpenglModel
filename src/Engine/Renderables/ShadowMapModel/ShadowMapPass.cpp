@@ -100,7 +100,7 @@ void ShadowMapPass::Draw()
 	unsigned int render_indices_size = static_cast<unsigned int>(caster_mesh_->data_.indices.size());
 	unsigned int instance_count_ = static_cast<unsigned int>(instances_count_);
 	unsigned int vertex_count_ = static_cast<unsigned int>(caster_mesh_->data_.vertices.size());
-	const bool instanced = render_indices_size > 0;
+	const bool instanced = instance_count_ > 0;
 	default_shader_->setBool("instanced", instanced);
 
 	if (instance_count_ > 0)
@@ -137,6 +137,7 @@ void ShadowMapPass::beginRenderPass()
 void ShadowMapPass::endRenderPass()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, m_Width, m_Height);
 }
 
 
